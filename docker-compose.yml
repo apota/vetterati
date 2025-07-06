@@ -151,6 +151,60 @@ services:
     networks:
       - ats-network
 
+  # Job Service (Python)
+  job-service:
+    build:
+      context: ./src/services/job-service
+      dockerfile: Dockerfile
+    ports:
+      - "8004:8000"
+    environment:
+      - DATABASE_URL=postgresql://ats_user:ats_password@postgres:5432/vetterati_ats
+      - REDIS_URL=redis://redis:6379
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - postgres
+      - redis
+      - elasticsearch
+    networks:
+      - ats-network
+
+  # Candidate Service (Python)
+  candidate-service:
+    build:
+      context: ./src/services/candidate-service
+      dockerfile: Dockerfile
+    ports:
+      - "8005:8000"
+    environment:
+      - DATABASE_URL=postgresql://ats_user:ats_password@postgres:5432/vetterati_ats
+      - REDIS_URL=redis://redis:6379
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - postgres
+      - redis
+      - elasticsearch
+    networks:
+      - ats-network
+
+  # Notification Service (Python)
+  notification-service:
+    build:
+      context: ./src/services/notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "8006:8000"
+    environment:
+      - DATABASE_URL=postgresql://ats_user:ats_password@postgres:5432/vetterati_ats
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://ats_user:ats_password@rabbitmq:5672
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    networks:
+      - ats-network
+
   # API Gateway (C#)
   api-gateway:
     build:
@@ -165,12 +219,18 @@ services:
       - Services__AhpService=http://ahp-service
       - Services__WorkflowService=http://workflow-service:8000
       - Services__AnalyticsService=http://analytics-service:8000
+      - Services__JobService=http://job-service:8000
+      - Services__CandidateService=http://candidate-service:8000
+      - Services__NotificationService=http://notification-service:8000
     depends_on:
       - auth-service
       - resume-service
       - ahp-service
       - workflow-service
       - analytics-service
+      - job-service
+      - candidate-service
+      - notification-service
     networks:
       - ats-network
 

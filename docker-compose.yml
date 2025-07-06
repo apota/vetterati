@@ -1,0 +1,198 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: vetterati_ats
+      POSTGRES_USER: ats_user
+      POSTGRES_PASSWORD: ats_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - ats-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - ats-network
+
+  # Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - ats-network
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ats_user
+      RABBITMQ_DEFAULT_PASS: ats_password
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - ats-network
+
+  # DynamoDB Local
+  dynamodb:
+    image: amazon/dynamodb-local
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath ./data
+    ports:
+      - "8000:8000"
+    volumes:
+      - dynamodb_data:/home/dynamodblocal/data
+    networks:
+      - ats-network
+
+  # Authentication Service (C#)
+  auth-service:
+    build:
+      context: ./src/services/auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "5001:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=vetterati_ats;Username=ats_user;Password=ats_password
+      - Redis__ConnectionString=redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ats-network
+
+  # Resume Management Service (Python)
+  resume-service:
+    build:
+      context: ./src/services/resume-service
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgresql://ats_user:ats_password@postgres:5432/vetterati_ats
+      - REDIS_URL=redis://redis:6379
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - postgres
+      - redis
+      - elasticsearch
+    volumes:
+      - ./temp/uploads:/app/uploads
+    networks:
+      - ats-network
+
+  # AHP Engine Service (C#)
+  ahp-service:
+    build:
+      context: ./src/services/ahp-service
+      dockerfile: Dockerfile
+    ports:
+      - "5002:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=vetterati_ats;Username=ats_user;Password=ats_password
+      - Redis__ConnectionString=redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ats-network
+
+  # Workflow Service (Python)
+  workflow-service:
+    build:
+      context: ./src/services/workflow-service
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_URL=postgresql://ats_user:ats_password@postgres:5432/vetterati_ats
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://ats_user:ats_password@rabbitmq:5672
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    networks:
+      - ats-network
+
+  # Analytics Service (Python)
+  analytics-service:
+    build:
+      context: ./src/services/analytics-service
+      dockerfile: Dockerfile
+    ports:
+      - "8003:8000"
+    environment:
+      - DATABASE_URL=postgresql://ats_user:ats_password@postgres:5432/vetterati_ats
+      - DYNAMODB_ENDPOINT=http://dynamodb:8000
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - postgres
+      - dynamodb
+      - elasticsearch
+    networks:
+      - ats-network
+
+  # API Gateway (C#)
+  api-gateway:
+    build:
+      context: ./src/services/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Services__AuthService=http://auth-service
+      - Services__ResumeService=http://resume-service:8000
+      - Services__AhpService=http://ahp-service
+      - Services__WorkflowService=http://workflow-service:8000
+      - Services__AnalyticsService=http://analytics-service:8000
+    depends_on:
+      - auth-service
+      - resume-service
+      - ahp-service
+      - workflow-service
+      - analytics-service
+    networks:
+      - ats-network
+
+  # Frontend (React)
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+    depends_on:
+      - api-gateway
+    networks:
+      - ats-network
+
+volumes:
+  postgres_data:
+  elasticsearch_data:
+  dynamodb_data:
+
+networks:
+  ats-network:
+    driver: bridge

@@ -1,0 +1,241 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using AuthService.Data;
+using AuthService.Services;
+using Vetterati.Shared.Models;
+using StackExchange.Redis;
+using System.Text.Json;
+
+namespace AuthService.Controllers;
+
+[ApiController]
+[Route("api/v1/auth")]
+public class AuthController : ControllerBase
+{
+    private readonly AuthDbContext _context;
+    private readonly IJwtService _jwtService;
+    private readonly IDatabase _redis;
+    private readonly ILogger<AuthController> _logger;
+
+    public AuthController(
+        AuthDbContext context, 
+        IJwtService jwtService, 
+        IConnectionMultiplexer redis,
+        ILogger<AuthController> logger)
+    {
+        _context = context;
+        _jwtService = jwtService;
+        _redis = redis.GetDatabase();
+        _logger = logger;
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult<ApiResponse<LoginResponse>>> Login([FromBody] LoginRequest request)
+    {
+        try
+        {
+            // For demo purposes, we'll use email-based login
+            // In production, this would integrate with actual SSO providers
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == request.Code && u.IsActive);
+
+            if (user == null)
+            {
+                // Create a demo user if not exists
+                user = new User
+                {
+                    Email = request.Code,
+                    Name = request.Code.Split('@')[0],
+                    SsoProvider = request.Provider,
+                    SsoId = request.Code,
+                    Roles = new List<string> { "recruiter" },
+                    IsActive = true
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                // Add to default organization
+                var defaultOrg = await _context.Organizations.FirstAsync();
+                var userOrg = new UserOrganization
+                {
+                    UserId = user.Id,
+                    OrganizationId = defaultOrg.Id,
+                    Role = "recruiter"
+                };
+                _context.UserOrganizations.Add(userOrg);
+                await _context.SaveChangesAsync();
+            }
+
+            // Update last login
+            user.LastLoginAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            // Generate tokens
+            var accessToken = _jwtService.GenerateAccessToken(user);
+            var refreshToken = _jwtService.GenerateRefreshToken();
+
+            // Store refresh token in Redis
+            await _redis.StringSetAsync($"refresh_token:{user.Id}", refreshToken, TimeSpan.FromDays(30));
+
+            var response = new ApiResponse<LoginResponse>
+            {
+                Data = new LoginResponse
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken,
+                    ExpiresIn = 3600,
+                    User = user
+                }
+            };
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during login");
+            return StatusCode(500, new ApiError 
+            { 
+                Code = "INTERNAL_ERROR", 
+                Message = "An error occurred during login" 
+            });
+        }
+    }
+
+    [HttpPost("refresh")]
+    public async Task<ActionResult<ApiResponse<LoginResponse>>> RefreshToken([FromBody] RefreshTokenRequest request)
+    {
+        try
+        {
+            // Find user by refresh token in Redis
+            var keys = _redis.Multiplexer.GetServer(_redis.Multiplexer.GetEndPoints().First())
+                .Keys(pattern: "refresh_token:*");
+
+            string? userId = null;
+            foreach (var key in keys)
+            {
+                var storedToken = await _redis.StringGetAsync(key);
+                if (storedToken == request.RefreshToken)
+                {
+                    userId = key.ToString().Split(':')[1];
+                    break;
+                }
+            }
+
+            if (userId == null)
+            {
+                return Unauthorized(new ApiError 
+                { 
+                    Code = "INVALID_REFRESH_TOKEN", 
+                    Message = "Invalid refresh token" 
+                });
+            }
+
+            var user = await _context.Users.FindAsync(Guid.Parse(userId));
+            if (user == null || !user.IsActive)
+            {
+                return Unauthorized(new ApiError 
+                { 
+                    Code = "USER_NOT_FOUND", 
+                    Message = "User not found or inactive" 
+                });
+            }
+
+            // Generate new tokens
+            var accessToken = _jwtService.GenerateAccessToken(user);
+            var newRefreshToken = _jwtService.GenerateRefreshToken();
+
+            // Update refresh token in Redis
+            await _redis.KeyDeleteAsync($"refresh_token:{userId}");
+            await _redis.StringSetAsync($"refresh_token:{userId}", newRefreshToken, TimeSpan.FromDays(30));
+
+            var response = new ApiResponse<LoginResponse>
+            {
+                Data = new LoginResponse
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = newRefreshToken,
+                    ExpiresIn = 3600,
+                    User = user
+                }
+            };
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during token refresh");
+            return StatusCode(500, new ApiError 
+            { 
+                Code = "INTERNAL_ERROR", 
+                Message = "An error occurred during token refresh" 
+            });
+        }
+    }
+
+    [HttpPost("logout")]
+    public async Task<ActionResult<ApiResponse<object>>> Logout()
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst("sub")?.Value;
+            if (userIdClaim != null)
+            {
+                // Remove refresh token from Redis
+                await _redis.KeyDeleteAsync($"refresh_token:{userIdClaim}");
+            }
+
+            return Ok(new ApiResponse<object> 
+            { 
+                Data = new { message = "Logged out successfully" } 
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during logout");
+            return StatusCode(500, new ApiError 
+            { 
+                Code = "INTERNAL_ERROR", 
+                Message = "An error occurred during logout" 
+            });
+        }
+    }
+
+    [HttpGet("me")]
+    public async Task<ActionResult<ApiResponse<User>>> GetCurrentUser()
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst("sub")?.Value;
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new ApiError 
+                { 
+                    Code = "UNAUTHORIZED", 
+                    Message = "User not authenticated" 
+                });
+            }
+
+            var user = await _context.Users.FindAsync(Guid.Parse(userIdClaim));
+            if (user == null)
+            {
+                return NotFound(new ApiError 
+                { 
+                    Code = "USER_NOT_FOUND", 
+                    Message = "User not found" 
+                });
+            }
+
+            return Ok(new ApiResponse<User> { Data = user });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting current user");
+            return StatusCode(500, new ApiError 
+            { 
+                Code = "INTERNAL_ERROR", 
+                Message = "An error occurred while fetching user" 
+            });
+        }
+    }
+}

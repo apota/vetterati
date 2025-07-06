@@ -1,0 +1,243 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  AWS_REGION: us-west-2
+  ECR_REPOSITORY_PREFIX: vetterati-ats
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: src/frontend/package-lock.json
+
+    # .NET Tests
+    - name: Restore .NET dependencies
+      run: |
+        dotnet restore src/shared/dotnet/Vetterati.Shared.csproj
+        dotnet restore src/services/auth-service/AuthService.csproj
+        dotnet restore src/services/api-gateway/ApiGateway.csproj
+        dotnet restore src/services/ahp-service/AhpService.csproj
+
+    - name: Build .NET projects
+      run: |
+        dotnet build src/shared/dotnet/Vetterati.Shared.csproj --no-restore
+        dotnet build src/services/auth-service/AuthService.csproj --no-restore
+        dotnet build src/services/api-gateway/ApiGateway.csproj --no-restore
+        dotnet build src/services/ahp-service/AhpService.csproj --no-restore
+
+    - name: Run .NET tests
+      run: |
+        dotnet test --no-build --verbosity normal
+      env:
+        ConnectionStrings__DefaultConnection: "Host=localhost;Database=test_db;Username=postgres;Password=postgres"
+
+    # Python Tests
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r src/services/resume-service/requirements.txt
+        pip install -r src/services/workflow-service/requirements.txt
+        pip install -r src/services/analytics-service/requirements.txt
+
+    - name: Run Python tests
+      run: |
+        cd tests
+        python -m pytest -v
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+        REDIS_URL: redis://localhost:6379
+
+    # Frontend Tests
+    - name: Install frontend dependencies
+      run: |
+        cd src/frontend
+        npm ci
+
+    - name: Run frontend tests
+      run: |
+        cd src/frontend
+        npm test -- --coverage --watchAll=false
+
+    - name: Build frontend
+      run: |
+        cd src/frontend
+        npm run build
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  build-and-push:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    needs: [test, security-scan]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    strategy:
+      matrix:
+        service:
+          - name: auth-service
+            context: ./src/services/auth-service
+            dockerfile: Dockerfile
+          - name: resume-service
+            context: ./src/services/resume-service
+            dockerfile: Dockerfile
+          - name: ahp-service
+            context: ./src/services/ahp-service
+            dockerfile: Dockerfile
+          - name: workflow-service
+            context: ./src/services/workflow-service
+            dockerfile: Dockerfile
+          - name: analytics-service
+            context: ./src/services/analytics-service
+            dockerfile: Dockerfile
+          - name: api-gateway
+            context: ./src/services/api-gateway
+            dockerfile: Dockerfile
+          - name: frontend
+            context: ./src/frontend
+            dockerfile: Dockerfile
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ env.ECR_REPOSITORY_PREFIX }}-${{ matrix.service.name }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ${{ matrix.service.context }} -f ${{ matrix.service.context }}/${{ matrix.service.dockerfile }}
+        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+  deploy:
+    name: Deploy to AWS
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.6.0
+
+    - name: Terraform Init
+      run: |
+        cd infrastructure/terraform
+        terraform init
+
+    - name: Terraform Plan
+      run: |
+        cd infrastructure/terraform
+        terraform plan -var="db_password=${{ secrets.DB_PASSWORD }}"
+
+    - name: Terraform Apply
+      run: |
+        cd infrastructure/terraform
+        terraform apply -auto-approve -var="db_password=${{ secrets.DB_PASSWORD }}"
+
+    - name: Update ECS Services
+      run: |
+        # Update ECS services to use new images
+        aws ecs update-service --cluster vetterati-prod-cluster --service vetterati-prod-auth-service --force-new-deployment
+        aws ecs update-service --cluster vetterati-prod-cluster --service vetterati-prod-resume-service --force-new-deployment
+        aws ecs update-service --cluster vetterati-prod-cluster --service vetterati-prod-ahp-service --force-new-deployment
+        aws ecs update-service --cluster vetterati-prod-cluster --service vetterati-prod-workflow-service --force-new-deployment
+        aws ecs update-service --cluster vetterati-prod-cluster --service vetterati-prod-analytics-service --force-new-deployment
+        aws ecs update-service --cluster vetterati-prod-cluster --service vetterati-prod-api-gateway --force-new-deployment
+        aws ecs update-service --cluster vetterati-prod-cluster --service vetterati-prod-frontend --force-new-deployment

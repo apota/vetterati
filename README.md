@@ -1,2 +1,2 @@
 # vetterati
-Vetterati - A one of a kind Applicant Tracking System. Tell us your dream candidate and let Vetterati do the rest
+Vetterati - A one of a kind Applicant Tracking System. The Illuminati of the candidate/applicant vetting systems. 

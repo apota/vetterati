@@ -118,7 +118,7 @@ export interface VerifyResetTokenRequest {
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/auth/email-login', credentials);
+    const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/api/v1/auth/email-login', credentials);
     const loginData = response.data.data;
     if (loginData.refresh_token) {
       localStorage.setItem('refresh_token', loginData.refresh_token);
@@ -127,7 +127,7 @@ export const authService = {
   },
 
   register: async (userData: RegisterRequest): Promise<LoginResponse> => {
-    const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/auth/register', userData);
+    const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/api/v1/auth/register', userData);
     const loginData = response.data.data;
     if (loginData.refresh_token) {
       localStorage.setItem('refresh_token', loginData.refresh_token);
@@ -136,26 +136,26 @@ export const authService = {
   },
 
   logout: async (): Promise<void> => {
-    await api.post('/auth/logout');
+    await api.post('/api/v1/auth/logout');
   },
 
   refresh: async (request: RefreshRequest): Promise<LoginResponse> => {
-    const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/auth/refresh', request);
+    const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/api/v1/auth/refresh', request);
     return response.data.data;
   },
 
   getUserInfo: async (): Promise<User> => {
-    const response: AxiosResponse<{ data: User }> = await api.get('/auth/me');
+    const response: AxiosResponse<{ data: User }> = await api.get('/api/v1/auth/me');
     return response.data.data;
   },
 
   forgotPassword: async (request: ForgotPasswordRequest): Promise<void> => {
-    await api.post('/auth/forgot-password', request);
+    await api.post('/api/v1/auth/forgot-password', request);
   },
 
   verifyResetToken: async (request: VerifyResetTokenRequest): Promise<boolean> => {
     try {
-      await api.post('/auth/verify-reset-token', request);
+      await api.post('/api/v1/auth/verify-reset-token', request);
       return true;
     } catch (error) {
       return false;
@@ -163,7 +163,7 @@ export const authService = {
   },
 
   resetPassword: async (request: ResetPasswordRequest): Promise<void> => {
-    await api.post('/auth/reset-password', request);
+    await api.post('/api/v1/auth/reset-password', request);
   },
 };
 

@@ -24,7 +24,7 @@ interface AuthState {
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
-  register: (userData: RegisterData) => Promise<void>;
+  register: (userData: RegisterData) => Promise<any>;
   logout: () => void;
   refreshToken: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
@@ -146,16 +146,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const register = async (userData: RegisterData) => {
-    dispatch({ type: 'LOGIN_START' });
     try {
       const response = await authService.register(userData);
-      localStorage.setItem('token', response.access_token);
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: { user: response.user, token: response.access_token },
-      });
+      // Don't auto-login after registration - let user manually log in with pre-filled form
+      return response;
     } catch (error) {
-      dispatch({ type: 'LOGIN_FAILURE' });
       throw error;
     }
   };

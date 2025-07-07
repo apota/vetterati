@@ -11,6 +11,11 @@ import {
   Paper,
   Link,
   MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../contexts/AuthContext';
@@ -29,6 +34,8 @@ interface RegisterFormData {
 const RegistrationPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [registeredCredentials, setRegisteredCredentials] = useState<{ email: string; password: string } | null>(null);
   const { register: registerUser } = useAuth();
   const navigate = useNavigate();
   
@@ -39,9 +46,15 @@ const RegistrationPage: React.FC = () => {
     formState: { errors },
   } = useForm<RegisterFormData>();
 
+  // Add debugging for form errors
+  const onError = (errors: any) => {
+    console.log('Form validation errors:', errors);
+  };
+
   const password = watch('password');
 
   const onSubmit = async (data: RegisterFormData) => {
+    console.log('Form submitted with data:', data);
     setIsLoading(true);
     setError(null);
     
@@ -54,13 +67,27 @@ const RegistrationPage: React.FC = () => {
         role: data.role,
         company: data.company,
       });
-      // Registration successful, redirect to dashboard
-      navigate('/dashboard');
+      // Registration successful, show confirmation dialog
+      setRegisteredCredentials({ email: data.email, password: data.password });
+      setShowSuccessDialog(true);
     } catch (err: any) {
+      console.error('Registration error:', err);
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSuccessDialogClose = () => {
+    setShowSuccessDialog(false);
+    // Navigate to login page with pre-filled credentials
+    navigate('/login', { 
+      state: { 
+        email: registeredCredentials?.email, 
+        password: registeredCredentials?.password,
+        fromRegistration: true 
+      } 
+    });
   };
 
   const userRoles = [
@@ -106,7 +133,7 @@ const RegistrationPage: React.FC = () => {
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, width: '100%' }}>
+          <Box component="form" onSubmit={handleSubmit(onSubmit, onError)} sx={{ mt: 1, width: '100%' }}>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <TextField
                 margin="normal"
@@ -266,6 +293,29 @@ const RegistrationPage: React.FC = () => {
             </Box>
           </Box>
         </Paper>
+
+        {/* Success Dialog */}
+        <Dialog
+          open={showSuccessDialog}
+          onClose={handleSuccessDialogClose}
+          aria-labelledby="success-dialog-title"
+          aria-describedby="success-dialog-description"
+        >
+          <DialogTitle id="success-dialog-title">
+            Account Created Successfully!
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="success-dialog-description">
+              Your account has been created successfully. You will now be redirected to the login page 
+              with your credentials pre-filled. Please sign in to access your dashboard.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleSuccessDialogClose} variant="contained" autoFocus>
+              Continue to Login
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Container>
   );

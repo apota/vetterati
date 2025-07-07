@@ -50,16 +50,50 @@ services:
     networks:
       - ats-network
 
-  # DynamoDB Local
-  dynamodb:
-    image: amazon/dynamodb-local
-    command: -jar DynamoDBLocal.jar -sharedDb -dbPath ./data
+  # LocalStack - Local AWS Cloud Stack
+  localstack:
+    image: localstack/localstack:latest
     ports:
-      - "8000:8000"
-    volumes:
-      - dynamodb_data:/home/dynamodblocal/data
+      - "4566:4566"  # LocalStack Gateway
+    environment:
+      - DEBUG=1
+      - SERVICES=s3,dynamodb,sqs,sns
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
     networks:
       - ats-network
+
+  # LocalStack Resource Initializer
+  localstack-init:
+    image: amazon/aws-cli:latest
+    depends_on:
+      localstack:
+        condition: service_healthy
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ENDPOINT_URL=http://localstack:4566
+    volumes:
+      - "./scripts/localstack:/scripts"
+    networks:
+      - ats-network
+    command: >
+      sh -c "
+        echo 'Waiting for LocalStack to be ready...' &&
+        sleep 10 &&
+        echo 'Creating S3 bucket...' &&
+        aws --endpoint-url=http://localstack:4566 s3 mb s3://vetterati-resumes &&
+        echo 'Creating DynamoDB tables...' &&
+        aws --endpoint-url=http://localstack:4566 dynamodb create-table --table-name analytics-events --attribute-definitions AttributeName=id,AttributeType=S AttributeName=timestamp,AttributeType=N --key-schema AttributeName=id,KeyType=HASH AttributeName=timestamp,KeyType=RANGE --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 &&
+        aws --endpoint-url=http://localstack:4566 dynamodb create-table --table-name user-analytics --attribute-definitions AttributeName=userId,AttributeType=S AttributeName=date,AttributeType=S --key-schema AttributeName=userId,KeyType=HASH AttributeName=date,KeyType=RANGE --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 &&
+        echo 'Creating SNS topic...' &&
+        aws --endpoint-url=http://localstack:4566 sns create-topic --name vetterati-notifications &&
+        echo 'Creating SQS queue...' &&
+        aws --endpoint-url=http://localstack:4566 sqs create-queue --queue-name vetterati-notifications &&
+        echo 'AWS resources initialized successfully!'
+      "
 
   # Authentication Service (C#)
   auth-service:
@@ -67,9 +101,10 @@ services:
       context: .
       dockerfile: ./src/services/auth-service/Dockerfile
     ports:
-      - "5001:80"
+      - "5001:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=vetterati_ats;Username=ats_user;Password=ats_password
       - Redis__ConnectionString=redis:6379
     depends_on:
@@ -89,10 +124,16 @@ services:
       - DATABASE_URL=postgresql://ats_user:ats_password@postgres:5432/vetterati_ats
       - REDIS_URL=redis://redis:6379
       - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - S3_BUCKET_NAME=vetterati-resumes
     depends_on:
       - postgres
       - redis
       - elasticsearch
+      - localstack
     volumes:
       - ./temp/uploads:/app/uploads
     networks:
@@ -142,11 +183,15 @@ services:
       - "8003:8000"
     environment:
       - DATABASE_URL=postgresql://ats_user:ats_password@postgres:5432/vetterati_ats
-      - DYNAMODB_ENDPOINT=http://dynamodb:8000
+      - DYNAMODB_ENDPOINT=http://localstack:4566
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     depends_on:
       - postgres
-      - dynamodb
+      - localstack
       - elasticsearch
     networks:
       - ats-network
@@ -198,10 +243,17 @@ services:
       - DATABASE_URL=postgresql://ats_user:ats_password@postgres:5432/vetterati_ats
       - REDIS_URL=redis://redis:6379
       - RABBITMQ_URL=amqp://ats_user:ats_password@rabbitmq:5672
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - SNS_TOPIC_ARN=arn:aws:sns:us-east-1:000000000000:vetterati-notifications
+      - SQS_QUEUE_URL=http://localstack:4566/000000000000/vetterati-notifications
     depends_on:
       - postgres
       - redis
       - rabbitmq
+      - localstack
     networks:
       - ats-network
 
@@ -211,9 +263,10 @@ services:
       context: .
       dockerfile: ./src/services/api-gateway/Dockerfile
     ports:
-      - "5000:80"
+      - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
       - Services__AuthService=http://auth-service
       - Services__ResumeService=http://resume-service:8000
       - Services__AhpService=http://ahp-service
@@ -251,7 +304,6 @@ services:
 volumes:
   postgres_data:
   elasticsearch_data:
-  dynamodb_data:
 
 networks:
   ats-network:

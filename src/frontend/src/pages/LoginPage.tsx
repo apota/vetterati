@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Card,
@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface LoginFormData {
   email: string;
@@ -23,14 +23,29 @@ interface LoginFormData {
 const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoginFormData>();
+
+  // Handle pre-filled credentials from registration
+  useEffect(() => {
+    const state = location.state as any;
+    if (state?.fromRegistration && state?.email && state?.password) {
+      setValue('email', state.email);
+      setValue('password', state.password);
+      setShowSuccessMessage(true);
+      // Clear the navigation state to prevent showing the message on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, setValue]);
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
@@ -74,6 +89,12 @@ const LoginPage: React.FC = () => {
           <Typography component="h2" variant="h6" color="text.secondary" gutterBottom>
             Sign in to your account
           </Typography>
+          
+          {showSuccessMessage && (
+            <Alert severity="success" sx={{ width: '100%', mb: 2 }}>
+              Account created successfully! Your credentials have been pre-filled below.
+            </Alert>
+          )}
           
           {error && (
             <Alert severity="error" sx={{ width: '100%', mb: 2 }}>

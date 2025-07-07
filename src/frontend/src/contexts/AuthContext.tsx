@@ -27,6 +27,9 @@ interface AuthContextType extends AuthState {
   register: (userData: RegisterData) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (token: string, newPassword: string, confirmPassword: string) => Promise<void>;
+  verifyResetToken: (token: string) => Promise<boolean>;
 }
 
 interface RegisterData {
@@ -181,12 +184,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const forgotPassword = async (email: string) => {
+    await authService.forgotPassword({ email });
+  };
+
+  const resetPassword = async (token: string, newPassword: string, confirmPassword: string) => {
+    await authService.resetPassword({ token, newPassword, confirmPassword });
+  };
+
+  const verifyResetToken = async (token: string): Promise<boolean> => {
+    return await authService.verifyResetToken({ token });
+  };
+
   const value: AuthContextType = {
     ...state,
     login,
     register,
     logout,
     refreshToken,
+    forgotPassword,
+    resetPassword,
+    verifyResetToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

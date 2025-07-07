@@ -28,6 +28,16 @@ public class User : BaseEntity
     public Dictionary<string, object> Preferences { get; set; } = new();
 }
 
+public class PasswordResetToken : BaseEntity
+{
+    public Guid UserId { get; set; }
+    public User User { get; set; } = null!;
+    public string Token { get; set; } = string.Empty;
+    public DateTime ExpiresAt { get; set; }
+    public bool IsUsed { get; set; } = false;
+    public DateTime? UsedAt { get; set; }
+}
+
 public class Organization : BaseEntity
 {
     public string Name { get; set; } = string.Empty;

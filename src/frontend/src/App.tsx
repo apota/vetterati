@@ -4,6 +4,8 @@ import { Box } from '@mui/material';
 import { useAuth } from './contexts/AuthContext';
 import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import JobsPage from './pages/JobsPage';
 import CandidatesPage from './pages/CandidatesPage';
@@ -24,6 +26,8 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
@@ -40,6 +44,8 @@ const App: React.FC = () => {
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/login" element={<Navigate to="/dashboard" replace />} />
         <Route path="/register" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/forgot-password" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/reset-password" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Layout>

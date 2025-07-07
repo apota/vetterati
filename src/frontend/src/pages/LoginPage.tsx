@@ -129,6 +129,15 @@ const LoginPage: React.FC = () => {
             </Button>
 
             <Box sx={{ textAlign: 'center', mt: 2 }}>
+              <Link
+                component="button"
+                variant="body2"
+                onClick={() => navigate('/forgot-password')}
+                sx={{ textDecoration: 'none', mb: 2, display: 'block' }}
+              >
+                Forgot your password?
+              </Link>
+              
               <Typography variant="body2">
                 Don't have an account?{' '}
                 <Link

@@ -35,6 +35,9 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(provider =>
 // Add JWT Service
 builder.Services.AddScoped<IJwtService, JwtService>();
 
+// Add Email Service
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 // Add JWT Authentication
 var jwtSecretKey = builder.Configuration["Jwt:SecretKey"] ?? "your-super-secret-key-that-is-at-least-32-characters-long";
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -11,6 +11,7 @@ public class AuthDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<UserOrganization> UserOrganizations { get; set; }
+    public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -18,6 +19,7 @@ public class AuthDbContext : DbContext
         modelBuilder.Entity<User>().ToTable("users", "ats_core");
         modelBuilder.Entity<Organization>().ToTable("organizations", "ats_core");
         modelBuilder.Entity<UserOrganization>().ToTable("user_organizations", "ats_core");
+        modelBuilder.Entity<PasswordResetToken>().ToTable("password_reset_tokens", "ats_core");
 
         // Configure User entity
         modelBuilder.Entity<User>(entity =>
@@ -81,6 +83,25 @@ public class AuthDbContext : DbContext
             entity.HasOne<Organization>()
                 .WithMany()
                 .HasForeignKey(e => e.OrganizationId);
+        });
+
+        // Configure PasswordResetToken entity
+        modelBuilder.Entity<PasswordResetToken>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Token).IsRequired().HasMaxLength(255);
+            entity.Property(e => e.ExpiresAt).IsRequired();
+            entity.Property(e => e.IsUsed).HasDefaultValue(false);
+            
+            entity.HasIndex(e => e.Token).IsUnique();
+            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => e.ExpiresAt);
+            
+            // Foreign key relationship
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         base.OnModelCreating(modelBuilder);

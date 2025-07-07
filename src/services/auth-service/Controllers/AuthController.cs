@@ -6,6 +6,7 @@ using Vetterati.Shared.Models;
 using StackExchange.Redis;
 using System.Text.Json;
 using BCrypt.Net;
+using System.Security.Cryptography;
 
 namespace AuthService.Controllers;
 
@@ -17,17 +18,20 @@ public class AuthController : ControllerBase
     private readonly IJwtService _jwtService;
     private readonly IDatabase _redis;
     private readonly ILogger<AuthController> _logger;
+    private readonly IEmailService _emailService;
 
     public AuthController(
         AuthDbContext context, 
         IJwtService jwtService, 
         IConnectionMultiplexer redis,
-        ILogger<AuthController> logger)
+        ILogger<AuthController> logger,
+        IEmailService emailService)
     {
         _context = context;
         _jwtService = jwtService;
         _redis = redis.GetDatabase();
         _logger = logger;
+        _emailService = emailService;
     }
 
     [HttpPost("login")]
@@ -391,5 +395,174 @@ public class AuthController : ControllerBase
                 Message = "An error occurred during login" 
             });
         }
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<ActionResult<ApiResponse<object>>> ForgotPassword([FromBody] ForgotPasswordRequest request)
+    {
+        try
+        {
+            // Find user by email
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == request.Email && u.IsActive);
+
+            // Always return success to prevent email enumeration attacks
+            // but only send email if user exists
+            if (user != null)
+            {
+                // Generate secure reset token
+                var resetToken = GenerateSecureToken();
+                
+                // Store reset token in database
+                var passwordResetToken = new PasswordResetToken
+                {
+                    UserId = user.Id,
+                    Token = resetToken,
+                    ExpiresAt = DateTime.UtcNow.AddHours(1), // 1 hour expiry
+                    IsUsed = false
+                };
+
+                _context.PasswordResetTokens.Add(passwordResetToken);
+                await _context.SaveChangesAsync();
+
+                // Send reset email
+                await _emailService.SendPasswordResetEmailAsync(user.Email, resetToken, user.Name);
+            }
+
+            return Ok(new ApiResponse<object> 
+            { 
+                Data = new { message = "If an account with that email exists, we've sent a password reset link." } 
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during forgot password request");
+            return StatusCode(500, new ApiError 
+            { 
+                Code = "INTERNAL_ERROR", 
+                Message = "An error occurred while processing your request" 
+            });
+        }
+    }
+
+    [HttpPost("verify-reset-token")]
+    public async Task<ActionResult<ApiResponse<object>>> VerifyResetToken([FromBody] VerifyResetTokenRequest request)
+    {
+        try
+        {
+            var resetToken = await _context.PasswordResetTokens
+                .Include(rt => rt.User)
+                .FirstOrDefaultAsync(rt => rt.Token == request.Token && 
+                                          !rt.IsUsed && 
+                                          rt.ExpiresAt > DateTime.UtcNow);
+
+            if (resetToken == null)
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "INVALID_TOKEN", 
+                    Message = "Invalid or expired reset token" 
+                });
+            }
+
+            return Ok(new ApiResponse<object> 
+            { 
+                Data = new { message = "Token is valid" } 
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during token verification");
+            return StatusCode(500, new ApiError 
+            { 
+                Code = "INTERNAL_ERROR", 
+                Message = "An error occurred while verifying the token" 
+            });
+        }
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<ActionResult<ApiResponse<object>>> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        try
+        {
+            // Validate passwords match
+            if (request.NewPassword != request.ConfirmPassword)
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "PASSWORD_MISMATCH", 
+                    Message = "Passwords do not match" 
+                });
+            }
+
+            // Validate password strength
+            if (request.NewPassword.Length < 8)
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "WEAK_PASSWORD", 
+                    Message = "Password must be at least 8 characters long" 
+                });
+            }
+
+            // Find and validate reset token
+            var resetToken = await _context.PasswordResetTokens
+                .Include(rt => rt.User)
+                .FirstOrDefaultAsync(rt => rt.Token == request.Token && 
+                                          !rt.IsUsed && 
+                                          rt.ExpiresAt > DateTime.UtcNow);
+
+            if (resetToken == null)
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "INVALID_TOKEN", 
+                    Message = "Invalid or expired reset token" 
+                });
+            }
+
+            // Update user's password
+            var user = resetToken.User;
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            user.UpdatedAt = DateTime.UtcNow;
+
+            // Mark token as used
+            resetToken.IsUsed = true;
+            resetToken.UsedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            // Invalidate all existing refresh tokens for security
+            var keys = _redis.Multiplexer.GetServer(_redis.Multiplexer.GetEndPoints().First())
+                .Keys(pattern: $"refresh_token:{user.Id}");
+            
+            foreach (var key in keys)
+            {
+                await _redis.KeyDeleteAsync(key);
+            }
+
+            return Ok(new ApiResponse<object> 
+            { 
+                Data = new { message = "Password has been reset successfully" } 
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during password reset");
+            return StatusCode(500, new ApiError 
+            { 
+                Code = "INTERNAL_ERROR", 
+                Message = "An error occurred while resetting your password" 
+            });
+        }
+    }
+
+    private string GenerateSecureToken()
+    {
+        using var rng = RandomNumberGenerator.Create();
+        var bytes = new byte[32];
+        rng.GetBytes(bytes);
+        return Convert.ToBase64String(bytes).Replace("+", "-").Replace("/", "_").Replace("=", "");
     }
 }

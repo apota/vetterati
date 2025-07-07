@@ -102,6 +102,20 @@ export interface User {
   updatedAt: string;
 }
 
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface VerifyResetTokenRequest {
+  token: string;
+}
+
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/auth/email-login', credentials);
@@ -133,6 +147,23 @@ export const authService = {
   getUserInfo: async (): Promise<User> => {
     const response: AxiosResponse<{ data: User }> = await api.get('/auth/me');
     return response.data.data;
+  },
+
+  forgotPassword: async (request: ForgotPasswordRequest): Promise<void> => {
+    await api.post('/auth/forgot-password', request);
+  },
+
+  verifyResetToken: async (request: VerifyResetTokenRequest): Promise<boolean> => {
+    try {
+      await api.post('/auth/verify-reset-token', request);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  },
+
+  resetPassword: async (request: ResetPasswordRequest): Promise<void> => {
+    await api.post('/auth/reset-password', request);
   },
 };
 

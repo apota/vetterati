@@ -89,6 +89,23 @@ public class EmailLoginRequest
     public string Password { get; set; } = string.Empty;
 }
 
+public class ForgotPasswordRequest
+{
+    public string Email { get; set; } = string.Empty;
+}
+
+public class ResetPasswordRequest
+{
+    public string Token { get; set; } = string.Empty;
+    public string NewPassword { get; set; } = string.Empty;
+    public string ConfirmPassword { get; set; } = string.Empty;
+}
+
+public class VerifyResetTokenRequest
+{
+    public string Token { get; set; } = string.Empty;
+}
+
 public class CreateJobRequest
 {
     public string Title { get; set; } = string.Empty;

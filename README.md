@@ -7,6 +7,12 @@
 
 Vetterati is a cloud-native, modular Applicant Tracking System (ATS) designed to streamline and automate the hiring process. Built with modern microservices architecture, it leverages AI for intelligent candidate matching using the Analytic Hierarchy Process (AHP), provides robust analytics, and supports scalable workflow automation.
 
+## Target Audience
+
+  Current popular ATS solutions such as Workday - SUCK!, especially for applicants. It's 2025
+  we should not be forcing applicants to re-enter data they have already provided in their resume.
+  Plus the filtering/matching algorithms are very "inaccurate" in all the commercial ATS apps.
+
 ## ✨ Key Features
 
 - **🔐 Modern Authentication**: JWT-based authentication with role-based access control

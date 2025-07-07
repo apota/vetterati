@@ -11,6 +11,7 @@ public class AhpDbContext : DbContext
 
     public DbSet<JobProfile> JobProfiles { get; set; }
     public DbSet<Candidate> Candidates { get; set; }
+    public DbSet<CandidateProfile> CandidateProfiles { get; set; }
     public DbSet<AhpCriterion> AhpCriteria { get; set; }
     public DbSet<AhpComparison> AhpComparisons { get; set; }
     public DbSet<CandidateScore> CandidateScores { get; set; }
@@ -33,6 +34,7 @@ public class AhpDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Value).HasPrecision(10, 6);
+            entity.Property(e => e.ComparisonValue).HasPrecision(10, 6);
             entity.HasIndex(e => new { e.JobProfileId, e.CriterionAId, e.CriterionBId }).IsUnique();
         });
 

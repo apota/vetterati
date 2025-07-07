@@ -132,8 +132,13 @@ public class AhpComparison : BaseEntity
     public Guid CriterionAId { get; set; }
     public Guid CriterionBId { get; set; }
     public decimal Value { get; set; }
+    public decimal ComparisonValue { get; set; }
     public string? Justification { get; set; }
     public Guid ComparedBy { get; set; }
+    
+    // Navigation properties
+    public AhpCriterion? CriterionA { get; set; }
+    public AhpCriterion? CriterionB { get; set; }
 }
 
 public class CandidateScore : BaseEntity
@@ -145,4 +150,17 @@ public class CandidateScore : BaseEntity
     public string? ScoreBreakdown { get; set; } // JSON serialized detailed breakdown
     public string? Methodology { get; set; }
     public DateTime CalculatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime ScoredAt { get; set; } = DateTime.UtcNow;
+}
+
+public class CandidateProfile : BaseEntity
+{
+    public Guid CandidateId { get; set; }
+    public string? ProfileData { get; set; } // JSON serialized profile data
+    public string? Skills { get; set; } // JSON serialized skills
+    public string? Experience { get; set; } // JSON serialized experience
+    public decimal? ExperienceYears { get; set; }
+    public string? Education { get; set; } // JSON serialized education
+    public string? Certifications { get; set; } // JSON serialized certifications
+    public DateTime? LastUpdated { get; set; }
 }

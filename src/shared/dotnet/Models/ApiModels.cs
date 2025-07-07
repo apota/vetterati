@@ -132,6 +132,7 @@ public class CalculateScoreRequest
 
 public class CandidateScoreResponse
 {
+    public Guid Id { get; set; }
     public Guid CandidateId { get; set; }
     public Guid JobProfileId { get; set; }
     public decimal OverallScore { get; set; }
@@ -139,6 +140,7 @@ public class CandidateScoreResponse
     public Dictionary<string, object> ScoreBreakdown { get; set; } = new();
     public string Methodology { get; set; } = string.Empty;
     public DateTime CalculatedAt { get; set; }
+    public DateTime ScoredAt { get; set; }
     public Dictionary<string, object>? Metadata { get; set; }
 }
 
@@ -186,7 +188,9 @@ public class ScoreAllCandidatesResponse
 {
     public Guid JobProfileId { get; set; }
     public int CandidatesScored { get; set; }
+    public decimal AverageScore { get; set; }
     public DateTime ScoredAt { get; set; } = DateTime.UtcNow;
+    public DateTime ProcessedAt { get; set; } = DateTime.UtcNow;
     public Dictionary<string, object>? Statistics { get; set; }
 }
 

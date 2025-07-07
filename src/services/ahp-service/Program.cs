@@ -45,9 +45,7 @@ builder.Services.AddCors(options =>
 });
 
 // Health checks
-builder.Services.AddHealthChecks()
-    .AddDbContextCheck<AhpDbContext>()
-    .AddRedis(builder.Configuration.GetConnectionString("Redis") ?? "localhost");
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 

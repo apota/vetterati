@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Vetterati.AhpService.Services;
 using Vetterati.Shared.Models;
+using System.Text.Json;
 
 namespace Vetterati.AhpService.Controllers;
 
@@ -41,8 +42,12 @@ public class ScoringController : ControllerBase
                 JobProfileId = score.JobProfileId,
                 CandidateId = score.CandidateId,
                 OverallScore = score.OverallScore,
-                ScoreBreakdown = score.ScoreBreakdown,
-                ScoredAt = score.ScoredAt
+                ScoreBreakdown = string.IsNullOrEmpty(score.ScoreBreakdown) 
+                    ? new Dictionary<string, object>() 
+                    : JsonSerializer.Deserialize<Dictionary<string, object>>(score.ScoreBreakdown) ?? new Dictionary<string, object>(),
+                ScoredAt = score.ScoredAt,
+                CalculatedAt = score.CalculatedAt,
+                Methodology = score.Methodology ?? string.Empty
             };
 
             return Ok(response);
@@ -80,8 +85,12 @@ public class ScoringController : ControllerBase
                 JobProfileId = score.JobProfileId,
                 CandidateId = score.CandidateId,
                 OverallScore = score.OverallScore,
-                ScoreBreakdown = score.ScoreBreakdown,
-                ScoredAt = score.ScoredAt
+                ScoreBreakdown = string.IsNullOrEmpty(score.ScoreBreakdown) 
+                    ? new Dictionary<string, object>() 
+                    : JsonSerializer.Deserialize<Dictionary<string, object>>(score.ScoreBreakdown) ?? new Dictionary<string, object>(),
+                ScoredAt = score.ScoredAt,
+                CalculatedAt = score.CalculatedAt,
+                Methodology = score.Methodology ?? string.Empty
             };
 
             return Ok(response);
@@ -114,8 +123,12 @@ public class ScoringController : ControllerBase
                 JobProfileId = score.JobProfileId,
                 CandidateId = score.CandidateId,
                 OverallScore = score.OverallScore,
-                ScoreBreakdown = score.ScoreBreakdown,
-                ScoredAt = score.ScoredAt
+                ScoreBreakdown = string.IsNullOrEmpty(score.ScoreBreakdown) 
+                    ? new Dictionary<string, object>() 
+                    : JsonSerializer.Deserialize<Dictionary<string, object>>(score.ScoreBreakdown) ?? new Dictionary<string, object>(),
+                ScoredAt = score.ScoredAt,
+                CalculatedAt = score.CalculatedAt,
+                Methodology = score.Methodology ?? string.Empty
             });
 
             return Ok(response);

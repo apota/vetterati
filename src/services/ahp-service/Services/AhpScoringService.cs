@@ -1,5 +1,7 @@
 using MathNet.Numerics.LinearAlgebra;
 using Vetterati.Shared.Models;
+using System.Linq;
+using Vetterati.AhpService.Data;
 
 namespace Vetterati.AhpService.Services;
 
@@ -72,12 +74,7 @@ public class AhpScoringService : IAhpScoringService
                 var score = await CalculateCriterionScoreAsync(criterion, candidateId);
                 var weight = weights.ContainsKey(criterion.Name) ? weights[criterion.Name] : 0;
                 
-                detailedScores[criterion.Name] = new
-                {
-                    RawScore = score,
-                    Weight = weight,
-                    WeightedScore = score * weight
-                };
+                detailedScores[criterion.Name] = score * weight; // Store the weighted score
             }
 
             return detailedScores;
@@ -97,20 +94,29 @@ public class AhpScoringService : IAhpScoringService
             var comparisons = await _jobProfileService.GetAhpComparisonsAsync(jobProfileId);
             var criteria = await _jobProfileService.GetAhpCriteriaAsync(jobProfileId);
             
-            var n = criteria.Count;
+            var comparisonsList = comparisons.ToList();
+            var criteriaList = criteria.ToList();
+            
+            var n = criteriaList.Count;
             var matrix = Matrix<double>.Build.Dense(n, n, 1.0);
 
             // Build comparison matrix
-            var criteriaList = criteria.ToList();
             for (int i = 0; i < n; i++)
             {
                 for (int j = 0; j < n; j++)
                 {
                     if (i != j)
                     {
-                        var comparison = comparisons.FirstOrDefault(c =>
-                            (c.CriterionAId == criteriaList[i].Id && c.CriterionBId == criteriaList[j].Id) ||
-                            (c.CriterionAId == criteriaList[j].Id && c.CriterionBId == criteriaList[i].Id));
+                        AhpComparison? comparison = null;
+                        foreach (var c in comparisonsList)
+                        {
+                            if ((c.CriterionAId == criteriaList[i].Id && c.CriterionBId == criteriaList[j].Id) ||
+                                (c.CriterionAId == criteriaList[j].Id && c.CriterionBId == criteriaList[i].Id))
+                            {
+                                comparison = c;
+                                break;
+                            }
+                        }
 
                         if (comparison != null)
                         {
@@ -161,6 +167,7 @@ public class AhpScoringService : IAhpScoringService
         {
             var matrix = await CalculateConsistencyRatioAsync(jobProfileId);
             var criteria = await _jobProfileService.GetAhpCriteriaAsync(jobProfileId);
+            var criteriaList = criteria.ToList();
             
             // Calculate principal eigenvector (weights)
             var eigenDecomposition = matrix.Evd();
@@ -183,13 +190,22 @@ public class AhpScoringService : IAhpScoringService
             var principalEigenVector = eigenVectors.Column(maxEigenValueIndex);
             
             // Normalize weights
-            var weightSum = principalEigenVector.Sum(v => Math.Abs(v.Real));
+            var weightSum = 0.0;
+            var vectorLength = principalEigenVector.Count;
+            for (int i = 0; i < vectorLength; i++)
+            {
+                var complexValue = principalEigenVector[i];
+                double realValue = ((System.Numerics.Complex)complexValue).Real;
+                weightSum += System.Math.Abs(realValue);
+            }
             var weights = new Dictionary<string, decimal>();
-            var criteriaList = criteria.ToList();
             
             for (int i = 0; i < criteriaList.Count; i++)
             {
-                weights[criteriaList[i].Name] = (decimal)(Math.Abs(principalEigenVector[i].Real) / weightSum);
+                var eigenValueComplex = principalEigenVector[i];
+                double eigenValue = ((System.Numerics.Complex)eigenValueComplex).Real;
+                var absEigenValue = System.Math.Abs(eigenValue);
+                weights[criteriaList[i].Name] = (decimal)(absEigenValue / weightSum);
             }
             
             return weights;
@@ -280,7 +296,14 @@ public class AhpScoringService : IAhpScoringService
         var eigenValues = eigenDecomposition.EigenValues;
         
         // Find maximum eigenvalue
-        var maxEigenValue = eigenValues.Max(e => e.Real);
+        double maxEigenValue = 0.0;
+        foreach (var eigenValue in eigenValues)
+        {
+            if (eigenValue.Real > maxEigenValue)
+            {
+                maxEigenValue = eigenValue.Real;
+            }
+        }
         
         // Calculate Consistency Index
         var consistencyIndex = (maxEigenValue - n) / (n - 1);

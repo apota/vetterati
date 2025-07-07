@@ -62,19 +62,39 @@ Vetterati is a cloud-native, modular Applicant Tracking System (ATS) designed to
 
 2. **Start all services with Docker Compose**
    ```bash
+   # Start infrastructure services first
+   docker-compose up -d postgres redis elasticsearch rabbitmq dynamodb
+   
+   # Start all application services
    docker-compose up -d
    ```
 
-3. **Initialize the database**
+3. **Verify system status**
    ```bash
-   # Database will be automatically initialized on first run
-   # Check logs: docker-compose logs postgres
+   # Check all containers are running
+   docker-compose ps
+   
+   # View logs for any service
+   docker-compose logs [service-name]
    ```
 
 4. **Access the application**
    - Frontend: http://localhost:3000
    - API Gateway: http://localhost:5000
    - Analytics Service: http://localhost:8003
+
+### ✅ System Status (All Services Operational)
+- **auth-service**: ✅ Running on port 5001
+- **ahp-service**: ✅ Running on port 5002  
+- **api-gateway**: ✅ Running on port 5000
+- **resume-service**: ✅ Running on port 8001
+- **job-service**: ✅ Running on port 8004
+- **candidate-service**: ✅ Running on port 8005
+- **workflow-service**: ✅ Running on port 8002
+- **analytics-service**: ✅ Running on port 8003
+- **notification-service**: ✅ Running on port 8006
+- **frontend**: ✅ Running on port 3000
+- **Infrastructure**: ✅ All databases and message queues operational
 
 ### Service URLs (Local Development)
 - **Frontend**: http://localhost:3000

@@ -15,6 +15,11 @@ public class User : BaseEntity
 {
     public string Email { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? Company { get; set; }
+    [JsonIgnore]
+    public string? PasswordHash { get; set; }
     public string? SsoProvider { get; set; }
     public string? SsoId { get; set; }
     public List<string> Roles { get; set; } = new();

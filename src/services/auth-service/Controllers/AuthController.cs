@@ -5,6 +5,7 @@ using AuthService.Services;
 using Vetterati.Shared.Models;
 using StackExchange.Redis;
 using System.Text.Json;
+using BCrypt.Net;
 
 namespace AuthService.Controllers;
 
@@ -235,6 +236,159 @@ public class AuthController : ControllerBase
             { 
                 Code = "INTERNAL_ERROR", 
                 Message = "An error occurred while fetching user" 
+            });
+        }
+    }
+
+    [HttpPost("register")]
+    public async Task<ActionResult<ApiResponse<LoginResponse>>> Register([FromBody] RegisterRequest request)
+    {
+        try
+        {
+            // Validate email doesn't already exist
+            var existingUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == request.Email);
+            
+            if (existingUser != null)
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "EMAIL_EXISTS", 
+                    Message = "A user with this email already exists" 
+                });
+            }
+
+            // Create new user
+            var user = new User
+            {
+                Email = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Name = $"{request.FirstName} {request.LastName}",
+                Company = request.Company,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                Roles = new List<string> { request.Role },
+                IsActive = true
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            // Create or find organization
+            var organization = await _context.Organizations
+                .FirstOrDefaultAsync(o => o.Name == request.Company);
+            
+            if (organization == null)
+            {
+                organization = new Organization
+                {
+                    Name = request.Company,
+                    Settings = new Dictionary<string, object>()
+                };
+                _context.Organizations.Add(organization);
+                await _context.SaveChangesAsync();
+            }
+
+            // Add user to organization
+            var userOrg = new UserOrganization
+            {
+                UserId = user.Id,
+                OrganizationId = organization.Id,
+                Role = request.Role
+            };
+            _context.UserOrganizations.Add(userOrg);
+            await _context.SaveChangesAsync();
+
+            // Generate tokens
+            var accessToken = _jwtService.GenerateAccessToken(user);
+            var refreshToken = _jwtService.GenerateRefreshToken();
+
+            // Store refresh token in Redis
+            await _redis.StringSetAsync($"refresh_token:{user.Id}", refreshToken, TimeSpan.FromDays(30));
+
+            var response = new ApiResponse<LoginResponse>
+            {
+                Data = new LoginResponse
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken,
+                    ExpiresIn = 3600,
+                    User = user
+                }
+            };
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during registration");
+            return StatusCode(500, new ApiError 
+            { 
+                Code = "INTERNAL_ERROR", 
+                Message = "An error occurred during registration" 
+            });
+        }
+    }
+
+    [HttpPost("email-login")]
+    public async Task<ActionResult<ApiResponse<LoginResponse>>> EmailLogin([FromBody] EmailLoginRequest request)
+    {
+        try
+        {
+            // Find user by email
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == request.Email && u.IsActive);
+
+            if (user == null || user.PasswordHash == null)
+            {
+                return Unauthorized(new ApiError 
+                { 
+                    Code = "INVALID_CREDENTIALS", 
+                    Message = "Invalid email or password" 
+                });
+            }
+
+            // Verify password
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            {
+                return Unauthorized(new ApiError 
+                { 
+                    Code = "INVALID_CREDENTIALS", 
+                    Message = "Invalid email or password" 
+                });
+            }
+
+            // Update last login
+            user.LastLoginAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            // Generate tokens
+            var accessToken = _jwtService.GenerateAccessToken(user);
+            var refreshToken = _jwtService.GenerateRefreshToken();
+
+            // Store refresh token in Redis
+            await _redis.StringSetAsync($"refresh_token:{user.Id}", refreshToken, TimeSpan.FromDays(30));
+
+            var response = new ApiResponse<LoginResponse>
+            {
+                Data = new LoginResponse
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken,
+                    ExpiresIn = 3600,
+                    User = user
+                }
+            };
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during email login");
+            return StatusCode(500, new ApiError 
+            { 
+                Code = "INTERNAL_ERROR", 
+                Message = "An error occurred during login" 
             });
         }
     }

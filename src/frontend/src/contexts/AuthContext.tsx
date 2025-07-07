@@ -5,7 +5,14 @@ interface User {
   id: string;
   email: string;
   name: string;
-  role: string;
+  firstName?: string;
+  lastName?: string;
+  company?: string;
+  roles: string[];
+  isActive: boolean;
+  lastLoginAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface AuthState {
@@ -17,8 +24,18 @@ interface AuthState {
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
+  register: (userData: RegisterData) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<void>;
+}
+
+interface RegisterData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  role: string;
+  company: string;
 }
 
 type AuthAction =
@@ -115,10 +132,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await authService.login({ email, password });
       localStorage.setItem('token', response.access_token);
-      const userInfo = await authService.getUserInfo();
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: { user: userInfo, token: response.access_token },
+        payload: { user: response.user, token: response.access_token },
+      });
+    } catch (error) {
+      dispatch({ type: 'LOGIN_FAILURE' });
+      throw error;
+    }
+  };
+
+  const register = async (userData: RegisterData) => {
+    dispatch({ type: 'LOGIN_START' });
+    try {
+      const response = await authService.register(userData);
+      localStorage.setItem('token', response.access_token);
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload: { user: response.user, token: response.access_token },
       });
     } catch (error) {
       dispatch({ type: 'LOGIN_FAILURE' });
@@ -153,6 +184,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const value: AuthContextType = {
     ...state,
     login,
+    register,
     logout,
     refreshToken,
   };

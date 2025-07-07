@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
-using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,18 +26,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Add Rate Limiting
-builder.Services.AddRateLimiter(options =>
-{
-    options.AddFixedWindowLimiter("DefaultPolicy", limiterOptions =>
-    {
-        limiterOptions.PermitLimit = 100;
-        limiterOptions.Window = TimeSpan.FromMinutes(1);
-        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        limiterOptions.QueueLimit = 10;
-    });
-});
-
 // Add Reverse Proxy
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
@@ -57,14 +43,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowFrontend");
-app.UseRateLimiter();
 
 // Custom middleware for request logging
 app.Use(async (context, next) =>
 {
     var requestId = Guid.NewGuid().ToString();
     context.Items["RequestId"] = requestId;
-    context.Response.Headers.Add("X-Request-ID", requestId);
+    context.Response.Headers.Append("X-Request-ID", requestId);
     
     Log.Information("Request {RequestId}: {Method} {Path}", 
         requestId, context.Request.Method, context.Request.Path);

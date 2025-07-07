@@ -9,9 +9,11 @@ import {
   Alert,
   Container,
   Paper,
+  Link,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginFormData {
   email: string;
@@ -22,6 +24,7 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
+  const navigate = useNavigate();
   
   const {
     register,
@@ -124,6 +127,20 @@ const LoginPage: React.FC = () => {
             >
               {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
+
+            <Box sx={{ textAlign: 'center', mt: 2 }}>
+              <Typography variant="body2">
+                Don't have an account?{' '}
+                <Link
+                  component="button"
+                  variant="body2"
+                  onClick={() => navigate('/register')}
+                  sx={{ textDecoration: 'none' }}
+                >
+                  Create account here
+                </Link>
+              </Typography>
+            </Box>
           </Box>
         </Paper>
       </Box>

@@ -41,7 +41,7 @@ api.interceptors.response.use(
             refresh_token: refreshToken,
           });
           
-          const { access_token } = response.data;
+          const { access_token } = response.data.data;
           localStorage.setItem('token', access_token);
           
           originalRequest.headers.Authorization = `Bearer ${access_token}`;
@@ -67,26 +67,58 @@ export interface LoginResponse {
   access_token: string;
   refresh_token: string;
   token_type: string;
+  expires_in: number;
+  user: User;
+}
+
+export interface ApiResponse<T> {
+  data: T;
 }
 
 export interface RefreshRequest {
   refresh_token: string;
 }
 
+export interface RegisterRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  role: string;
+  company: string;
+}
+
 export interface User {
   id: string;
   email: string;
   name: string;
-  role: string;
+  firstName?: string;
+  lastName?: string;
+  company?: string;
+  roles: string[];
+  isActive: boolean;
+  lastLoginAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    const response: AxiosResponse<LoginResponse> = await api.post('/auth/login', credentials);
-    if (response.data.refresh_token) {
-      localStorage.setItem('refresh_token', response.data.refresh_token);
+    const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/auth/email-login', credentials);
+    const loginData = response.data.data;
+    if (loginData.refresh_token) {
+      localStorage.setItem('refresh_token', loginData.refresh_token);
     }
-    return response.data;
+    return loginData;
+  },
+
+  register: async (userData: RegisterRequest): Promise<LoginResponse> => {
+    const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/auth/register', userData);
+    const loginData = response.data.data;
+    if (loginData.refresh_token) {
+      localStorage.setItem('refresh_token', loginData.refresh_token);
+    }
+    return loginData;
   },
 
   logout: async (): Promise<void> => {
@@ -94,13 +126,13 @@ export const authService = {
   },
 
   refresh: async (request: RefreshRequest): Promise<LoginResponse> => {
-    const response: AxiosResponse<LoginResponse> = await api.post('/auth/refresh', request);
-    return response.data;
+    const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/auth/refresh', request);
+    return response.data.data;
   },
 
   getUserInfo: async (): Promise<User> => {
-    const response: AxiosResponse<User> = await api.get('/auth/user');
-    return response.data;
+    const response: AxiosResponse<{ data: User }> = await api.get('/auth/me');
+    return response.data.data;
   },
 };
 

@@ -104,7 +104,18 @@ public class IdealCandidateProfile : BaseEntity
     public bool IsActive { get; set; } = true;
 }
 
-// AHP-related entities
+public class JobProfile : BaseEntity
+{
+    public Guid JobId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public string Criteria { get; set; } = "{}"; // JSON serialized criteria
+    public string? Weights { get; set; } // JSON serialized weights
+    public string? ComparisonMatrix { get; set; } // JSON serialized matrix
+    public bool IsActive { get; set; } = true;
+    public Guid CreatedBy { get; set; }
+}
+
 public class AhpCriterion : BaseEntity
 {
     public Guid JobProfileId { get; set; }
@@ -112,6 +123,7 @@ public class AhpCriterion : BaseEntity
     public string? Description { get; set; }
     public decimal Weight { get; set; }
     public int Priority { get; set; }
+    public string? Category { get; set; }
 }
 
 public class AhpComparison : BaseEntity
@@ -119,79 +131,18 @@ public class AhpComparison : BaseEntity
     public Guid JobProfileId { get; set; }
     public Guid CriterionAId { get; set; }
     public Guid CriterionBId { get; set; }
-    public decimal ComparisonValue { get; set; }
-    
-    // Navigation properties
-    public AhpCriterion? CriterionA { get; set; }
-    public AhpCriterion? CriterionB { get; set; }
+    public decimal Value { get; set; }
+    public string? Justification { get; set; }
+    public Guid ComparedBy { get; set; }
 }
 
 public class CandidateScore : BaseEntity
 {
     public Guid CandidateId { get; set; }
-    public Guid JobId { get; set; }
-    public Guid AhpHierarchyId { get; set; }
+    public Guid JobProfileId { get; set; }
     public decimal OverallScore { get; set; }
-    public List<Dictionary<string, object>> ProfileMatches { get; set; } = new();
-    public List<Dictionary<string, object>> AttributeScores { get; set; } = new();
-    public Dictionary<string, object> Explanation { get; set; } = new();
+    public string? CriteriaScores { get; set; } // JSON serialized individual scores
+    public string? ScoreBreakdown { get; set; } // JSON serialized detailed breakdown
+    public string? Methodology { get; set; }
     public DateTime CalculatedAt { get; set; } = DateTime.UtcNow;
-    public Dictionary<string, object> Metadata { get; set; } = new();
-}
-
-public class Interview : BaseEntity
-{
-    public Guid CandidateWorkflowId { get; set; }
-    public Guid CandidateId { get; set; }
-    public Guid JobId { get; set; }
-    public string? StageId { get; set; }
-    public string? Title { get; set; }
-    public string? Description { get; set; }
-    public string? Type { get; set; }
-    public string Status { get; set; } = "scheduled";
-    public Dictionary<string, object> Scheduling { get; set; } = new();
-    public Dictionary<string, object> Participants { get; set; } = new();
-    public Dictionary<string, object> Content { get; set; } = new();
-    public Dictionary<string, object> Evaluation { get; set; } = new();
-}
-
-public class JobProfile : BaseEntity
-{
-    public Guid JobId { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public string? Department { get; set; }
-    public string? Location { get; set; }
-    public string? JobLevel { get; set; }
-    public string? EmploymentType { get; set; }
-    public string Status { get; set; } = "draft";
-    public Guid CreatedBy { get; set; }
-    public DateTime? PostedAt { get; set; }
-    public DateTime? ClosedAt { get; set; }
-    public string? RequiredSkills { get; set; } // JSON serialized
-    public string? PreferredSkills { get; set; } // JSON serialized
-    public string? JobResponsibilities { get; set; } // JSON serialized
-    public string? AhpCriteria { get; set; } // JSON serialized AHP criteria weights
-}
-
-public class CandidateProfile : BaseEntity
-{
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? Email { get; set; }
-    public string? Phone { get; set; }
-    public string? Location { get; set; } // JSON serialized location data
-    public string? LinkedInUrl { get; set; }
-    public string? PortfolioUrl { get; set; }
-    public string? Summary { get; set; }
-    public string? Experience { get; set; } // JSON serialized experience array
-    public string? Education { get; set; } // JSON serialized education array
-    public string? Skills { get; set; } // JSON serialized skills object
-    public decimal? TotalYearsExperience { get; set; }
-    public decimal? AverageTenure { get; set; }
-    public decimal? CareerProgressionScore { get; set; }
-    public string? Source { get; set; }
-    public string? SourceDetails { get; set; } // JSON serialized
-    public decimal? ParsingConfidence { get; set; }
-    public string? ParsingMetadata { get; set; } // JSON serialized
 }

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Vetterati.AhpService.Data;
-using Vetterati.Shared.Models.Entities;
+using Vetterati.Shared.Models;
 
 namespace Vetterati.AhpService.Services;
 

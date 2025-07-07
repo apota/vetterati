@@ -64,8 +64,8 @@ services:
   # Authentication Service (C#)
   auth-service:
     build:
-      context: ./src/services/auth-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./src/services/auth-service/Dockerfile
     ports:
       - "5001:80"
     environment:
@@ -101,8 +101,8 @@ services:
   # AHP Engine Service (C#)
   ahp-service:
     build:
-      context: ./src/services/ahp-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./src/services/ahp-service/Dockerfile
     ports:
       - "5002:80"
     environment:
@@ -208,8 +208,8 @@ services:
   # API Gateway (C#)
   api-gateway:
     build:
-      context: ./src/services/api-gateway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./src/services/api-gateway/Dockerfile
     ports:
       - "5000:80"
     environment:

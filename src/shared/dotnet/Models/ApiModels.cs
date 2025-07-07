@@ -124,38 +124,85 @@ public class ScoreCandidateRequest
 // AHP Service API Models
 public class CalculateScoreRequest
 {
-    public Guid JobProfileId { get; set; }
     public Guid CandidateId { get; set; }
+    public Guid JobProfileId { get; set; }
+    public Dictionary<string, object>? CandidateData { get; set; }
+    public Dictionary<string, object>? Options { get; set; }
 }
 
 public class CandidateScoreResponse
 {
-    public Guid Id { get; set; }
-    public Guid JobProfileId { get; set; }
     public Guid CandidateId { get; set; }
+    public Guid JobProfileId { get; set; }
     public decimal OverallScore { get; set; }
-    public string? ScoreBreakdown { get; set; }
-    public DateTime ScoredAt { get; set; }
+    public Dictionary<string, decimal> CriteriaScores { get; set; } = new();
+    public Dictionary<string, object> ScoreBreakdown { get; set; } = new();
+    public string Methodology { get; set; } = string.Empty;
+    public DateTime CalculatedAt { get; set; }
+    public Dictionary<string, object>? Metadata { get; set; }
+}
+
+public class CreateJobProfileRequest
+{
+    public Guid JobId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public List<CriterionRequest> Criteria { get; set; } = new();
+}
+
+public class CriterionRequest
+{
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public decimal Weight { get; set; }
+    public int Priority { get; set; }
+    public string? Category { get; set; }
+}
+
+public class ComparisonRequest
+{
+    public Guid CriterionAId { get; set; }
+    public Guid CriterionBId { get; set; }
+    public decimal Value { get; set; }
+    public string? Justification { get; set; }
+}
+
+public class CandidateMatchRequest
+{
+    public Guid JobProfileId { get; set; }
+    public List<Guid>? CandidateIds { get; set; }
+    public Dictionary<string, object>? Filters { get; set; }
+    public Dictionary<string, object>? Options { get; set; }
+}
+
+public class CandidateMatchResponse
+{
+    public List<CandidateScoreResponse> Matches { get; set; } = new();
+    public Dictionary<string, object> MatchStatistics { get; set; } = new();
+    public DateTime MatchedAt { get; set; }
 }
 
 public class ScoreAllCandidatesResponse
 {
     public Guid JobProfileId { get; set; }
     public int CandidatesScored { get; set; }
-    public decimal AverageScore { get; set; }
-    public DateTime ProcessedAt { get; set; }
+    public DateTime ScoredAt { get; set; } = DateTime.UtcNow;
+    public Dictionary<string, object>? Statistics { get; set; }
 }
 
 public class RefreshScoresResponse
 {
     public Guid JobProfileId { get; set; }
     public bool Success { get; set; }
-    public DateTime RefreshedAt { get; set; }
+    public DateTime RefreshedAt { get; set; } = DateTime.UtcNow;
+    public int CandidatesRefreshed { get; set; }
 }
 
 public class ValidateMatrixResponse
 {
     public Guid JobProfileId { get; set; }
     public bool IsValid { get; set; }
-    public DateTime ValidatedAt { get; set; }
+    public DateTime ValidatedAt { get; set; } = DateTime.UtcNow;
+    public List<string>? ValidationErrors { get; set; }
+    public Dictionary<string, object>? MatrixMetrics { get; set; }
 }

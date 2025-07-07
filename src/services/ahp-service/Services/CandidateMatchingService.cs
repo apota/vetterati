@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 using Vetterati.AhpService.Data;
-using Vetterati.Shared.Models.Entities;
+using Vetterati.Shared.Models;
 
 namespace Vetterati.AhpService.Services;
 

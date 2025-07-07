@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Vetterati.AhpService.Services;
-using Vetterati.Shared.Models.ApiModels;
+using Vetterati.Shared.Models;
 
 namespace Vetterati.AhpService.Controllers;
 

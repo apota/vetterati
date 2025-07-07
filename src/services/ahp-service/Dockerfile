@@ -5,20 +5,19 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy shared library first
-COPY ["src/shared/dotnet/Vetterati.Shared.csproj", "shared/dotnet/"]
-RUN dotnet restore "shared/dotnet/Vetterati.Shared.csproj"
+# Copy all necessary project files first
+COPY ["src/shared/dotnet/Vetterati.Shared.csproj", "src/shared/dotnet/"]
+COPY ["src/services/ahp-service/AhpService.csproj", "src/services/ahp-service/"]
 
-# Copy project file and restore dependencies
-COPY ["src/services/ahp-service/AhpService.csproj", "services/ahp-service/"]
-RUN dotnet restore "services/ahp-service/AhpService.csproj"
+# Restore dependencies
+RUN dotnet restore "src/services/ahp-service/AhpService.csproj"
 
-# Copy source code
-COPY src/shared/dotnet/ shared/dotnet/
-COPY src/services/ahp-service/ services/ahp-service/
+# Copy all source code
+COPY src/shared/dotnet/ src/shared/dotnet/
+COPY src/services/ahp-service/ src/services/ahp-service/
 
 # Build the application
-WORKDIR "/src/services/ahp-service"
+WORKDIR "/src/src/services/ahp-service"
 RUN dotnet build "AhpService.csproj" -c Release -o /app/build
 
 FROM build AS publish

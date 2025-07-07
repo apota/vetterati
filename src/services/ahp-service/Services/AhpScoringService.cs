@@ -1,5 +1,5 @@
 using MathNet.Numerics.LinearAlgebra;
-using Vetterati.Shared.Models.Entities;
+using Vetterati.Shared.Models;
 
 namespace Vetterati.AhpService.Services;
 

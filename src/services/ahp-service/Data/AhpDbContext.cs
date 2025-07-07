@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Vetterati.Shared.Models.Entities;
+using Vetterati.Shared.Models;
 
 namespace Vetterati.AhpService.Data;
 
@@ -10,7 +10,7 @@ public class AhpDbContext : DbContext
     }
 
     public DbSet<JobProfile> JobProfiles { get; set; }
-    public DbSet<CandidateProfile> CandidateProfiles { get; set; }
+    public DbSet<Candidate> Candidates { get; set; }
     public DbSet<AhpCriterion> AhpCriteria { get; set; }
     public DbSet<AhpComparison> AhpComparisons { get; set; }
     public DbSet<CandidateScore> CandidateScores { get; set; }
@@ -32,18 +32,8 @@ public class AhpDbContext : DbContext
         modelBuilder.Entity<AhpComparison>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.ComparisonValue).HasPrecision(10, 6);
+            entity.Property(e => e.Value).HasPrecision(10, 6);
             entity.HasIndex(e => new { e.JobProfileId, e.CriterionAId, e.CriterionBId }).IsUnique();
-            
-            entity.HasOne(e => e.CriterionA)
-                .WithMany()
-                .HasForeignKey(e => e.CriterionAId)
-                .OnDelete(DeleteBehavior.Restrict);
-                
-            entity.HasOne(e => e.CriterionB)
-                .WithMany()
-                .HasForeignKey(e => e.CriterionBId)
-                .OnDelete(DeleteBehavior.Restrict);
         });
 
         // Candidate Score configuration
@@ -59,11 +49,10 @@ public class AhpDbContext : DbContext
         modelBuilder.Entity<JobProfile>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.RequiredSkills).HasColumnType("jsonb");
-            entity.Property(e => e.PreferredSkills).HasColumnType("jsonb");
-            entity.Property(e => e.JobResponsibilities).HasColumnType("jsonb");
-            entity.Property(e => e.AhpCriteria).HasColumnType("jsonb");
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Criteria).HasColumnType("jsonb");
+            entity.Property(e => e.Weights).HasColumnType("jsonb");
+            entity.Property(e => e.ComparisonMatrix).HasColumnType("jsonb");
         });
     }
 }

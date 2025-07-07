@@ -5,7 +5,7 @@
 
 ## 🚀 Overview
 
-Vetterati is a cloud-native, modular Applicant Tracking System (ATS) designed to streamline and automate the hiring process. Built with modern microservices architecture, it leverages AI for intelligent candidate matching using the Analytic Hierarchy Process (AHP), provides robust analytics, and supports scalable workflow automation.
+Vetterati is a cloud-native, modular Applicant Tracking System (ATS) designed to streamline and automate the applicant **VETTING** and hiring process. Built with modern microservices architecture, it leverages AI for intelligent candidate matching using the Analytic Hierarchy Process (AHP), provides robust analytics, and supports scalable workflow automation. It is like having the illuminati vetting your applicants!
 
 ## Target Audience
 

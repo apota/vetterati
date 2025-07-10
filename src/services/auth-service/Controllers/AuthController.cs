@@ -19,19 +19,25 @@ public class AuthController : ControllerBase
     private readonly IDatabase _redis;
     private readonly ILogger<AuthController> _logger;
     private readonly IEmailService _emailService;
+    private readonly IPasswordValidationService _passwordValidation;
+    private readonly IUserManagementService _userManagement;
 
     public AuthController(
         AuthDbContext context, 
         IJwtService jwtService, 
         IConnectionMultiplexer redis,
         ILogger<AuthController> logger,
-        IEmailService emailService)
+        IEmailService emailService,
+        IPasswordValidationService passwordValidation,
+        IUserManagementService userManagement)
     {
         _context = context;
         _jwtService = jwtService;
         _redis = redis.GetDatabase();
         _logger = logger;
         _emailService = emailService;
+        _passwordValidation = passwordValidation;
+        _userManagement = userManagement;
     }
 
     [HttpPost("login")]
@@ -62,7 +68,7 @@ public class AuthController : ControllerBase
 
                 // Add to default organization
                 var defaultOrg = await _context.Organizations.FirstAsync();
-                var userOrg = new UserOrganization
+                var userOrg = new AuthService.Data.UserOrganization
                 {
                     UserId = user.Id,
                     OrganizationId = defaultOrg.Id,
@@ -294,7 +300,7 @@ public class AuthController : ControllerBase
             }
 
             // Add user to organization
-            var userOrg = new UserOrganization
+            var userOrg = new AuthService.Data.UserOrganization
             {
                 UserId = user.Id,
                 OrganizationId = organization.Id,

@@ -38,6 +38,15 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 // Add Email Service
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+// Add Password Validation Service
+builder.Services.AddScoped<IPasswordValidationService, PasswordValidationService>();
+
+// Add User Management Service
+builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+
+// Add Rate Limiting Service
+builder.Services.AddScoped<IRateLimitingService, RateLimitingService>();
+
 // Add JWT Authentication
 var jwtSecretKey = builder.Configuration["Jwt:SecretKey"] ?? "your-super-secret-key-that-is-at-least-32-characters-long";
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -78,6 +87,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAll");
+
+// Add rate limiting middleware
+app.UseMiddleware<RateLimitMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

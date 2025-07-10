@@ -108,10 +108,13 @@ public class AuthDbContext : DbContext
     }
 }
 
-public class UserOrganization : BaseEntity
+public class UserOrganization : Vetterati.Shared.Models.BaseEntity
 {
     public Guid UserId { get; set; }
+    public User User { get; set; } = null!;
     public Guid OrganizationId { get; set; }
+    public Organization Organization { get; set; } = null!;
     public string Role { get; set; } = string.Empty;
     public bool IsActive { get; set; } = true;
+    public DateTime? JoinedAt { get; set; } = DateTime.UtcNow;
 }

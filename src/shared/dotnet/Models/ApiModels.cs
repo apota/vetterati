@@ -243,3 +243,16 @@ public class ValidateMatrixResponse
     public List<string>? ValidationErrors { get; set; }
     public Dictionary<string, object>? MatrixMetrics { get; set; }
 }
+
+public class DemoLoginRequest
+{
+    public string Role { get; set; } = string.Empty;
+}
+
+public class DemoUserInfo
+{
+    public string Role { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+}

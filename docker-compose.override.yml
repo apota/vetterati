@@ -1,0 +1,74 @@
+version: '3.8'
+
+# Docker Compose Override for Development
+# This file contains development-specific configurations
+# It automatically merges with docker-compose.yml when running docker-compose up
+
+services:
+  # Development overrides for auth service
+  auth-service:
+    environment:
+      # Override with development-specific settings
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      # Enable detailed logging for development
+      - Logging__LogLevel__Default=Debug
+      - Logging__LogLevel__Microsoft=Information
+      - Logging__LogLevel__Microsoft.AspNetCore=Warning
+      # Development-specific email settings (will log instead of send)
+      - Email__SendGrid__ApiKey=demo-development-key
+      - Email__Smtp__Host=localhost
+      - Email__Smtp__Port=1025
+      - Frontend__BaseUrl=http://localhost:3000
+    volumes:
+      # Mount source code for hot reload in development (optional)
+      - ./src/services/auth-service:/app/src:ro
+    # Enable debug mode
+    command: ["dotnet", "AuthService.dll", "--environment=Development"]
+
+  # Development overrides for frontend
+  frontend:
+    environment:
+      # Point to local API gateway
+      - REACT_APP_API_URL=http://localhost:5000
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    volumes:
+      # Mount source code for hot reload
+      - ./src/frontend/src:/app/src:ro
+      - ./src/frontend/public:/app/public:ro
+      - /app/node_modules
+
+  # Add development tools
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - ats-network
+
+  # Database administration tool
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@vetterati.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - ats-network
+
+  # Redis administration tool
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - ats-network

@@ -114,18 +114,15 @@ public class RateLimitInfo
 public class RateLimitMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly IRateLimitingService _rateLimiting;
     private readonly ILogger<RateLimitMiddleware> _logger;
     private readonly RateLimitOptions _options;
 
     public RateLimitMiddleware(
         RequestDelegate next,
-        IRateLimitingService rateLimiting,
         ILogger<RateLimitMiddleware> logger,
         IConfiguration configuration)
     {
         _next = next;
-        _rateLimiting = rateLimiting;
         _logger = logger;
         _options = configuration.GetSection("RateLimit").Get<RateLimitOptions>() ?? new RateLimitOptions();
     }
@@ -140,6 +137,9 @@ public class RateLimitMiddleware
             return;
         }
 
+        // Get rate limiting service from request scope
+        var rateLimiting = context.RequestServices.GetRequiredService<IRateLimitingService>();
+
         // Get rate limit key (IP address for anonymous, user ID for authenticated)
         var rateLimitKey = GetRateLimitKey(context);
         var isAuthenticated = context.User.Identity?.IsAuthenticated == true;
@@ -148,8 +148,8 @@ public class RateLimitMiddleware
         var window = TimeSpan.FromHours(1); // 1 hour window
 
         // Check rate limit
-        var rateLimitInfo = await _rateLimiting.GetRateLimitInfoAsync(rateLimitKey, maxRequests, window);
-        var isExceeded = await _rateLimiting.IsRateLimitExceededAsync(rateLimitKey, maxRequests, window);
+        var rateLimitInfo = await rateLimiting.GetRateLimitInfoAsync(rateLimitKey, maxRequests, window);
+        var isExceeded = await rateLimiting.IsRateLimitExceededAsync(rateLimitKey, maxRequests, window);
 
         // Add rate limit headers
         context.Response.Headers["X-RateLimit-Limit"] = maxRequests.ToString();

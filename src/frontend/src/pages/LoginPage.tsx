@@ -10,6 +10,9 @@ import {
   Container,
   Paper,
   Link,
+  Divider,
+  Chip,
+  Grid,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../contexts/AuthContext';
@@ -24,7 +27,7 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const { login } = useAuth();
+  const { login, demoLogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -55,6 +58,29 @@ const LoginPage: React.FC = () => {
       await login(data.email, data.password);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Demo users for quick login
+  const demoUsers = [
+    { role: 'admin', name: 'Admin User', description: 'Full system administrator', color: 'error' as const },
+    { role: 'recruiter', name: 'Jane Recruiter', description: 'Recruiter role', color: 'primary' as const },
+    { role: 'hiring-manager', name: 'John Manager', description: 'Hiring manager', color: 'secondary' as const },
+    { role: 'candidate', name: 'Alice Candidate', description: 'Job candidate', color: 'success' as const },
+    { role: 'interviewer', name: 'Bob Interviewer', description: 'Technical interviewer', color: 'info' as const },
+    { role: 'hr', name: 'Carol HR', description: 'HR representative', color: 'warning' as const },
+  ];
+
+  const handleDemoLogin = async (role: string) => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      await demoLogin(role);
+    } catch (err: any) {
+      setError(err.response?.data?.message || `Demo login failed for ${role}. Please try again.`);
     } finally {
       setIsLoading(false);
     }
@@ -171,6 +197,66 @@ const LoginPage: React.FC = () => {
                 </Link>
               </Typography>
             </Box>
+
+            <Divider sx={{ my: 3 }}>
+              <Typography variant="body2" color="text.secondary">
+                Quick Demo Login
+              </Typography>
+            </Divider>
+
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2, textAlign: 'center' }}>
+              Click any role below to instantly log in as a demo user
+            </Typography>
+
+            <Grid container spacing={1}>
+              {demoUsers.map((user) => (
+                <Grid item xs={6} key={user.role}>
+                  <Chip
+                    label={user.name}
+                    variant="outlined"
+                    color={user.color}
+                    onClick={() => handleDemoLogin(user.role)}
+                    disabled={isLoading}
+                    sx={{ 
+                      width: '100%', 
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: (theme) => 
+                          theme.palette[user.color].main + '20'
+                      }
+                    }}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 2, textAlign: 'center', display: 'block' }}>
+              Demo users are for testing purposes only
+            </Typography>
+
+            <Divider sx={{ my: 2 }}>
+              <Chip label="Or sign in as demo user" />
+            </Divider>
+
+            <Grid container spacing={2}>
+              {demoUsers.map((user) => (
+                <Grid item xs={12} sm={6} key={user.role}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    color={user.color}
+                    onClick={() => handleDemoLogin(user.role)}
+                    disabled={isLoading}
+                    sx={{ mb: 1 }}
+                  >
+                    {isLoading ? 'Loading...' : user.name}
+                  </Button>
+                  <Typography variant="caption" color="text.secondary" align="center">
+                    {user.description}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
           </Box>
         </Paper>
       </Box>

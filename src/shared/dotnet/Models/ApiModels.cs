@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Vetterati.Shared.Models;
 
@@ -255,4 +256,9 @@ public class DemoUserInfo
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+}
+
+public class SimpleTestRequest
+{
+    public string TestField { get; set; } = string.Empty;
 }

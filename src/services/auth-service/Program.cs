@@ -104,8 +104,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 
-// Add rate limiting middleware
-app.UseMiddleware<RateLimitMiddleware>();
+// Add rate limiting middleware - temporarily disabled for debugging
+// app.UseMiddleware<RateLimitMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

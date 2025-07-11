@@ -583,10 +583,49 @@ public class AuthController : ControllerBase
     /// POST /api/v1/auth/demo-login with { "role": "admin" }
     /// </summary>
     [HttpPost("demo-login")]
-    public async Task<ActionResult<ApiResponse<LoginResponse>>> DemoLogin([FromBody] DemoLoginRequest request)
+    public async Task<ActionResult<ApiResponse<LoginResponse>>> DemoLogin([FromBody] DemoLoginRequest? request = null)
     {
         try
         {
+            _logger.LogInformation("=== DEMO LOGIN ENDPOINT CALLED ===");
+            _logger.LogInformation("Request object: {Request}", request);
+            _logger.LogInformation("Request Role: {Role}", request?.Role ?? "NULL");
+            _logger.LogInformation("ModelState IsValid: {IsValid}", ModelState.IsValid);
+            
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("ModelState validation failed:");
+                foreach (var error in ModelState)
+                {
+                    _logger.LogWarning("  {Key}: {Errors}", error.Key, string.Join(", ", error.Value?.Errors.Select(e => e.ErrorMessage) ?? new string[0]));
+                }
+                return BadRequest(new ApiError 
+                { 
+                    Code = "VALIDATION_ERROR", 
+                    Message = "Model validation failed"
+                });
+            }
+            
+            if (request == null)
+            {
+                _logger.LogWarning("Demo login request is NULL");
+                return BadRequest(new ApiError 
+                { 
+                    Code = "INVALID_REQUEST", 
+                    Message = "Request body is null" 
+                });
+            }
+            
+            if (string.IsNullOrWhiteSpace(request.Role))
+            {
+                _logger.LogWarning("Demo login request has null/empty role. Role value: '{Role}'", request.Role);
+                return BadRequest(new ApiError 
+                { 
+                    Code = "INVALID_REQUEST", 
+                    Message = "Role is required" 
+                });
+            }
+
             // Define demo users for different roles
             var demoUsers = new Dictionary<string, (string email, string name, List<string> roles, string company)>
             {
@@ -609,25 +648,45 @@ public class AuthController : ControllerBase
 
             var (email, name, roles, company) = demoUsers[request.Role.ToLower()];
 
-            // Create demo user object (temporary, bypassing database for now)
-            var user = new User
+            // Check if demo user already exists in database
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
             {
-                Id = Guid.NewGuid(), // Generate temporary ID
-                Email = email,
-                Name = name,
-                FirstName = name.Split(' ')[0],
-                LastName = name.Split(' ').Length > 1 ? name.Split(' ')[1] : "",
-                Company = company,
-                Roles = roles,
-                IsActive = true,
-                LastLoginAt = DateTime.UtcNow,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
+                // Create demo user in database
+                user = new User
+                {
+                    Email = email,
+                    Name = name,
+                    FirstName = name.Split(' ')[0],
+                    LastName = name.Split(' ').Length > 1 ? name.Split(' ')[1] : "",
+                    Company = company,
+                    SsoProvider = "demo",
+                    SsoId = $"demo_{request.Role.ToLower()}",
+                    Roles = roles,
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Created new demo user: {Email} with role: {Role}", email, request.Role);
+            }
+
+            // Update last login
+            user.LastLoginAt = DateTime.UtcNow;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
 
             // Generate tokens
             var accessToken = _jwtService.GenerateAccessToken(user);
             var refreshToken = _jwtService.GenerateRefreshToken();
+
+            // Store refresh token in Redis
+            await _redis.StringSetAsync($"refresh_token:{user.Id}", refreshToken, TimeSpan.FromDays(30));
 
             var response = new ApiResponse<LoginResponse>
             {
@@ -645,7 +704,7 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during demo login for role: {Role}", request.Role);
+            _logger.LogError(ex, "Error during demo login for role: {Role}", request?.Role ?? "null");
             return StatusCode(500, new ApiError 
             { 
                 Code = "INTERNAL_ERROR", 
@@ -687,6 +746,73 @@ public class AuthController : ControllerBase
                 Message = "An error occurred while fetching demo users" 
             });
         }
+    }
+
+    /// <summary>
+    /// Simple test endpoint to verify controller is working
+    /// </summary>
+    [HttpGet("test")]
+    public IActionResult Test()
+    {
+        _logger.LogInformation("Test endpoint called successfully");
+        return Ok(new { message = "Auth controller is working", timestamp = DateTime.UtcNow });
+    }
+
+    /// <summary>
+    /// Test POST endpoint to verify POST requests work
+    /// </summary>
+    [HttpPost("test-post")]
+    public async Task<IActionResult> TestPost()
+    {
+        _logger.LogInformation("Test POST endpoint called");
+        
+        // Read raw request body
+        using (var reader = new StreamReader(Request.Body))
+        {
+            var body = await reader.ReadToEndAsync();
+            _logger.LogInformation("Raw request body: {Body}", body);
+        }
+        
+        return Ok(new { message = "POST request received", timestamp = DateTime.UtcNow });
+    }
+
+    /// <summary>
+    /// Simple demo login that accepts any role
+    /// </summary>
+    [HttpPost("simple-demo")]
+    public IActionResult SimpleDemo([FromBody] JsonElement request)
+    {
+        _logger.LogInformation("SimpleDemo endpoint called");
+        _logger.LogInformation("Request: {Request}", request);
+        
+        if (request.TryGetProperty("role", out var roleElement))
+        {
+            var role = roleElement.GetString();
+            _logger.LogInformation("Role extracted: {Role}", role);
+            return Ok(new { message = "Success", role = role });
+        }
+        
+        return BadRequest(new { error = "No role found" });
+    }
+
+    /// <summary>
+    /// Ultra simple test endpoint
+    /// </summary>
+    [HttpPost("ultra-simple")]
+    public IActionResult UltraSimple()
+    {
+        _logger.LogInformation("UltraSimple endpoint called successfully!");
+        return Ok(new { message = "Ultra simple endpoint works", timestamp = DateTime.UtcNow });
+    }
+
+    /// <summary>
+    /// Simple test endpoint to debug model binding
+    /// </summary>
+    [HttpPost("test-binding")]
+    public IActionResult TestBinding([FromBody] SimpleTestRequest request)
+    {
+        _logger.LogInformation("TestBinding called with: {TestField}", request?.TestField ?? "null");
+        return Ok(new { message = "Test binding works", testField = request?.TestField });
     }
 
     private string GenerateSecureToken()

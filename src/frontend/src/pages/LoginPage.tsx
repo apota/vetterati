@@ -78,9 +78,40 @@ const LoginPage: React.FC = () => {
     setError(null);
     
     try {
+      console.log(`Attempting demo login for role: ${role}`);
       await demoLogin(role);
+      console.log('Demo login successful, navigating to dashboard...');
+      // Force navigation to dashboard in case automatic redirect doesn't work
+      navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || `Demo login failed for ${role}. Please try again.`);
+      console.error('Demo login error:', err);
+      
+      // More detailed error messages
+      let errorMessage = `Demo login failed for ${role}.`;
+      
+      if (err.response) {
+        // Server responded with an error
+        const status = err.response.status;
+        const data = err.response.data;
+        
+        if (status === 404) {
+          errorMessage = `Demo login endpoint not found. Is the auth service running?`;
+        } else if (status === 500) {
+          errorMessage = `Server error during demo login. ${data?.message || 'Please try again.'}`;
+        } else if (data?.message) {
+          errorMessage = data.message;
+        } else {
+          errorMessage = `HTTP ${status}: ${err.response.statusText}`;
+        }
+      } else if (err.request) {
+        // Network error
+        errorMessage = `Cannot connect to auth service. Please check if the backend is running.`;
+      } else {
+        // Other error
+        errorMessage = err.message || `Unknown error during demo login for ${role}`;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -212,17 +243,17 @@ const LoginPage: React.FC = () => {
               {demoUsers.map((user) => (
                 <Grid item xs={6} key={user.role}>
                   <Chip
-                    label={user.name}
+                    label={isLoading ? 'Loading...' : user.name}
                     variant="outlined"
                     color={user.color}
                     onClick={() => handleDemoLogin(user.role)}
                     disabled={isLoading}
                     sx={{ 
                       width: '100%', 
-                      cursor: 'pointer',
+                      cursor: isLoading ? 'default' : 'pointer',
                       '&:hover': {
                         backgroundColor: (theme) => 
-                          theme.palette[user.color].main + '20'
+                          isLoading ? 'transparent' : theme.palette[user.color].main + '20'
                       }
                     }}
                   />

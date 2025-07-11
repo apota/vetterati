@@ -19,19 +19,25 @@ public class AuthController : ControllerBase
     private readonly IDatabase _redis;
     private readonly ILogger<AuthController> _logger;
     private readonly IEmailService _emailService;
+    private readonly IPasswordValidationService _passwordValidation;
+    private readonly IUserManagementService _userManagement;
 
     public AuthController(
         AuthDbContext context, 
         IJwtService jwtService, 
         IConnectionMultiplexer redis,
         ILogger<AuthController> logger,
-        IEmailService emailService)
+        IEmailService emailService,
+        IPasswordValidationService passwordValidation,
+        IUserManagementService userManagement)
     {
         _context = context;
         _jwtService = jwtService;
         _redis = redis.GetDatabase();
         _logger = logger;
         _emailService = emailService;
+        _passwordValidation = passwordValidation;
+        _userManagement = userManagement;
     }
 
     [HttpPost("login")]
@@ -62,7 +68,7 @@ public class AuthController : ControllerBase
 
                 // Add to default organization
                 var defaultOrg = await _context.Organizations.FirstAsync();
-                var userOrg = new UserOrganization
+                var userOrg = new AuthService.Data.UserOrganization
                 {
                     UserId = user.Id,
                     OrganizationId = defaultOrg.Id,
@@ -249,6 +255,17 @@ public class AuthController : ControllerBase
     {
         try
         {
+            // Validate password first
+            var passwordValidation = _passwordValidation.ValidatePassword(request.Password);
+            if (!passwordValidation.IsValid)
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "INVALID_PASSWORD", 
+                    Message = string.Join("; ", passwordValidation.Errors)
+                });
+            }
+
             // Validate email doesn't already exist
             var existingUser = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == request.Email);
@@ -294,7 +311,7 @@ public class AuthController : ControllerBase
             }
 
             // Add user to organization
-            var userOrg = new UserOrganization
+            var userOrg = new AuthService.Data.UserOrganization
             {
                 UserId = user.Id,
                 OrganizationId = organization.Id,
@@ -325,11 +342,12 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during registration");
+            _logger.LogError(ex, "Error during registration for email: {Email}. Error: {ErrorMessage}", 
+                request.Email, ex.Message);
             return StatusCode(500, new ApiError 
             { 
                 Code = "INTERNAL_ERROR", 
-                Message = "An error occurred during registration" 
+                Message = "An error occurred during registration. Please try again." 
             });
         }
     }
@@ -554,6 +572,119 @@ public class AuthController : ControllerBase
             { 
                 Code = "INTERNAL_ERROR", 
                 Message = "An error occurred while resetting your password" 
+            });
+        }
+    }
+
+    /// <summary>
+    /// <summary>
+    /// Demo login endpoint for quick testing with predefined users.
+    /// Available roles: admin, recruiter, hiring-manager, candidate, interviewer, hr
+    /// POST /api/v1/auth/demo-login with { "role": "admin" }
+    /// </summary>
+    [HttpPost("demo-login")]
+    public async Task<ActionResult<ApiResponse<LoginResponse>>> DemoLogin([FromBody] DemoLoginRequest request)
+    {
+        try
+        {
+            // Define demo users for different roles
+            var demoUsers = new Dictionary<string, (string email, string name, List<string> roles, string company)>
+            {
+                ["admin"] = ("admin@vetterati.com", "Admin User", new List<string> { "admin", "recruiter" }, "Vetterati"),
+                ["recruiter"] = ("recruiter@company.com", "Jane Recruiter", new List<string> { "recruiter" }, "TechCorp"),
+                ["hiring-manager"] = ("manager@company.com", "John Manager", new List<string> { "hiring_manager" }, "TechCorp"),
+                ["candidate"] = ("candidate@email.com", "Alice Candidate", new List<string> { "candidate" }, ""),
+                ["interviewer"] = ("interviewer@company.com", "Bob Interviewer", new List<string> { "interviewer" }, "TechCorp"),
+                ["hr"] = ("hr@company.com", "Carol HR", new List<string> { "hr", "recruiter" }, "TechCorp")
+            };
+
+            if (!demoUsers.ContainsKey(request.Role.ToLower()))
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "INVALID_DEMO_ROLE", 
+                    Message = $"Invalid demo role. Available roles: {string.Join(", ", demoUsers.Keys)}" 
+                });
+            }
+
+            var (email, name, roles, company) = demoUsers[request.Role.ToLower()];
+
+            // Create demo user object (temporary, bypassing database for now)
+            var user = new User
+            {
+                Id = Guid.NewGuid(), // Generate temporary ID
+                Email = email,
+                Name = name,
+                FirstName = name.Split(' ')[0],
+                LastName = name.Split(' ').Length > 1 ? name.Split(' ')[1] : "",
+                Company = company,
+                Roles = roles,
+                IsActive = true,
+                LastLoginAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            // Generate tokens
+            var accessToken = _jwtService.GenerateAccessToken(user);
+            var refreshToken = _jwtService.GenerateRefreshToken();
+
+            var response = new ApiResponse<LoginResponse>
+            {
+                Data = new LoginResponse
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken,
+                    ExpiresIn = 3600,
+                    User = user
+                }
+            };
+
+            _logger.LogInformation("Demo login successful for role: {Role}, email: {Email}", request.Role, email);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during demo login for role: {Role}", request.Role);
+            return StatusCode(500, new ApiError 
+            { 
+                Code = "INTERNAL_ERROR", 
+                Message = "An error occurred during demo login" 
+            });
+        }
+    }
+
+    /// <summary>
+    /// Get list of available demo users for testing.
+    /// GET /api/v1/auth/demo-users
+    /// </summary>
+    [HttpGet("demo-users")]
+    public ActionResult<ApiResponse<List<DemoUserInfo>>> GetDemoUsers()
+    {
+        try
+        {
+            var demoUsers = new List<DemoUserInfo>
+            {
+                new() { Role = "admin", Name = "Admin User", Email = "admin@vetterati.com", Description = "Full system administrator with all permissions" },
+                new() { Role = "recruiter", Name = "Jane Recruiter", Email = "recruiter@company.com", Description = "Recruiter who can manage candidates and jobs" },
+                new() { Role = "hiring-manager", Name = "John Manager", Email = "manager@company.com", Description = "Hiring manager who can review candidates and make decisions" },
+                new() { Role = "candidate", Name = "Alice Candidate", Email = "candidate@email.com", Description = "Job candidate applying for positions" },
+                new() { Role = "interviewer", Name = "Bob Interviewer", Email = "interviewer@company.com", Description = "Technical interviewer who conducts interviews" },
+                new() { Role = "hr", Name = "Carol HR", Email = "hr@company.com", Description = "HR representative with recruiting capabilities" }
+            };
+
+            return Ok(new ApiResponse<List<DemoUserInfo>> 
+            { 
+                Data = demoUsers 
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting demo users list");
+            return StatusCode(500, new ApiError 
+            { 
+                Code = "INTERNAL_ERROR", 
+                Message = "An error occurred while fetching demo users" 
             });
         }
     }

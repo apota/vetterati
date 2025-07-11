@@ -23,7 +23,8 @@ builder.Services.AddSwaggerGen();
 
 // Add Database
 builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+           .UseSnakeCaseNamingConvention());
 
 // Add Redis
 builder.Services.AddSingleton<IConnectionMultiplexer>(provider =>
@@ -37,6 +38,15 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 
 // Add Email Service
 builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Add Password Validation Service
+builder.Services.AddScoped<IPasswordValidationService, PasswordValidationService>();
+
+// Add User Management Service
+builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+
+// Add Rate Limiting Service
+builder.Services.AddScoped<IRateLimitingService, RateLimitingService>();
 
 // Add JWT Authentication
 var jwtSecretKey = builder.Configuration["Jwt:SecretKey"] ?? "your-super-secret-key-that-is-at-least-32-characters-long";
@@ -70,6 +80,21 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Ensure database is created and migrated
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+    try
+    {
+        context.Database.EnsureCreated();
+        Log.Information("Database schema created successfully");
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex, "Failed to create database schema");
+    }
+}
+
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
@@ -78,6 +103,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAll");
+
+// Add rate limiting middleware
+app.UseMiddleware<RateLimitMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

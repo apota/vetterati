@@ -10,6 +10,9 @@ import {
   Container,
   Paper,
   Link,
+  Divider,
+  Chip,
+  Grid,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../contexts/AuthContext';
@@ -24,7 +27,7 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const { login } = useAuth();
+  const { login, demoLogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -55,6 +58,60 @@ const LoginPage: React.FC = () => {
       await login(data.email, data.password);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Demo users for quick login
+  const demoUsers = [
+    { role: 'admin', name: 'Admin User', description: 'Full system administrator', color: 'error' as const },
+    { role: 'recruiter', name: 'Jane Recruiter', description: 'Recruiter role', color: 'primary' as const },
+    { role: 'hiring-manager', name: 'John Manager', description: 'Hiring manager', color: 'secondary' as const },
+    { role: 'candidate', name: 'Alice Candidate', description: 'Job candidate', color: 'success' as const },
+    { role: 'interviewer', name: 'Bob Interviewer', description: 'Technical interviewer', color: 'info' as const },
+    { role: 'hr', name: 'Carol HR', description: 'HR representative', color: 'warning' as const },
+  ];
+
+  const handleDemoLogin = async (role: string) => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      console.log(`Attempting demo login for role: ${role}`);
+      await demoLogin(role);
+      console.log('Demo login successful, navigating to dashboard...');
+      // Force navigation to dashboard in case automatic redirect doesn't work
+      navigate('/dashboard');
+    } catch (err: any) {
+      console.error('Demo login error:', err);
+      
+      // More detailed error messages
+      let errorMessage = `Demo login failed for ${role}.`;
+      
+      if (err.response) {
+        // Server responded with an error
+        const status = err.response.status;
+        const data = err.response.data;
+        
+        if (status === 404) {
+          errorMessage = `Demo login endpoint not found. Is the auth service running?`;
+        } else if (status === 500) {
+          errorMessage = `Server error during demo login. ${data?.message || 'Please try again.'}`;
+        } else if (data?.message) {
+          errorMessage = data.message;
+        } else {
+          errorMessage = `HTTP ${status}: ${err.response.statusText}`;
+        }
+      } else if (err.request) {
+        // Network error
+        errorMessage = `Cannot connect to auth service. Please check if the backend is running.`;
+      } else {
+        // Other error
+        errorMessage = err.message || `Unknown error during demo login for ${role}`;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -171,6 +228,42 @@ const LoginPage: React.FC = () => {
                 </Link>
               </Typography>
             </Box>
+
+            <Divider sx={{ my: 3 }}>
+              <Typography variant="body2" color="text.secondary">
+                Quick Demo Login
+              </Typography>
+            </Divider>
+
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2, textAlign: 'center' }}>
+              Click any role below to instantly log in as a demo user
+            </Typography>
+
+            <Grid container spacing={1}>
+              {demoUsers.map((user) => (
+                <Grid item xs={6} key={user.role}>
+                  <Chip
+                    label={isLoading ? 'Loading...' : user.name}
+                    variant="outlined"
+                    color={user.color}
+                    onClick={() => handleDemoLogin(user.role)}
+                    disabled={isLoading}
+                    sx={{ 
+                      width: '100%', 
+                      cursor: isLoading ? 'default' : 'pointer',
+                      '&:hover': {
+                        backgroundColor: (theme) => 
+                          isLoading ? 'transparent' : theme.palette[user.color].main + '20'
+                      }
+                    }}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 2, textAlign: 'center', display: 'block' }}>
+              Demo users are for testing purposes only
+            </Typography>
           </Box>
         </Paper>
       </Box>

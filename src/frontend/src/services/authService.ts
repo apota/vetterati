@@ -64,11 +64,11 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-  expires_in: number;
-  user: User;
+  AccessToken: string;
+  RefreshToken: string;
+  TokenType: string;
+  ExpiresIn: number;
+  User: User;
 }
 
 export interface ApiResponse<T> {
@@ -116,12 +116,23 @@ export interface VerifyResetTokenRequest {
   token: string;
 }
 
+export interface DemoLoginRequest {
+  role: string;
+}
+
+export interface DemoUserInfo {
+  role: string;
+  name: string;
+  email: string;
+  description: string;
+}
+
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/api/v1/auth/email-login', credentials);
     const loginData = response.data.data;
-    if (loginData.refresh_token) {
-      localStorage.setItem('refresh_token', loginData.refresh_token);
+    if (loginData.RefreshToken) {
+      localStorage.setItem('refresh_token', loginData.RefreshToken);
     }
     return loginData;
   },
@@ -129,8 +140,8 @@ export const authService = {
   register: async (userData: RegisterRequest): Promise<LoginResponse> => {
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/api/v1/auth/register', userData);
     const loginData = response.data.data;
-    if (loginData.refresh_token) {
-      localStorage.setItem('refresh_token', loginData.refresh_token);
+    if (loginData.RefreshToken) {
+      localStorage.setItem('refresh_token', loginData.RefreshToken);
     }
     return loginData;
   },
@@ -164,6 +175,20 @@ export const authService = {
 
   resetPassword: async (request: ResetPasswordRequest): Promise<void> => {
     await api.post('/api/v1/auth/reset-password', request);
+  },
+
+  demoLogin: async (role: string): Promise<LoginResponse> => {
+    const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/api/v1/auth/demo-login', { role });
+    const loginData = response.data.data;
+    if (loginData.RefreshToken) {
+      localStorage.setItem('refresh_token', loginData.RefreshToken);
+    }
+    return loginData;
+  },
+
+  getDemoUsers: async (): Promise<DemoUserInfo[]> => {
+    const response: AxiosResponse<ApiResponse<DemoUserInfo[]>> = await api.get('/api/v1/auth/demo-users');
+    return response.data.data;
   },
 };
 

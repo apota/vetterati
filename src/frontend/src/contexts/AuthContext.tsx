@@ -24,6 +24,7 @@ interface AuthState {
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
+  demoLogin: (role: string) => Promise<void>;
   register: (userData: RegisterData) => Promise<any>;
   logout: () => void;
   refreshToken: () => Promise<void>;
@@ -134,10 +135,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     dispatch({ type: 'LOGIN_START' });
     try {
       const response = await authService.login({ email, password });
-      localStorage.setItem('token', response.access_token);
+      localStorage.setItem('token', response.AccessToken);
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: { user: response.user, token: response.access_token },
+        payload: { user: response.User, token: response.AccessToken },
+      });
+    } catch (error) {
+      dispatch({ type: 'LOGIN_FAILURE' });
+      throw error;
+    }
+  };
+
+  const demoLogin = async (role: string) => {
+    dispatch({ type: 'LOGIN_START' });
+    try {
+      const response = await authService.demoLogin(role);
+      localStorage.setItem('token', response.AccessToken);
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload: { user: response.User, token: response.AccessToken },
       });
     } catch (error) {
       dispatch({ type: 'LOGIN_FAILURE' });
@@ -171,8 +187,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const refreshToken = localStorage.getItem('refresh_token');
       if (refreshToken) {
         const response = await authService.refresh({ refresh_token: refreshToken });
-        localStorage.setItem('token', response.access_token);
-        dispatch({ type: 'REFRESH_TOKEN', payload: { token: response.access_token } });
+        localStorage.setItem('token', response.AccessToken);
+        dispatch({ type: 'REFRESH_TOKEN', payload: { token: response.AccessToken } });
       }
     } catch (error) {
       logout();
@@ -194,6 +210,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const value: AuthContextType = {
     ...state,
     login,
+    demoLogin,
     register,
     logout,
     refreshToken,

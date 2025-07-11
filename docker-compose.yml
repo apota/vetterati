@@ -12,7 +12,13 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./scripts/db-init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ats_user -d vetterati_ats"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks:
       - ats-network
 
@@ -21,6 +27,12 @@ services:
     image: redis:7-alpine
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     networks:
       - ats-network
 
@@ -61,6 +73,12 @@ services:
       - AWS_DEFAULT_REGION=us-east-1
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     networks:
       - ats-network
 
@@ -106,10 +124,43 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=vetterati_ats;Username=ats_user;Password=ats_password
-      - Redis__ConnectionString=redis:6379
+      - ConnectionStrings__Redis=redis:6379
+      - Jwt__SecretKey=your-super-secret-jwt-key-for-docker-that-is-at-least-32-characters-long-and-secure
+      - Jwt__Issuer=vetterati-ats
+      - Jwt__Audience=vetterati-ats
+      - Jwt__ExpiryMinutes=60
+      - Jwt__RefreshTokenExpiryDays=30
+      - PasswordPolicy__MinLength=8
+      - PasswordPolicy__MaxLength=128
+      - PasswordPolicy__RequireUppercase=true
+      - PasswordPolicy__RequireLowercase=true
+      - PasswordPolicy__RequireDigit=true
+      - PasswordPolicy__RequireSpecialChar=true
+      - PasswordPolicy__MaxFailedAttempts=5
+      - PasswordPolicy__LockoutDuration=00:15:00
+      - RateLimit__AnonymousUserLimit=100
+      - RateLimit__AuthenticatedUserLimit=1000
+      - RateLimit__AdminUserLimit=5000
+      - Frontend__BaseUrl=http://localhost:3000
+      - Email__SendGrid__ApiKey=demo-sendgrid-key
+      - Email__SendGrid__FromEmail=noreply@vetterati.com
+      - Email__SendGrid__FromName=Vetterati ATS
+      - Email__Smtp__Host=smtp.gmail.com
+      - Email__Smtp__Port=587
+      - Email__Smtp__Username=demo@vetterati.com
+      - Email__Smtp__Password=demo-password
+      - Email__Smtp__EnableSsl=true
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks:
       - ats-network
 
@@ -267,7 +318,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
-      - Services__AuthService=http://auth-service
+      - Services__AuthService=http://auth-service:8080
       - Services__ResumeService=http://resume-service:8000
       - Services__AhpService=http://ahp-service
       - Services__WorkflowService=http://workflow-service:8000

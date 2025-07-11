@@ -822,4 +822,56 @@ public class AuthController : ControllerBase
         rng.GetBytes(bytes);
         return Convert.ToBase64String(bytes).Replace("+", "-").Replace("/", "_").Replace("=", "");
     }
+
+    /// <summary>
+    /// Test registration endpoint with manual JSON parsing
+    /// </summary>
+    [HttpPost("test-register")]
+    public async Task<IActionResult> TestRegister()
+    {
+        try
+        {
+            _logger.LogInformation("TestRegister endpoint called");
+            
+            // Read raw request body
+            using var reader = new StreamReader(Request.Body);
+            var body = await reader.ReadToEndAsync();
+            _logger.LogInformation("Raw request body: {Body}", body);
+            
+            if (string.IsNullOrEmpty(body))
+            {
+                return BadRequest(new { error = "Empty request body" });
+            }
+            
+            // Parse JSON manually
+            var jsonDocument = JsonDocument.Parse(body);
+            var root = jsonDocument.RootElement;
+            
+            // Extract fields
+            var firstName = root.TryGetProperty("firstName", out var fnProp) ? fnProp.GetString() : "";
+            var lastName = root.TryGetProperty("lastName", out var lnProp) ? lnProp.GetString() : "";
+            var email = root.TryGetProperty("email", out var emailProp) ? emailProp.GetString() : "";
+            var password = root.TryGetProperty("password", out var passProp) ? passProp.GetString() : "";
+            var role = root.TryGetProperty("role", out var roleProp) ? roleProp.GetString() : "";
+            var company = root.TryGetProperty("company", out var compProp) ? compProp.GetString() : "";
+            
+            _logger.LogInformation("Extracted data - Name: {FirstName} {LastName}, Email: {Email}, Role: {Role}, Company: {Company}", 
+                firstName, lastName, email, role, company);
+                
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                return BadRequest(new { error = "Email and password are required" });
+            }
+            
+            return Ok(new { 
+                message = "Test registration successful", 
+                data = new { firstName, lastName, email, role, company } 
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in TestRegister");
+            return StatusCode(500, new { error = ex.Message });
+        }
+    }
 }

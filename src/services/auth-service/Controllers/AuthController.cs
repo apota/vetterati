@@ -577,6 +577,7 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
+    /// <summary>
     /// Demo login endpoint for quick testing with predefined users.
     /// Available roles: admin, recruiter, hiring-manager, candidate, interviewer, hr
     /// POST /api/v1/auth/demo-login with { "role": "admin" }
@@ -608,69 +609,25 @@ public class AuthController : ControllerBase
 
             var (email, name, roles, company) = demoUsers[request.Role.ToLower()];
 
-            // Check if demo user already exists
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == email);
-
-            if (user == null)
+            // Create demo user object (temporary, bypassing database for now)
+            var user = new User
             {
-                // Create demo user
-                user = new User
-                {
-                    Email = email,
-                    Name = name,
-                    FirstName = name.Split(' ')[0],
-                    LastName = name.Split(' ').Length > 1 ? name.Split(' ')[1] : "",
-                    Company = company,
-                    SsoProvider = "demo",
-                    SsoId = $"demo_{request.Role.ToLower()}",
-                    Roles = roles,
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                // Add to organization if company is specified
-                if (!string.IsNullOrEmpty(company))
-                {
-                    var organization = await _context.Organizations
-                        .FirstOrDefaultAsync(o => o.Name == company);
-                    
-                    if (organization == null)
-                    {
-                        organization = new Organization
-                        {
-                            Name = company,
-                            Settings = new Dictionary<string, object>()
-                        };
-                        _context.Organizations.Add(organization);
-                        await _context.SaveChangesAsync();
-                    }
-
-                    // Add user to organization
-                    var userOrg = new AuthService.Data.UserOrganization
-                    {
-                        UserId = user.Id,
-                        OrganizationId = organization.Id,
-                        Role = roles.Contains("admin") ? "admin" : roles[0]
-                    };
-                    _context.UserOrganizations.Add(userOrg);
-                    await _context.SaveChangesAsync();
-                }
-            }
-
-            // Update last login
-            user.LastLoginAt = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+                Id = Guid.NewGuid(), // Generate temporary ID
+                Email = email,
+                Name = name,
+                FirstName = name.Split(' ')[0],
+                LastName = name.Split(' ').Length > 1 ? name.Split(' ')[1] : "",
+                Company = company,
+                Roles = roles,
+                IsActive = true,
+                LastLoginAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
 
             // Generate tokens
             var accessToken = _jwtService.GenerateAccessToken(user);
             var refreshToken = _jwtService.GenerateRefreshToken();
-
-            // Store refresh token in Redis
-            await _redis.StringSetAsync($"refresh_token:{user.Id}", refreshToken, TimeSpan.FromDays(30));
 
             var response = new ApiResponse<LoginResponse>
             {

@@ -318,7 +318,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
-      - Services__AuthService=http://auth-service
+      - Services__AuthService=http://auth-service:8080
       - Services__ResumeService=http://resume-service:8000
       - Services__AhpService=http://ahp-service
       - Services__WorkflowService=http://workflow-service:8000

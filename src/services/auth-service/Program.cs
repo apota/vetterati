@@ -23,7 +23,8 @@ builder.Services.AddSwaggerGen();
 
 // Add Database
 builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+           .UseSnakeCaseNamingConvention());
 
 // Add Redis
 builder.Services.AddSingleton<IConnectionMultiplexer>(provider =>
@@ -78,6 +79,21 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Ensure database is created and migrated
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+    try
+    {
+        context.Database.EnsureCreated();
+        Log.Information("Database schema created successfully");
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex, "Failed to create database schema");
+    }
+}
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())

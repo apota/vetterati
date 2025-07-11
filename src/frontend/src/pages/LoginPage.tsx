@@ -233,30 +233,6 @@ const LoginPage: React.FC = () => {
             <Typography variant="caption" color="text.secondary" sx={{ mt: 2, textAlign: 'center', display: 'block' }}>
               Demo users are for testing purposes only
             </Typography>
-
-            <Divider sx={{ my: 2 }}>
-              <Chip label="Or sign in as demo user" />
-            </Divider>
-
-            <Grid container spacing={2}>
-              {demoUsers.map((user) => (
-                <Grid item xs={12} sm={6} key={user.role}>
-                  <Button
-                    variant="outlined"
-                    fullWidth
-                    color={user.color}
-                    onClick={() => handleDemoLogin(user.role)}
-                    disabled={isLoading}
-                    sx={{ mb: 1 }}
-                  >
-                    {isLoading ? 'Loading...' : user.name}
-                  </Button>
-                  <Typography variant="caption" color="text.secondary" align="center">
-                    {user.description}
-                  </Typography>
-                </Grid>
-              ))}
-            </Grid>
           </Box>
         </Paper>
       </Box>

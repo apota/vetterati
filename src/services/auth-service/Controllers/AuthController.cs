@@ -251,18 +251,90 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<ApiResponse<LoginResponse>>> Register([FromBody] RegisterRequest request)
+    public async Task<ActionResult<ApiResponse<LoginResponse>>> Register([FromBody] RegisterRequest? request)
     {
         try
         {
-            // Validate password first
-            var passwordValidation = _passwordValidation.ValidatePassword(request.Password);
-            if (!passwordValidation.IsValid)
+            _logger.LogInformation("Register endpoint called");
+            
+            // Check if request is null
+            if (request == null)
+            {
+                _logger.LogWarning("Register request is null");
+                return BadRequest(new ApiError 
+                { 
+                    Code = "INVALID_REQUEST", 
+                    Message = "Request body is required" 
+                });
+            }
+
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(request.Email))
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "VALIDATION_ERROR", 
+                    Message = "Email is required" 
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Password))
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "VALIDATION_ERROR", 
+                    Message = "Password is required" 
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.FirstName))
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "VALIDATION_ERROR", 
+                    Message = "First name is required" 
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.LastName))
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "VALIDATION_ERROR", 
+                    Message = "Last name is required" 
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Role))
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "VALIDATION_ERROR", 
+                    Message = "Role is required" 
+                });
+            }
+
+            _logger.LogInformation("Registration attempt for email: {Email}, name: {FirstName} {LastName}, role: {Role}", 
+                request.Email, request.FirstName, request.LastName, request.Role);
+
+            // Validate password
+            var passwordValidation = _passwordValidation?.ValidatePassword(request.Password);
+            if (passwordValidation != null && !passwordValidation.IsValid)
             {
                 return BadRequest(new ApiError 
                 { 
                     Code = "INVALID_PASSWORD", 
                     Message = string.Join("; ", passwordValidation.Errors)
+                });
+            }
+
+            // Basic password validation if service is not available
+            if (passwordValidation == null && request.Password.Length < 6)
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "INVALID_PASSWORD", 
+                    Message = "Password must be at least 6 characters long" 
                 });
             }
 
@@ -286,28 +358,38 @@ public class AuthController : ControllerBase
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Name = $"{request.FirstName} {request.LastName}",
-                Company = request.Company,
+                Company = request.Company ?? "Default Company",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 Roles = new List<string> { request.Role },
-                IsActive = true
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation("User created successfully with ID: {UserId}", user.Id);
+
             // Create or find organization
+            var organizationName = !string.IsNullOrWhiteSpace(request.Company) ? request.Company : "Default Company";
             var organization = await _context.Organizations
-                .FirstOrDefaultAsync(o => o.Name == request.Company);
+                .FirstOrDefaultAsync(o => o.Name == organizationName);
             
             if (organization == null)
             {
                 organization = new Organization
                 {
-                    Name = request.Company,
-                    Settings = new Dictionary<string, object>()
+                    Name = organizationName,
+                    Settings = new Dictionary<string, object>(),
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
                 };
                 _context.Organizations.Add(organization);
                 await _context.SaveChangesAsync();
+                
+                _logger.LogInformation("Organization created: {OrganizationName} with ID: {OrganizationId}", 
+                    organizationName, organization.Id);
             }
 
             // Add user to organization
@@ -315,10 +397,13 @@ public class AuthController : ControllerBase
             {
                 UserId = user.Id,
                 OrganizationId = organization.Id,
-                Role = request.Role
+                Role = request.Role,
+                CreatedAt = DateTime.UtcNow
             };
             _context.UserOrganizations.Add(userOrg);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("User added to organization successfully");
 
             // Generate tokens
             var accessToken = _jwtService.GenerateAccessToken(user);
@@ -338,12 +423,13 @@ public class AuthController : ControllerBase
                 }
             };
 
+            _logger.LogInformation("Registration completed successfully for user: {Email}", request.Email);
             return Ok(response);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during registration for email: {Email}. Error: {ErrorMessage}", 
-                request.Email, ex.Message);
+            _logger.LogError(ex, "Error during registration for email: {Email}. Error: {ErrorMessage}. StackTrace: {StackTrace}", 
+                request?.Email ?? "unknown", ex.Message, ex.StackTrace);
             return StatusCode(500, new ApiError 
             { 
                 Code = "INTERNAL_ERROR", 

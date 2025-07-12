@@ -37,11 +37,15 @@ const ForgotPasswordPage: React.FC = () => {
 
     try {
       const response = await authService.forgotPassword(data);
+      console.log('Forgot password response:', response);
       setSuccess(true);
       
       // Check if response contains resetUrl for demo purposes
       if (response && (response as any).resetUrl) {
+        console.log('Reset URL found:', (response as any).resetUrl);
         setResetUrl((response as any).resetUrl);
+      } else {
+        console.log('No reset URL in response:', response);
       }
     } catch (err: any) {
       setError(

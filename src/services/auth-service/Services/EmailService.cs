@@ -26,7 +26,7 @@ public class EmailService : IEmailService
     {
         try
         {
-            var frontendUrl = _configuration["Frontend:BaseUrl"] ?? "http://localhost:3000";
+            var frontendUrl = _configuration["Frontend:BaseUrl"] ?? "EMAIL-SERVICE-FALLBACK";
             var resetUrl = $"{frontendUrl}/reset-password?token={resetToken}";
             
             var emailBody = GeneratePasswordResetEmailBody(userName, resetUrl);

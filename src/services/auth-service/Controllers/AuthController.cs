@@ -21,6 +21,7 @@ public class AuthController : ControllerBase
     private readonly IEmailService _emailService;
     private readonly IPasswordValidationService _passwordValidation;
     private readonly IUserManagementService _userManagement;
+    private readonly IConfiguration _configuration;
 
     public AuthController(
         AuthDbContext context, 
@@ -29,7 +30,8 @@ public class AuthController : ControllerBase
         ILogger<AuthController> logger,
         IEmailService emailService,
         IPasswordValidationService passwordValidation,
-        IUserManagementService userManagement)
+        IUserManagementService userManagement,
+        IConfiguration configuration)
     {
         _context = context;
         _jwtService = jwtService;
@@ -38,6 +40,7 @@ public class AuthController : ControllerBase
         _emailService = emailService;
         _passwordValidation = passwordValidation;
         _userManagement = userManagement;
+        _configuration = configuration;
     }
 
     [HttpPost("login")]
@@ -542,7 +545,9 @@ public class AuthController : ControllerBase
                 await _emailService.SendPasswordResetEmailAsync(user.Email, resetToken, user.Name);
                 
                 // For demo purposes, also return the reset URL
-                resetUrl = $"http://localhost:8081/reset-password?token={resetToken}";
+                var frontendUrl = _configuration["Frontend:BaseUrl"] ?? "DEFAULT-FALLBACK-URL";
+                _logger.LogInformation("Frontend URL from config: {FrontendUrl}", frontendUrl);
+                resetUrl = $"{frontendUrl}/reset-password?token={resetToken}";
                 
                 // Log the reset URL for demo purposes
                 _logger.LogInformation("DEMO: Reset URL for {Email}: {ResetUrl}", user.Email, resetUrl);

@@ -141,7 +141,7 @@ services:
       - RateLimit__AnonymousUserLimit=100
       - RateLimit__AuthenticatedUserLimit=1000
       - RateLimit__AdminUserLimit=5000
-      - Frontend__BaseUrl=http://localhost:8081
+      - Frontend__BaseUrl=http://localhost:3000
       - Email__SendGrid__ApiKey=demo-sendgrid-key
       - Email__SendGrid__FromEmail=noreply@vetterati.com
       - Email__SendGrid__FromName=Vetterati ATS

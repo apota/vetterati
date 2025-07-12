@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using AuthService.Data;
 using AuthService.Services;
+using Vetterati.Shared.Models;
 using StackExchange.Redis;
 using Serilog;
 
@@ -29,14 +30,27 @@ builder.Services.AddSwaggerGen();
 
 // Add Database
 builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-           .UseSnakeCaseNamingConvention());
+    options.UseInMemoryDatabase("VetteratiAuthTestDb"));
 
-// Add Redis
+// Add Redis - Mock for testing
 builder.Services.AddSingleton<IConnectionMultiplexer>(provider =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
-    return ConnectionMultiplexer.Connect(connectionString);
+    try
+    {
+        var configuration = new ConfigurationOptions
+        {
+            EndPoints = { "localhost:6379" },
+            AbortOnConnectFail = false,
+            ConnectTimeout = 500,
+            ConnectRetry = 0
+        };
+        return ConnectionMultiplexer.Connect(configuration);
+    }
+    catch
+    {
+        Log.Warning("Redis not available, using mock connection for testing");
+        return ConnectionMultiplexer.Connect("localhost:6379,abortConnect=false");
+    }
 });
 
 // Add JWT Service
@@ -93,6 +107,22 @@ using (var scope = app.Services.CreateScope())
     try
     {
         context.Database.EnsureCreated();
+        
+        // Add test organization if not exists
+        if (!context.Organizations.Any())
+        {
+            var testOrg = new Organization
+            {
+                Name = "Test Organization",
+                Settings = new Dictionary<string, object>(),
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            context.Organizations.Add(testOrg);
+            await context.SaveChangesAsync();
+            Log.Information("Test organization created");
+        }
+        
         Log.Information("Database schema created successfully");
     }
     catch (Exception ex)

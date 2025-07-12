@@ -509,10 +509,16 @@ public class AuthController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("Forgot password request for email: {Email}", request.Email);
+            
             // Find user by email
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == request.Email && u.IsActive);
 
+            _logger.LogInformation("User found: {Found}, User ID: {UserId}", user != null, user?.Id);
+
+            string? resetUrl = null;
+            
             // Always return success to prevent email enumeration attacks
             // but only send email if user exists
             if (user != null)
@@ -534,11 +540,33 @@ public class AuthController : ControllerBase
 
                 // Send reset email
                 await _emailService.SendPasswordResetEmailAsync(user.Email, resetToken, user.Name);
+                
+                // For demo purposes, also return the reset URL
+                resetUrl = $"http://localhost:8081/reset-password?token={resetToken}";
+                
+                // Log the reset URL for demo purposes
+                _logger.LogInformation("DEMO: Reset URL for {Email}: {ResetUrl}", user.Email, resetUrl);
+            }
+
+            // For demo purposes, include the reset URL in response
+            object responseData;
+            if (resetUrl != null)
+            {
+                responseData = new { 
+                    message = "If an account with that email exists, we've sent a password reset link.",
+                    resetUrl = resetUrl // Demo: actual reset URL
+                };
+            }
+            else
+            {
+                responseData = new { 
+                    message = "If an account with that email exists, we've sent a password reset link." 
+                };
             }
 
             return Ok(new ApiResponse<object> 
             { 
-                Data = new { message = "If an account with that email exists, we've sent a password reset link." } 
+                Data = responseData 
             });
         }
         catch (Exception ex)
@@ -835,6 +863,16 @@ public class AuthController : ControllerBase
                 Message = "An error occurred while fetching demo users" 
             });
         }
+    }
+
+    [HttpGet("test-log")]
+    public ActionResult<ApiResponse<object>> TestLog()
+    {
+        _logger.LogInformation("TEST: Test log endpoint called");
+        return Ok(new ApiResponse<object> 
+        { 
+            Data = new { message = "Test log successful" } 
+        });
     }
 
 

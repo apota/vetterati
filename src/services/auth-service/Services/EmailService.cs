@@ -1,4 +1,7 @@
 using System;
+using System.IO;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace AuthService.Services;
 
@@ -23,9 +26,6 @@ public class EmailService : IEmailService
     {
         try
         {
-            // For demo purposes, we'll just log the email
-            // In production, integrate with SendGrid, SMTP, or other email service
-            
             var frontendUrl = _configuration["Frontend:BaseUrl"] ?? "http://localhost:3000";
             var resetUrl = $"{frontendUrl}/reset-password?token={resetToken}";
             
@@ -33,10 +33,11 @@ public class EmailService : IEmailService
             
             _logger.LogInformation("Password reset email would be sent to {Email}", toEmail);
             _logger.LogInformation("Reset URL: {ResetUrl}", resetUrl);
-            _logger.LogInformation("Email Body:\n{EmailBody}", emailBody);
             
-            // TODO: Implement actual email sending
-            // Example implementations:
+            // Save email to file for demo purposes
+            await SaveEmailToFileAsync(toEmail, "Password Reset - Vetterati ATS", emailBody);
+            
+            // TODO: For production, implement actual email sending:
             // - SendGrid: await SendGridSendAsync(toEmail, "Password Reset", emailBody);
             // - SMTP: await SmtpSendAsync(toEmail, "Password Reset", emailBody);
             
@@ -56,9 +57,11 @@ public class EmailService : IEmailService
             var emailBody = GenerateWelcomeEmailBody(userName);
             
             _logger.LogInformation("Welcome email would be sent to {Email}", toEmail);
-            _logger.LogInformation("Email Body:\n{EmailBody}", emailBody);
             
-            // TODO: Implement actual email sending
+            // Save email to file for demo purposes
+            await SaveEmailToFileAsync(toEmail, "Welcome to Vetterati ATS", emailBody);
+            
+            // TODO: For production, implement actual email sending
             
             await Task.CompletedTask;
         }
@@ -151,5 +154,41 @@ public class EmailService : IEmailService
     </div>
 </body>
 </html>";
+    }
+
+    private async Task SaveEmailToFileAsync(string toEmail, string subject, string body)
+    {
+        try
+        {
+            // Create emails directory if it doesn't exist
+            var emailsDir = Path.Combine(Directory.GetCurrentDirectory(), "emails");
+            if (!Directory.Exists(emailsDir))
+            {
+                Directory.CreateDirectory(emailsDir);
+            }
+            
+            // Generate filename with timestamp
+            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            var safeEmail = toEmail.Replace("@", "_at_").Replace(".", "_");
+            var filename = $"{timestamp}_{safeEmail}_password_reset.html";
+            var filePath = Path.Combine(emailsDir, filename);
+            
+            // Create email content with headers
+            var emailContent = $@"
+TO: {toEmail}
+SUBJECT: {subject}
+DATE: {DateTime.Now:yyyy-MM-dd HH:mm:ss}
+==========================================
+
+{body}";
+            
+            await File.WriteAllTextAsync(filePath, emailContent);
+            _logger.LogInformation("Email saved to file: {FilePath}", filePath);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to save email to file for {Email}", toEmail);
+            // Don't throw here as this is just for demo purposes
+        }
     }
 }

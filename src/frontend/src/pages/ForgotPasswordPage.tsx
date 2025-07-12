@@ -20,6 +20,7 @@ const ForgotPasswordPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resetUrl, setResetUrl] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const {
@@ -32,10 +33,16 @@ const ForgotPasswordPage: React.FC = () => {
   const onSubmit = async (data: ForgotPasswordRequest) => {
     setIsLoading(true);
     setError(null);
+    setResetUrl(null);
 
     try {
-      await authService.forgotPassword(data);
+      const response = await authService.forgotPassword(data);
       setSuccess(true);
+      
+      // Check if response contains resetUrl for demo purposes
+      if (response && (response as any).resetUrl) {
+        setResetUrl((response as any).resetUrl);
+      }
     } catch (err: any) {
       setError(
         err.response?.data?.message || 
@@ -77,6 +84,19 @@ const ForgotPasswordPage: React.FC = () => {
             <Alert severity="success" sx={{ width: '100%', mb: 3 }}>
               We've sent a password reset link to <strong>{getValues('email')}</strong>
             </Alert>
+
+            {resetUrl && (
+              <Alert severity="info" sx={{ width: '100%', mb: 3 }}>
+                <Typography variant="body2" component="div">
+                  <strong>Demo Mode:</strong> Here's your reset link:
+                </Typography>
+                <Typography variant="body2" component="div" sx={{ mt: 1, wordBreak: 'break-all' }}>
+                  <a href={resetUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#1976d2' }}>
+                    {resetUrl}
+                  </a>
+                </Typography>
+              </Alert>
+            )}
 
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3, textAlign: 'center' }}>
               Please check your email and click the link to reset your password. 

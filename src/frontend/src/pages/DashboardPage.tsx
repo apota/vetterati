@@ -15,44 +15,63 @@ import {
   Paper,
   CircularProgress,
   Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import {
   TrendingUp,
   People,
   Work,
   Event,
+  CalendarToday,
+  Refresh,
 } from '@mui/icons-material';
-import DashboardService, { DashboardStats, RecentApplication } from '../services/dashboardService';
+import DashboardService, { DashboardStats, RecentApplication, TimeWindow } from '../services/dashboardService';
 
 const DashboardPage: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentApplications, setRecentApplications] = useState<RecentApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [timeWindow, setTimeWindow] = useState<TimeWindow>('day');
+
+  const fetchDashboardData = async (selectedTimeWindow: TimeWindow) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const [dashboardStats, applications] = await Promise.all([
+        DashboardService.getDashboardStats(selectedTimeWindow),
+        DashboardService.getRecentApplications()
+      ]);
+
+      setStats(dashboardStats);
+      setRecentApplications(applications);
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err);
+      setError('Failed to load dashboard data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const [dashboardStats, applications] = await Promise.all([
-          DashboardService.getDashboardStats(),
-          DashboardService.getRecentApplications()
-        ]);
+    fetchDashboardData(timeWindow);
+  }, [timeWindow]);
 
-        setStats(dashboardStats);
-        setRecentApplications(applications);
-      } catch (err) {
-        console.error('Error fetching dashboard data:', err);
-        setError('Failed to load dashboard data. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleTimeWindowChange = (event: SelectChangeEvent<TimeWindow>) => {
+    const newTimeWindow = event.target.value as TimeWindow;
+    setTimeWindow(newTimeWindow);
+  };
 
-    fetchDashboardData();
-  }, []);
+  const handleRefresh = () => {
+    fetchDashboardData(timeWindow);
+  };
 
   const statCards = stats ? [
     {
@@ -100,8 +119,43 @@ const DashboardPage: React.FC = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
-        <CircularProgress />
+      <Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Typography variant="h4" gutterBottom>
+            Dashboard
+          </Typography>
+          
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="time-window-select-label-loading">
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CalendarToday fontSize="small" />
+                Compare with
+              </Box>
+            </InputLabel>
+            <Select
+              labelId="time-window-select-label-loading"
+              value={timeWindow}
+              onChange={handleTimeWindowChange}
+              label="Compare with"
+              disabled={loading}
+            >
+              {DashboardService.TIME_WINDOW_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  <Box>
+                    <Typography variant="body2">{option.label}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {option.description}
+                    </Typography>
+                  </Box>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+          <CircularProgress />
+        </Box>
       </Box>
     );
   }
@@ -109,9 +163,39 @@ const DashboardPage: React.FC = () => {
   if (error) {
     return (
       <Box>
-        <Typography variant="h4" gutterBottom>
-          Dashboard
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Typography variant="h4" gutterBottom>
+            Dashboard
+          </Typography>
+          
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="time-window-select-label-error">
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CalendarToday fontSize="small" />
+                Compare with
+              </Box>
+            </InputLabel>
+            <Select
+              labelId="time-window-select-label-error"
+              value={timeWindow}
+              onChange={handleTimeWindowChange}
+              label="Compare with"
+              disabled={loading}
+            >
+              {DashboardService.TIME_WINDOW_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  <Box>
+                    <Typography variant="body2">{option.label}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {option.description}
+                    </Typography>
+                  </Box>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
@@ -121,9 +205,62 @@ const DashboardPage: React.FC = () => {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        Dashboard
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          Dashboard
+        </Typography>
+        
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Tooltip title="Refresh data">
+            <IconButton 
+              onClick={handleRefresh} 
+              disabled={loading}
+              color="primary"
+            >
+              <Refresh />
+            </IconButton>
+          </Tooltip>
+          
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="time-window-select-label">
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CalendarToday fontSize="small" />
+                Compare with
+              </Box>
+            </InputLabel>
+            <Select
+              labelId="time-window-select-label"
+              value={timeWindow}
+              onChange={handleTimeWindowChange}
+              label="Compare with"
+              disabled={loading}
+            >
+              {DashboardService.TIME_WINDOW_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  <Box>
+                    <Typography variant="body2">{option.label}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {option.description}
+                    </Typography>
+                  </Box>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      </Box>
+
+      {stats && (
+        <Box sx={{ mb: 2 }}>
+          <Chip
+            icon={<CalendarToday />}
+            label={`Compared to ${stats.comparisonPeriod}`}
+            variant="outlined"
+            color="primary"
+            size="small"
+          />
+        </Box>
+      )}
       
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {statCards.map((stat, index) => (

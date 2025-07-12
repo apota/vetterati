@@ -834,72 +834,15 @@ public class AuthController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Simple test endpoint to verify controller is working
-    /// </summary>
-    [HttpGet("test")]
-    public IActionResult Test()
-    {
-        _logger.LogInformation("Test endpoint called successfully");
-        return Ok(new { message = "Auth controller is working", timestamp = DateTime.UtcNow });
-    }
 
-    /// <summary>
-    /// Test POST endpoint to verify POST requests work
-    /// </summary>
-    [HttpPost("test-post")]
-    public async Task<IActionResult> TestPost()
-    {
-        _logger.LogInformation("Test POST endpoint called");
-        
-        // Read raw request body
-        using (var reader = new StreamReader(Request.Body))
-        {
-            var body = await reader.ReadToEndAsync();
-            _logger.LogInformation("Raw request body: {Body}", body);
-        }
-        
-        return Ok(new { message = "POST request received", timestamp = DateTime.UtcNow });
-    }
 
-    /// <summary>
-    /// Simple demo login that accepts any role
-    /// </summary>
-    [HttpPost("simple-demo")]
-    public IActionResult SimpleDemo([FromBody] JsonElement request)
-    {
-        _logger.LogInformation("SimpleDemo endpoint called");
-        _logger.LogInformation("Request: {Request}", request);
-        
-        if (request.TryGetProperty("role", out var roleElement))
-        {
-            var role = roleElement.GetString();
-            _logger.LogInformation("Role extracted: {Role}", role);
-            return Ok(new { message = "Success", role = role });
-        }
-        
-        return BadRequest(new { error = "No role found" });
-    }
 
-    /// <summary>
-    /// Ultra simple test endpoint
-    /// </summary>
-    [HttpPost("ultra-simple")]
-    public IActionResult UltraSimple()
-    {
-        _logger.LogInformation("UltraSimple endpoint called successfully!");
-        return Ok(new { message = "Ultra simple endpoint works", timestamp = DateTime.UtcNow });
-    }
 
-    /// <summary>
-    /// Simple test endpoint to debug model binding
-    /// </summary>
-    [HttpPost("test-binding")]
-    public IActionResult TestBinding([FromBody] SimpleTestRequest request)
-    {
-        _logger.LogInformation("TestBinding called with: {TestField}", request?.TestField ?? "null");
-        return Ok(new { message = "Test binding works", testField = request?.TestField });
-    }
+
+
+
+
+
 
     private string GenerateSecureToken()
     {
@@ -909,55 +852,5 @@ public class AuthController : ControllerBase
         return Convert.ToBase64String(bytes).Replace("+", "-").Replace("/", "_").Replace("=", "");
     }
 
-    /// <summary>
-    /// Test registration endpoint with manual JSON parsing
-    /// </summary>
-    [HttpPost("test-register")]
-    public async Task<IActionResult> TestRegister()
-    {
-        try
-        {
-            _logger.LogInformation("TestRegister endpoint called");
-            
-            // Read raw request body
-            using var reader = new StreamReader(Request.Body);
-            var body = await reader.ReadToEndAsync();
-            _logger.LogInformation("Raw request body: {Body}", body);
-            
-            if (string.IsNullOrEmpty(body))
-            {
-                return BadRequest(new { error = "Empty request body" });
-            }
-            
-            // Parse JSON manually
-            var jsonDocument = JsonDocument.Parse(body);
-            var root = jsonDocument.RootElement;
-            
-            // Extract fields
-            var firstName = root.TryGetProperty("firstName", out var fnProp) ? fnProp.GetString() : "";
-            var lastName = root.TryGetProperty("lastName", out var lnProp) ? lnProp.GetString() : "";
-            var email = root.TryGetProperty("email", out var emailProp) ? emailProp.GetString() : "";
-            var password = root.TryGetProperty("password", out var passProp) ? passProp.GetString() : "";
-            var role = root.TryGetProperty("role", out var roleProp) ? roleProp.GetString() : "";
-            var company = root.TryGetProperty("company", out var compProp) ? compProp.GetString() : "";
-            
-            _logger.LogInformation("Extracted data - Name: {FirstName} {LastName}, Email: {Email}, Role: {Role}, Company: {Company}", 
-                firstName, lastName, email, role, company);
-                
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-            {
-                return BadRequest(new { error = "Email and password are required" });
-            }
-            
-            return Ok(new { 
-                message = "Test registration successful", 
-                data = new { firstName, lastName, email, role, company } 
-            });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error in TestRegister");
-            return StatusCode(500, new { error = ex.Message });
-        }
-    }
+
 }

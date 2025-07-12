@@ -258,7 +258,4 @@ public class DemoUserInfo
     public string Description { get; set; } = string.Empty;
 }
 
-public class SimpleTestRequest
-{
-    public string TestField { get; set; } = string.Empty;
-}
+

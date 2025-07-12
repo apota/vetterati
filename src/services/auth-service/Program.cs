@@ -30,27 +30,14 @@ builder.Services.AddSwaggerGen();
 
 // Add Database
 builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseInMemoryDatabase("VetteratiAuthTestDb"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+           .UseSnakeCaseNamingConvention());
 
-// Add Redis - Mock for testing
+// Add Redis
 builder.Services.AddSingleton<IConnectionMultiplexer>(provider =>
 {
-    try
-    {
-        var configuration = new ConfigurationOptions
-        {
-            EndPoints = { "localhost:6379" },
-            AbortOnConnectFail = false,
-            ConnectTimeout = 500,
-            ConnectRetry = 0
-        };
-        return ConnectionMultiplexer.Connect(configuration);
-    }
-    catch
-    {
-        Log.Warning("Redis not available, using mock connection for testing");
-        return ConnectionMultiplexer.Connect("localhost:6379,abortConnect=false");
-    }
+    var connectionString = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+    return ConnectionMultiplexer.Connect(connectionString);
 });
 
 // Add JWT Service
@@ -107,22 +94,6 @@ using (var scope = app.Services.CreateScope())
     try
     {
         context.Database.EnsureCreated();
-        
-        // Add test organization if not exists
-        if (!context.Organizations.Any())
-        {
-            var testOrg = new Organization
-            {
-                Name = "Test Organization",
-                Settings = new Dictionary<string, object>(),
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-            context.Organizations.Add(testOrg);
-            await context.SaveChangesAsync();
-            Log.Information("Test organization created");
-        }
-        
         Log.Information("Database schema created successfully");
     }
     catch (Exception ex)

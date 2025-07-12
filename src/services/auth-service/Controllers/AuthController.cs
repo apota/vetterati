@@ -251,18 +251,90 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<ApiResponse<LoginResponse>>> Register([FromBody] RegisterRequest request)
+    public async Task<ActionResult<ApiResponse<LoginResponse>>> Register([FromBody] RegisterRequest? request)
     {
         try
         {
-            // Validate password first
-            var passwordValidation = _passwordValidation.ValidatePassword(request.Password);
-            if (!passwordValidation.IsValid)
+            _logger.LogInformation("Register endpoint called");
+            
+            // Check if request is null
+            if (request == null)
+            {
+                _logger.LogWarning("Register request is null");
+                return BadRequest(new ApiError 
+                { 
+                    Code = "INVALID_REQUEST", 
+                    Message = "Request body is required" 
+                });
+            }
+
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(request.Email))
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "VALIDATION_ERROR", 
+                    Message = "Email is required" 
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Password))
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "VALIDATION_ERROR", 
+                    Message = "Password is required" 
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.FirstName))
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "VALIDATION_ERROR", 
+                    Message = "First name is required" 
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.LastName))
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "VALIDATION_ERROR", 
+                    Message = "Last name is required" 
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Role))
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "VALIDATION_ERROR", 
+                    Message = "Role is required" 
+                });
+            }
+
+            _logger.LogInformation("Registration attempt for email: {Email}, name: {FirstName} {LastName}, role: {Role}", 
+                request.Email, request.FirstName, request.LastName, request.Role);
+
+            // Validate password
+            var passwordValidation = _passwordValidation?.ValidatePassword(request.Password);
+            if (passwordValidation != null && !passwordValidation.IsValid)
             {
                 return BadRequest(new ApiError 
                 { 
                     Code = "INVALID_PASSWORD", 
                     Message = string.Join("; ", passwordValidation.Errors)
+                });
+            }
+
+            // Basic password validation if service is not available
+            if (passwordValidation == null && request.Password.Length < 6)
+            {
+                return BadRequest(new ApiError 
+                { 
+                    Code = "INVALID_PASSWORD", 
+                    Message = "Password must be at least 6 characters long" 
                 });
             }
 
@@ -286,28 +358,38 @@ public class AuthController : ControllerBase
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Name = $"{request.FirstName} {request.LastName}",
-                Company = request.Company,
+                Company = request.Company ?? "Default Company",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 Roles = new List<string> { request.Role },
-                IsActive = true
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation("User created successfully with ID: {UserId}", user.Id);
+
             // Create or find organization
+            var organizationName = !string.IsNullOrWhiteSpace(request.Company) ? request.Company : "Default Company";
             var organization = await _context.Organizations
-                .FirstOrDefaultAsync(o => o.Name == request.Company);
+                .FirstOrDefaultAsync(o => o.Name == organizationName);
             
             if (organization == null)
             {
                 organization = new Organization
                 {
-                    Name = request.Company,
-                    Settings = new Dictionary<string, object>()
+                    Name = organizationName,
+                    Settings = new Dictionary<string, object>(),
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
                 };
                 _context.Organizations.Add(organization);
                 await _context.SaveChangesAsync();
+                
+                _logger.LogInformation("Organization created: {OrganizationName} with ID: {OrganizationId}", 
+                    organizationName, organization.Id);
             }
 
             // Add user to organization
@@ -315,10 +397,16 @@ public class AuthController : ControllerBase
             {
                 UserId = user.Id,
                 OrganizationId = organization.Id,
-                Role = request.Role
+                Role = request.Role,
+                IsActive = true,
+                JoinedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
             _context.UserOrganizations.Add(userOrg);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("User added to organization successfully");
 
             // Generate tokens
             var accessToken = _jwtService.GenerateAccessToken(user);
@@ -338,12 +426,13 @@ public class AuthController : ControllerBase
                 }
             };
 
+            _logger.LogInformation("Registration completed successfully for user: {Email}", request.Email);
             return Ok(response);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during registration for email: {Email}. Error: {ErrorMessage}", 
-                request.Email, ex.Message);
+            _logger.LogError(ex, "Error during registration for email: {Email}. Error: {ErrorMessage}. StackTrace: {StackTrace}", 
+                request?.Email ?? "unknown", ex.Message, ex.StackTrace);
             return StatusCode(500, new ApiError 
             { 
                 Code = "INTERNAL_ERROR", 
@@ -583,10 +672,49 @@ public class AuthController : ControllerBase
     /// POST /api/v1/auth/demo-login with { "role": "admin" }
     /// </summary>
     [HttpPost("demo-login")]
-    public async Task<ActionResult<ApiResponse<LoginResponse>>> DemoLogin([FromBody] DemoLoginRequest request)
+    public async Task<ActionResult<ApiResponse<LoginResponse>>> DemoLogin([FromBody] DemoLoginRequest? request = null)
     {
         try
         {
+            _logger.LogInformation("=== DEMO LOGIN ENDPOINT CALLED ===");
+            _logger.LogInformation("Request object: {Request}", request);
+            _logger.LogInformation("Request Role: {Role}", request?.Role ?? "NULL");
+            _logger.LogInformation("ModelState IsValid: {IsValid}", ModelState.IsValid);
+            
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("ModelState validation failed:");
+                foreach (var error in ModelState)
+                {
+                    _logger.LogWarning("  {Key}: {Errors}", error.Key, string.Join(", ", error.Value?.Errors.Select(e => e.ErrorMessage) ?? new string[0]));
+                }
+                return BadRequest(new ApiError 
+                { 
+                    Code = "VALIDATION_ERROR", 
+                    Message = "Model validation failed"
+                });
+            }
+            
+            if (request == null)
+            {
+                _logger.LogWarning("Demo login request is NULL");
+                return BadRequest(new ApiError 
+                { 
+                    Code = "INVALID_REQUEST", 
+                    Message = "Request body is null" 
+                });
+            }
+            
+            if (string.IsNullOrWhiteSpace(request.Role))
+            {
+                _logger.LogWarning("Demo login request has null/empty role. Role value: '{Role}'", request.Role);
+                return BadRequest(new ApiError 
+                { 
+                    Code = "INVALID_REQUEST", 
+                    Message = "Role is required" 
+                });
+            }
+
             // Define demo users for different roles
             var demoUsers = new Dictionary<string, (string email, string name, List<string> roles, string company)>
             {
@@ -609,25 +737,45 @@ public class AuthController : ControllerBase
 
             var (email, name, roles, company) = demoUsers[request.Role.ToLower()];
 
-            // Create demo user object (temporary, bypassing database for now)
-            var user = new User
+            // Check if demo user already exists in database
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
             {
-                Id = Guid.NewGuid(), // Generate temporary ID
-                Email = email,
-                Name = name,
-                FirstName = name.Split(' ')[0],
-                LastName = name.Split(' ').Length > 1 ? name.Split(' ')[1] : "",
-                Company = company,
-                Roles = roles,
-                IsActive = true,
-                LastLoginAt = DateTime.UtcNow,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
+                // Create demo user in database
+                user = new User
+                {
+                    Email = email,
+                    Name = name,
+                    FirstName = name.Split(' ')[0],
+                    LastName = name.Split(' ').Length > 1 ? name.Split(' ')[1] : "",
+                    Company = company,
+                    SsoProvider = "demo",
+                    SsoId = $"demo_{request.Role.ToLower()}",
+                    Roles = roles,
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Created new demo user: {Email} with role: {Role}", email, request.Role);
+            }
+
+            // Update last login
+            user.LastLoginAt = DateTime.UtcNow;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
 
             // Generate tokens
             var accessToken = _jwtService.GenerateAccessToken(user);
             var refreshToken = _jwtService.GenerateRefreshToken();
+
+            // Store refresh token in Redis
+            await _redis.StringSetAsync($"refresh_token:{user.Id}", refreshToken, TimeSpan.FromDays(30));
 
             var response = new ApiResponse<LoginResponse>
             {
@@ -645,7 +793,7 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during demo login for role: {Role}", request.Role);
+            _logger.LogError(ex, "Error during demo login for role: {Role}", request?.Role ?? "null");
             return StatusCode(500, new ApiError 
             { 
                 Code = "INTERNAL_ERROR", 
@@ -689,6 +837,16 @@ public class AuthController : ControllerBase
         }
     }
 
+
+
+
+
+
+
+
+
+
+
     private string GenerateSecureToken()
     {
         using var rng = RandomNumberGenerator.Create();
@@ -696,4 +854,6 @@ public class AuthController : ControllerBase
         rng.GetBytes(bytes);
         return Convert.ToBase64String(bytes).Replace("+", "-").Replace("/", "_").Replace("=", "");
     }
+
+
 }

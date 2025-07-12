@@ -73,16 +73,12 @@ public class AuthDbContext : DbContext
             entity.Property(e => e.Role).IsRequired().HasMaxLength(100);
             entity.Property(e => e.IsActive).HasDefaultValue(true);
             
-            entity.HasIndex(e => new { e.UserId, e.OrganizationId }).IsUnique();
+            // Explicit column mapping
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.OrganizationId).HasColumnName("organization_id");
+            entity.Property(e => e.JoinedAt).HasColumnName("joined_at");
             
-            // Foreign key relationships
-            entity.HasOne<User>()
-                .WithMany()
-                .HasForeignKey(e => e.UserId);
-                
-            entity.HasOne<Organization>()
-                .WithMany()
-                .HasForeignKey(e => e.OrganizationId);
+            entity.HasIndex(e => new { e.UserId, e.OrganizationId }).IsUnique();
         });
 
         // Configure PasswordResetToken entity
@@ -111,9 +107,7 @@ public class AuthDbContext : DbContext
 public class UserOrganization : Vetterati.Shared.Models.BaseEntity
 {
     public Guid UserId { get; set; }
-    public User User { get; set; } = null!;
     public Guid OrganizationId { get; set; }
-    public Organization Organization { get; set; } = null!;
     public string Role { get; set; } = string.Empty;
     public bool IsActive { get; set; } = true;
     public DateTime? JoinedAt { get; set; } = DateTime.UtcNow;

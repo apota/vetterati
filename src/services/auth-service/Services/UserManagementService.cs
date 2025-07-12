@@ -389,8 +389,7 @@ public class UserManagementService : IUserManagementService
         {
             return await _context.UserOrganizations
                 .Where(uo => uo.UserId == userId && uo.IsActive)
-                .Include(uo => uo.Organization)
-                .Select(uo => uo.Organization)
+                .Join(_context.Organizations, uo => uo.OrganizationId, o => o.Id, (uo, o) => o)
                 .ToListAsync();
         }
         catch (Exception ex)

@@ -73,6 +73,11 @@ public class AuthDbContext : DbContext
             entity.Property(e => e.Role).IsRequired().HasMaxLength(100);
             entity.Property(e => e.IsActive).HasDefaultValue(true);
             
+            // Explicit column mapping
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.OrganizationId).HasColumnName("organization_id");
+            entity.Property(e => e.JoinedAt).HasColumnName("joined_at");
+            
             entity.HasIndex(e => new { e.UserId, e.OrganizationId }).IsUnique();
             
             // Foreign key relationships

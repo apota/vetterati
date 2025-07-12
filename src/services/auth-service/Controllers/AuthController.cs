@@ -398,7 +398,10 @@ public class AuthController : ControllerBase
                 UserId = user.Id,
                 OrganizationId = organization.Id,
                 Role = request.Role,
-                CreatedAt = DateTime.UtcNow
+                IsActive = true,
+                JoinedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
             _context.UserOrganizations.Add(userOrg);
             await _context.SaveChangesAsync();

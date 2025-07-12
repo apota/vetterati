@@ -160,8 +160,9 @@ export const authService = {
     return response.data.data;
   },
 
-  forgotPassword: async (request: ForgotPasswordRequest): Promise<void> => {
-    await api.post('/api/v1/auth/forgot-password', request);
+  forgotPassword: async (request: ForgotPasswordRequest): Promise<any> => {
+    const response = await api.post('/api/v1/auth/forgot-password', request);
+    return response.data.data;
   },
 
   verifyResetToken: async (request: VerifyResetTokenRequest): Promise<boolean> => {

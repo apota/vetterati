@@ -21,6 +21,7 @@ public class AuthController : ControllerBase
     private readonly IEmailService _emailService;
     private readonly IPasswordValidationService _passwordValidation;
     private readonly IUserManagementService _userManagement;
+    private readonly IConfiguration _configuration;
 
     public AuthController(
         AuthDbContext context, 
@@ -29,7 +30,8 @@ public class AuthController : ControllerBase
         ILogger<AuthController> logger,
         IEmailService emailService,
         IPasswordValidationService passwordValidation,
-        IUserManagementService userManagement)
+        IUserManagementService userManagement,
+        IConfiguration configuration)
     {
         _context = context;
         _jwtService = jwtService;
@@ -38,6 +40,7 @@ public class AuthController : ControllerBase
         _emailService = emailService;
         _passwordValidation = passwordValidation;
         _userManagement = userManagement;
+        _configuration = configuration;
     }
 
     [HttpPost("login")]
@@ -509,10 +512,16 @@ public class AuthController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("Forgot password request for email: {Email}", request.Email);
+            
             // Find user by email
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == request.Email && u.IsActive);
 
+            _logger.LogInformation("User found: {Found}, User ID: {UserId}", user != null, user?.Id);
+
+            string? resetUrl = null;
+            
             // Always return success to prevent email enumeration attacks
             // but only send email if user exists
             if (user != null)
@@ -534,11 +543,35 @@ public class AuthController : ControllerBase
 
                 // Send reset email
                 await _emailService.SendPasswordResetEmailAsync(user.Email, resetToken, user.Name);
+                
+                // For demo purposes, also return the reset URL
+                var frontendUrl = _configuration["Frontend:BaseUrl"] ?? "DEFAULT-FALLBACK-URL";
+                _logger.LogInformation("Frontend URL from config: {FrontendUrl}", frontendUrl);
+                resetUrl = $"{frontendUrl}/reset-password?token={resetToken}";
+                
+                // Log the reset URL for demo purposes
+                _logger.LogInformation("DEMO: Reset URL for {Email}: {ResetUrl}", user.Email, resetUrl);
+            }
+
+            // For demo purposes, include the reset URL in response
+            object responseData;
+            if (resetUrl != null)
+            {
+                responseData = new { 
+                    message = "If an account with that email exists, we've sent a password reset link.",
+                    resetUrl = resetUrl // Demo: actual reset URL
+                };
+            }
+            else
+            {
+                responseData = new { 
+                    message = "If an account with that email exists, we've sent a password reset link." 
+                };
             }
 
             return Ok(new ApiResponse<object> 
             { 
-                Data = new { message = "If an account with that email exists, we've sent a password reset link." } 
+                Data = responseData 
             });
         }
         catch (Exception ex)
@@ -835,6 +868,16 @@ public class AuthController : ControllerBase
                 Message = "An error occurred while fetching demo users" 
             });
         }
+    }
+
+    [HttpGet("test-log")]
+    public ActionResult<ApiResponse<object>> TestLog()
+    {
+        _logger.LogInformation("TEST: Test log endpoint called");
+        return Ok(new ApiResponse<object> 
+        { 
+            Data = new { message = "Test log successful" } 
+        });
     }
 
 

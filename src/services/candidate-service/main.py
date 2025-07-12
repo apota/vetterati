@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime
 
 from database import get_db, init_db
-from models import Candidate, Experience, Education, Skill, Resume, Application
+from models import Candidate, CandidateExperience, CandidateEducation, CandidateSkill, CandidateResume, CandidateApplication
 from schemas import (
     CandidateCreate, CandidateUpdate, CandidateResponse,
     ExperienceCreate, ExperienceResponse,

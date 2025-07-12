@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -13,6 +13,8 @@ import {
   TableHead,
   TableRow,
   Paper,
+  CircularProgress,
+  Alert,
 } from '@mui/material';
 import {
   TrendingUp,
@@ -20,66 +22,68 @@ import {
   Work,
   Event,
 } from '@mui/icons-material';
+import DashboardService, { DashboardStats, RecentApplication } from '../services/dashboardService';
 
 const DashboardPage: React.FC = () => {
-  // Mock data - in real app, this would come from API calls
-  const stats = [
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [recentApplications, setRecentApplications] = useState<RecentApplication[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const [dashboardStats, applications] = await Promise.all([
+          DashboardService.getDashboardStats(),
+          DashboardService.getRecentApplications()
+        ]);
+
+        setStats(dashboardStats);
+        setRecentApplications(applications);
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+        setError('Failed to load dashboard data. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  const statCards = stats ? [
     {
       title: 'Active Jobs',
-      value: '24',
+      value: stats.activeJobs.toString(),
       icon: <Work />,
       color: 'primary',
-      change: '+12%',
+      change: stats.jobsChange,
     },
     {
       title: 'Total Candidates',
-      value: '1,247',
+      value: stats.totalCandidates.toLocaleString(),
       icon: <People />,
       color: 'success',
-      change: '+8%',
+      change: stats.candidatesChange,
     },
     {
       title: 'Interviews Today',
-      value: '12',
+      value: stats.interviewsToday.toString(),
       icon: <Event />,
       color: 'warning',
-      change: '+3',
+      change: stats.interviewsChange,
     },
     {
       title: 'Hire Rate',
-      value: '23%',
+      value: `${stats.hireRate}%`,
       icon: <TrendingUp />,
       color: 'info',
-      change: '+2.5%',
+      change: stats.hireRateChange,
     },
-  ];
-
-  const recentApplications = [
-    {
-      candidate: 'John Doe',
-      position: 'Senior Software Engineer',
-      status: 'Interview',
-      applied: '2 hours ago',
-    },
-    {
-      candidate: 'Jane Smith',
-      position: 'Product Manager',
-      status: 'Review',
-      applied: '5 hours ago',
-    },
-    {
-      candidate: 'Bob Johnson',
-      position: 'UX Designer',
-      status: 'Offer',
-      applied: '1 day ago',
-    },
-    {
-      candidate: 'Alice Brown',
-      position: 'Data Scientist',
-      status: 'Interview',
-      applied: '2 days ago',
-    },
-  ];
+  ] : [];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -94,6 +98,27 @@ const DashboardPage: React.FC = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box>
+        <Typography variant="h4" gutterBottom>
+          Dashboard
+        </Typography>
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      </Box>
+    );
+  }
+
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
@@ -101,7 +126,7 @@ const DashboardPage: React.FC = () => {
       </Typography>
       
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        {stats.map((stat, index) => (
+        {statCards.map((stat, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
             <Card>
               <CardContent>
@@ -146,8 +171,8 @@ const DashboardPage: React.FC = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {recentApplications.map((application, index) => (
-                      <TableRow key={index}>
+                    {recentApplications.map((application) => (
+                      <TableRow key={application.id}>
                         <TableCell>
                           <Typography variant="body2" fontWeight="medium">
                             {application.candidate}
@@ -164,7 +189,7 @@ const DashboardPage: React.FC = () => {
                         </TableCell>
                         <TableCell>
                           <Typography variant="body2" color="text.secondary">
-                            {application.applied}
+                            {application.appliedAt}
                           </Typography>
                         </TableCell>
                       </TableRow>

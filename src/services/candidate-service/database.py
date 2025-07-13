@@ -122,3 +122,8 @@ def init_elasticsearch():
 def create_tables():
     """Create database tables."""
     Base.metadata.create_all(bind=engine)
+
+def init_db():
+    """Initialize database and elasticsearch."""
+    create_tables()
+    init_elasticsearch()

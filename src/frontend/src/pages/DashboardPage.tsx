@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Box,
   Grid,
@@ -13,73 +13,101 @@ import {
   TableHead,
   TableRow,
   Paper,
+  CircularProgress,
+  Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import {
   TrendingUp,
   People,
   Work,
   Event,
+  CalendarToday,
+  Refresh,
 } from '@mui/icons-material';
+import DashboardService, { DashboardStats, RecentApplication, TimeWindow } from '../services/dashboardService';
 
 const DashboardPage: React.FC = () => {
-  // Mock data - in real app, this would come from API calls
-  const stats = [
-    {
-      title: 'Active Jobs',
-      value: '24',
-      icon: <Work />,
-      color: 'primary',
-      change: '+12%',
-    },
-    {
-      title: 'Total Candidates',
-      value: '1,247',
-      icon: <People />,
-      color: 'success',
-      change: '+8%',
-    },
-    {
-      title: 'Interviews Today',
-      value: '12',
-      icon: <Event />,
-      color: 'warning',
-      change: '+3',
-    },
-    {
-      title: 'Hire Rate',
-      value: '23%',
-      icon: <TrendingUp />,
-      color: 'info',
-      change: '+2.5%',
-    },
-  ];
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [recentApplications, setRecentApplications] = useState<RecentApplication[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [timeWindow, setTimeWindow] = useState<TimeWindow>('day');
 
-  const recentApplications = [
-    {
-      candidate: 'John Doe',
-      position: 'Senior Software Engineer',
-      status: 'Interview',
-      applied: '2 hours ago',
-    },
-    {
-      candidate: 'Jane Smith',
-      position: 'Product Manager',
-      status: 'Review',
-      applied: '5 hours ago',
-    },
-    {
-      candidate: 'Bob Johnson',
-      position: 'UX Designer',
-      status: 'Offer',
-      applied: '1 day ago',
-    },
-    {
-      candidate: 'Alice Brown',
-      position: 'Data Scientist',
-      status: 'Interview',
-      applied: '2 days ago',
-    },
-  ];
+  const fetchDashboardData = useCallback(async (selectedTimeWindow: TimeWindow) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const [dashboardStats, applications] = await Promise.all([
+        DashboardService.getDashboardStats(selectedTimeWindow),
+        DashboardService.getRecentApplications()
+      ]);
+
+      setStats(dashboardStats);
+      setRecentApplications(applications);
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err);
+      setError('Failed to load dashboard data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchDashboardData(timeWindow);
+  }, [timeWindow]);
+
+  const handleTimeWindowChange = useCallback((event: SelectChangeEvent<TimeWindow>) => {
+    const newTimeWindow = event.target.value as TimeWindow;
+    setTimeWindow(newTimeWindow);
+  }, []);
+
+  const handleRefresh = useCallback(() => {
+    DashboardService.clearCache();
+    fetchDashboardData(timeWindow);
+  }, [fetchDashboardData, timeWindow]);
+
+  const statCards = useMemo(() => {
+    if (!stats) return [];
+    
+    return [
+      {
+        title: 'Active Jobs',
+        value: stats.activeJobs.toString(),
+        icon: <Work />,
+        color: 'primary',
+        change: stats.jobsChange,
+      },
+      {
+        title: 'Total Candidates',
+        value: stats.totalCandidates.toLocaleString(),
+        icon: <People />,
+        color: 'success',
+        change: stats.candidatesChange,
+      },
+      {
+        title: 'Interviews Today',
+        value: stats.interviewsToday.toString(),
+        icon: <Event />,
+        color: 'warning',
+        change: stats.interviewsChange,
+      },
+      {
+        title: 'Hire Rate',
+        value: `${stats.hireRate}%`,
+        icon: <TrendingUp />,
+        color: 'info',
+        change: stats.hireRateChange,
+      },
+    ];
+  }, [stats]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -94,14 +122,153 @@ const DashboardPage: React.FC = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Typography variant="h4" gutterBottom>
+            Dashboard
+          </Typography>
+          
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="time-window-select-label-loading">
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CalendarToday fontSize="small" />
+                Compare with
+              </Box>
+            </InputLabel>
+            <Select
+              labelId="time-window-select-label-loading"
+              value={timeWindow}
+              onChange={handleTimeWindowChange}
+              label="Compare with"
+              disabled={loading}
+            >
+              {DashboardService.TIME_WINDOW_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  <Box>
+                    <Typography variant="body2">{option.label}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {option.description}
+                    </Typography>
+                  </Box>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+          <CircularProgress />
+        </Box>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Typography variant="h4" gutterBottom>
+            Dashboard
+          </Typography>
+          
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="time-window-select-label-error">
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CalendarToday fontSize="small" />
+                Compare with
+              </Box>
+            </InputLabel>
+            <Select
+              labelId="time-window-select-label-error"
+              value={timeWindow}
+              onChange={handleTimeWindowChange}
+              label="Compare with"
+              disabled={loading}
+            >
+              {DashboardService.TIME_WINDOW_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  <Box>
+                    <Typography variant="body2">{option.label}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {option.description}
+                    </Typography>
+                  </Box>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      </Box>
+    );
+  }
+
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        Dashboard
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          Dashboard
+        </Typography>
+        
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Tooltip title="Refresh data">
+            <IconButton 
+              onClick={handleRefresh} 
+              disabled={loading}
+              color="primary"
+            >
+              <Refresh />
+            </IconButton>
+          </Tooltip>
+          
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="time-window-select-label">
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CalendarToday fontSize="small" />
+                Compare with
+              </Box>
+            </InputLabel>
+            <Select
+              labelId="time-window-select-label"
+              value={timeWindow}
+              onChange={handleTimeWindowChange}
+              label="Compare with"
+              disabled={loading}
+            >
+              {DashboardService.TIME_WINDOW_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  <Box>
+                    <Typography variant="body2">{option.label}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {option.description}
+                    </Typography>
+                  </Box>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      </Box>
+
+      {stats && (
+        <Box sx={{ mb: 2 }}>
+          <Chip
+            icon={<CalendarToday />}
+            label={`Compared to ${stats.comparisonPeriod}`}
+            variant="outlined"
+            color="primary"
+            size="small"
+          />
+        </Box>
+      )}
       
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        {stats.map((stat, index) => (
+        {statCards.map((stat, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
             <Card>
               <CardContent>
@@ -146,8 +313,8 @@ const DashboardPage: React.FC = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {recentApplications.map((application, index) => (
-                      <TableRow key={index}>
+                    {recentApplications.map((application) => (
+                      <TableRow key={application.id}>
                         <TableCell>
                           <Typography variant="body2" fontWeight="medium">
                             {application.candidate}
@@ -164,7 +331,7 @@ const DashboardPage: React.FC = () => {
                         </TableCell>
                         <TableCell>
                           <Typography variant="body2" color="text.secondary">
-                            {application.applied}
+                            {application.appliedAt}
                           </Typography>
                         </TableCell>
                       </TableRow>

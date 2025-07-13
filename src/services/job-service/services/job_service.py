@@ -145,41 +145,25 @@ class JobService:
     
     def get_job_stats(self) -> Dict[str, Any]:
         """Get job statistics"""
+        # Get total jobs by status
         total_jobs = self.db.query(Job).count()
         active_jobs = self.db.query(Job).filter(Job.status == 'active').count()
         draft_jobs = self.db.query(Job).filter(Job.status == 'draft').count()
+        paused_jobs = self.db.query(Job).filter(Job.status == 'paused').count()
         closed_jobs = self.db.query(Job).filter(Job.status == 'closed').count()
         
+        # Get total applications
         total_applications = self.db.query(JobApplication).count()
-        avg_applications = total_applications / total_jobs if total_jobs > 0 else 0
-        
-        # Top departments
-        top_departments = self.db.query(
-            Job.department,
-            func.count(Job.id).label('count')
-        ).filter(
-            Job.department.isnot(None)
-        ).group_by(Job.department).order_by(desc('count')).limit(10).all()
-        
-        # Top locations
-        top_locations = self.db.query(
-            Job.location,
-            func.count(Job.id).label('count')
-        ).filter(
-            Job.location.isnot(None)
-        ).group_by(Job.location).order_by(desc('count')).limit(10).all()
         
         return {
-            'total_jobs': total_jobs,
-            'active_jobs': active_jobs,
-            'draft_jobs': draft_jobs,
-            'closed_jobs': closed_jobs,
-            'total_applications': total_applications,
-            'avg_applications_per_job': round(avg_applications, 2),
-            'top_departments': [{'name': d[0], 'count': d[1]} for d in top_departments],
-            'top_locations': [{'name': l[0], 'count': l[1]} for l in top_locations]
+            "total": total_jobs,
+            "active": active_jobs,
+            "draft": draft_jobs,
+            "paused": paused_jobs,
+            "closed": closed_jobs,
+            "total_applications": total_applications
         }
-    
+
     def publish_job(self, job_id: uuid.UUID) -> Optional[Job]:
         """Publish a job (change status from draft to active)"""
         job = self.get_job(job_id)

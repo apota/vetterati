@@ -460,61 +460,17 @@ class CandidateService:
     
     def get_candidate_stats(self) -> Dict[str, Any]:
         """Get candidate statistics"""
+        # Get total candidates by status
         total_candidates = self.db.query(Candidate).count()
-        active_candidates = self.db.query(Candidate).filter(Candidate.status == "active").count()
+        active_candidates = self.db.query(Candidate).filter(Candidate.status == 'active').count()
+        inactive_candidates = self.db.query(Candidate).filter(Candidate.status == 'inactive').count()
         
-        # New candidates this month
-        current_month = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-        new_this_month = self.db.query(Candidate).filter(
-            Candidate.created_at >= current_month
-        ).count()
-        
-        # By career level
-        career_levels = self.db.query(
-            Candidate.career_level,
-            func.count(Candidate.id).label('count')
-        ).filter(
-            Candidate.status == "active",
-            Candidate.career_level.isnot(None)
-        ).group_by(Candidate.career_level).all()
-        
-        by_career_level = {level[0]: level[1] for level in career_levels}
-        
-        # By location (top 10 cities)
-        locations = self.db.query(
-            Candidate.location_city,
-            func.count(Candidate.id).label('count')
-        ).filter(
-            Candidate.status == "active",
-            Candidate.location_city.isnot(None)
-        ).group_by(Candidate.location_city).order_by(desc('count')).limit(10).all()
-        
-        by_location = {loc[0]: loc[1] for loc in locations}
-        
-        # Top skills
-        top_skills = self.db.query(
-            CandidateSkill.name,
-            func.count(CandidateSkill.id).label('count')
-        ).join(Candidate).filter(
-            Candidate.status == "active"
-        ).group_by(CandidateSkill.name).order_by(desc('count')).limit(10).all()
-        
-        top_skills_dict = {skill[0]: skill[1] for skill in top_skills}
-        
-        # Average experience
-        avg_experience = self.db.query(
-            func.avg(Candidate.total_years_experience)
-        ).filter(
-            Candidate.status == "active",
-            Candidate.total_years_experience.isnot(None)
-        ).scalar() or 0
-        
+        # For now, return basic stats without job applications
+        # TODO: Implement proper job application tracking
         return {
-            "total_candidates": total_candidates,
-            "active_candidates": active_candidates,
-            "new_this_month": new_this_month,
-            "by_career_level": by_career_level,
-            "by_location": by_location,
-            "top_skills": top_skills_dict,
-            "average_experience": round(float(avg_experience), 1)
+            "total": total_candidates,
+            "active": active_candidates,
+            "inactive": inactive_candidates,
+            "hired": 0,  # Will be implemented when job applications are properly linked
+            "rejected": 0  # Will be implemented when job applications are properly linked
         }

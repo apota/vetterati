@@ -262,3 +262,62 @@ class InterviewService:
             .order_by(InterviewStep.scheduled_start)
         )
         return result.scalars().all()
+    
+    async def get_interview_stats(self, db: AsyncSession) -> Dict[str, Any]:
+        """Get interview statistics"""
+        try:
+            # Get today's date
+            today = datetime.now().date()
+            week_start = today - timedelta(days=today.weekday())
+            
+            # Count interviews scheduled for today
+            today_result = await db.execute(
+                select(InterviewStep).where(
+                    InterviewStep.scheduled_start >= datetime.combine(today, datetime.min.time()),
+                    InterviewStep.scheduled_start < datetime.combine(today + timedelta(days=1), datetime.min.time())
+                )
+            )
+            today_count = len(today_result.scalars().all())
+            
+            # Count interviews this week
+            week_result = await db.execute(
+                select(InterviewStep).where(
+                    InterviewStep.scheduled_start >= datetime.combine(week_start, datetime.min.time())
+                )
+            )
+            week_count = len(week_result.scalars().all())
+            
+            # Count scheduled interviews
+            scheduled_result = await db.execute(
+                select(InterviewStep).where(InterviewStep.status == 'scheduled')
+            )
+            scheduled_count = len(scheduled_result.scalars().all())
+            
+            # Count completed interviews
+            completed_result = await db.execute(
+                select(InterviewStep).where(InterviewStep.status == 'completed')
+            )
+            completed_count = len(completed_result.scalars().all())
+            
+            # Count total interviews
+            total_result = await db.execute(select(InterviewStep))
+            total_count = len(total_result.scalars().all())
+            
+            return {
+                "today": today_count,
+                "thisWeek": week_count,
+                "scheduled": scheduled_count,
+                "completed": completed_count,
+                "total": total_count
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching interview stats: {e}")
+            # Return default stats if there's an error
+            return {
+                "today": 0,
+                "thisWeek": 0,
+                "scheduled": 0,
+                "completed": 0,
+                "total": 0
+            }

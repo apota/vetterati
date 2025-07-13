@@ -235,8 +235,8 @@ class CandidateSearchParams(BaseModel):
     status: Optional[CandidateStatus] = None
     page: int = Field(1, ge=1)
     per_page: int = Field(20, ge=1, le=100)
-    sort_by: str = Field("relevance", regex="^(relevance|created_at|name|experience)$")
-    sort_order: str = Field("desc", regex="^(asc|desc)$")
+    sort_by: str = Field("relevance", pattern="^(relevance|created_at|name|experience)$")
+    sort_order: str = Field("desc", pattern="^(asc|desc)$")
 
 # Statistics schemas
 class CandidateStats(BaseModel):

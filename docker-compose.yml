@@ -215,7 +215,7 @@ services:
     ports:
       - "8002:8000"
     environment:
-      - DATABASE_URL=postgresql://ats_user:ats_password@postgres:5432/vetterati_ats
+      - DATABASE_URL=postgresql+asyncpg://ats_user:ats_password@postgres:5432/vetterati_ats
       - REDIS_URL=redis://redis:6379
       - RABBITMQ_URL=amqp://ats_user:ats_password@rabbitmq:5672
     depends_on:

@@ -161,8 +161,8 @@ class WorkflowNotification(Base):
     retry_count = Column(Integer, default=0)
     max_retries = Column(Integer, default=3)
     
-    # Metadata
-    metadata = Column(JSON)
+    # Notification metadata
+    notification_metadata = Column(JSON)
     error_message = Column(Text)
     
     # Timestamps

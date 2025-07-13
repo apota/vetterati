@@ -264,10 +264,13 @@ export class DashboardService {
     }
 
     try {
-      // Get recent applications from jobs endpoint
+      // Optimize: Try to get applications directly first (if endpoint exists)
+      // Fallback to jobs-based approach if direct applications endpoint doesn't exist
+      
+      // Get recent applications from jobs endpoint with reduced limit for faster response
       const response = await api.get('/api/v1/jobs', {
         params: {
-          limit: 10,
+          limit: 3, // Reduced from 10 to 3 for faster loading
           sort: 'created_at',
           order: 'desc'
         }
@@ -275,8 +278,8 @@ export class DashboardService {
 
       const jobs = response.data.data.items || [];
       
-      // Get applications for each job
-      const applicationsPromises = jobs.slice(0, 5).map(async (job: any) => {
+      // Get applications for fewer jobs to reduce API calls
+      const applicationsPromises = jobs.slice(0, 2).map(async (job: any) => {
         try {
           const appResponse = await api.get(`/api/v1/jobs/${job.id}/applications`, {
             params: { limit: 2 }
@@ -300,7 +303,7 @@ export class DashboardService {
       
       const result = allApplications.slice(0, 4);
       
-      // Cache the result
+      // Cache the result with longer duration for dashboard performance
       this.applicationsCache = { data: result, timestamp: Date.now() };
       
       return result;

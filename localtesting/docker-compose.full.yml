@@ -1,0 +1,106 @@
+version: '3.8'
+
+# This file starts the full stack for integration testing
+services:
+  # Import all infrastructure services
+  postgres:
+    extends:
+      file: docker-compose.infrastructure.yml
+      service: postgres
+
+  redis:
+    extends:
+      file: docker-compose.infrastructure.yml
+      service: redis
+
+  elasticsearch:
+    extends:
+      file: docker-compose.infrastructure.yml
+      service: elasticsearch
+
+  rabbitmq:
+    extends:
+      file: docker-compose.infrastructure.yml
+      service: rabbitmq
+
+  localstack:
+    extends:
+      file: docker-compose.infrastructure.yml
+      service: localstack
+
+  localstack-init:
+    extends:
+      file: docker-compose.infrastructure.yml
+      service: localstack-init
+
+  # Import all application services
+  auth-service:
+    extends:
+      file: docker-compose.services.yml
+      service: auth-service
+
+  resume-service:
+    extends:
+      file: docker-compose.services.yml
+      service: resume-service
+
+  ahp-service:
+    extends:
+      file: docker-compose.services.yml
+      service: ahp-service
+
+  workflow-service:
+    extends:
+      file: docker-compose.services.yml
+      service: workflow-service
+
+  analytics-service:
+    extends:
+      file: docker-compose.services.yml
+      service: analytics-service
+
+  job-service:
+    extends:
+      file: docker-compose.services.yml
+      service: job-service
+
+  candidate-service:
+    extends:
+      file: docker-compose.services.yml
+      service: candidate-service
+
+  notification-service:
+    extends:
+      file: docker-compose.services.yml
+      service: notification-service
+
+  api-gateway:
+    extends:
+      file: docker-compose.services.yml
+      service: api-gateway
+
+  # Frontend (React)
+  frontend:
+    build:
+      context: ../src/frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - api-gateway
+    volumes:
+      - ../src/frontend:/app
+      - /app/node_modules
+    networks:
+      - ats-local
+
+volumes:
+  postgres_data:
+  elasticsearch_data:
+
+networks:
+  ats-local:
+    driver: bridge

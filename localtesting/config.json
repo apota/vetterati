@@ -1,0 +1,117 @@
+{
+  "environment": "local-development",
+  "services": {
+    "infrastructure": {
+      "postgres": {
+        "port": 5432,
+        "url": "postgresql://ats_user:ats_password@localhost:5432/vetterati_ats",
+        "healthcheck": "pg_isready -U ats_user -d vetterati_ats"
+      },
+      "redis": {
+        "port": 6379,
+        "url": "redis://localhost:6379",
+        "healthcheck": "redis-cli ping"
+      },
+      "elasticsearch": {
+        "port": 9200,
+        "url": "http://localhost:9200",
+        "healthcheck": "curl -f http://localhost:9200/_cluster/health"
+      },
+      "rabbitmq": {
+        "port": 5672,
+        "management_port": 15672,
+        "url": "amqp://ats_user:ats_password@localhost:5672",
+        "management_url": "http://localhost:15672"
+      },
+      "localstack": {
+        "port": 4566,
+        "url": "http://localhost:4566",
+        "healthcheck": "curl -f http://localhost:4566/_localstack/health"
+      }
+    },
+    "application": {
+      "api-gateway": {
+        "port": 5000,
+        "url": "http://localhost:5000",
+        "technology": "C#/.NET",
+        "dependencies": ["auth-service"]
+      },
+      "auth-service": {
+        "port": 5001,
+        "url": "http://localhost:5001",
+        "technology": "C#/.NET",
+        "dependencies": ["postgres", "redis"]
+      },
+      "resume-service": {
+        "port": 8001,
+        "url": "http://localhost:8001",
+        "technology": "Python/FastAPI",
+        "dependencies": ["postgres", "redis", "elasticsearch", "localstack"]
+      },
+      "ahp-service": {
+        "port": 5002,
+        "url": "http://localhost:5002",
+        "technology": "C#/.NET",
+        "dependencies": ["postgres", "redis"]
+      },
+      "workflow-service": {
+        "port": 8002,
+        "url": "http://localhost:8002",
+        "technology": "Python/FastAPI",
+        "dependencies": ["postgres", "redis", "rabbitmq"]
+      },
+      "analytics-service": {
+        "port": 8003,
+        "url": "http://localhost:8003",
+        "technology": "Python/FastAPI",
+        "dependencies": ["postgres", "localstack", "elasticsearch"]
+      },
+      "job-service": {
+        "port": 8004,
+        "url": "http://localhost:8004",
+        "technology": "Python/FastAPI",
+        "dependencies": ["postgres", "redis", "elasticsearch"]
+      },
+      "candidate-service": {
+        "port": 8005,
+        "url": "http://localhost:8005",
+        "technology": "Python/FastAPI",
+        "dependencies": ["postgres", "redis", "elasticsearch"]
+      },
+      "notification-service": {
+        "port": 8006,
+        "url": "http://localhost:8006",
+        "technology": "Python/FastAPI",
+        "dependencies": ["postgres", "redis", "rabbitmq", "localstack"]
+      },
+      "frontend": {
+        "port": 3000,
+        "url": "http://localhost:3000",
+        "technology": "React/TypeScript",
+        "dependencies": ["api-gateway"]
+      }
+    }
+  },
+  "development_workflows": {
+    "frontend_only": {
+      "description": "Develop frontend with hot reload",
+      "steps": [
+        ".\\scripts\\start-infrastructure.ps1",
+        ".\\scripts\\start-frontend-dev.ps1"
+      ]
+    },
+    "backend_service": {
+      "description": "Develop a specific backend service",
+      "steps": [
+        ".\\scripts\\start-infrastructure.ps1",
+        ".\\scripts\\start-service-dev.ps1 -ServiceName 'service-name' -RunLocal"
+      ]
+    },
+    "full_stack": {
+      "description": "Run complete application stack",
+      "steps": [
+        "docker-compose -f docker-compose.full.yml up"
+      ]
+    }
+  }
+}

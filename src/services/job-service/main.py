@@ -52,6 +52,19 @@ async def readiness_check(db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=503, detail="Service not ready")
 
+# Stats endpoint - must be before parameterized routes
+@app.get(f"{settings.api_v1_prefix}/jobs/stats")
+async def get_job_stats(db: Session = Depends(get_db)):
+    """Get job statistics"""
+    job_service = JobService(db)
+    stats = job_service.get_job_stats()
+    
+    return {
+        "success": True,
+        "data": stats,
+        "message": "Job statistics retrieved successfully"
+    }
+
 # Dependency to get current user (simplified for now)
 def get_current_user():
     # TODO: Implement actual JWT token validation

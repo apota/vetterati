@@ -44,3 +44,6 @@ class Settings(BaseSettings):
         case_sensitive = False
 
 settings = Settings()
+
+def get_settings():
+    return settings

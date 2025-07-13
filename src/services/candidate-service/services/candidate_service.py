@@ -465,17 +465,12 @@ class CandidateService:
         active_candidates = self.db.query(Candidate).filter(Candidate.status == 'active').count()
         inactive_candidates = self.db.query(Candidate).filter(Candidate.status == 'inactive').count()
         
-        # Get hired candidates (assuming there's a JobApplication with status 'hired')
-        from models import JobApplication
-        hired_candidates = self.db.query(JobApplication).filter(JobApplication.status == 'hired').count()
-        
-        # Get rejected candidates
-        rejected_candidates = self.db.query(JobApplication).filter(JobApplication.status == 'rejected').count()
-        
+        # For now, return basic stats without job applications
+        # TODO: Implement proper job application tracking
         return {
             "total": total_candidates,
             "active": active_candidates,
             "inactive": inactive_candidates,
-            "hired": hired_candidates,
-            "rejected": rejected_candidates
+            "hired": 0,  # Will be implemented when job applications are properly linked
+            "rejected": 0  # Will be implemented when job applications are properly linked
         }

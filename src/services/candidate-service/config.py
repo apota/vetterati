@@ -8,6 +8,9 @@ class Settings(BaseSettings):
     app_version: str = "1.0.0"
     debug: bool = False
     
+    # API
+    api_v1_prefix: str = "/api/v1"
+    
     # Database
     database_url: str = "postgresql://ats_user:ats_password@localhost:5432/vetterati_ats"
     
@@ -47,3 +50,6 @@ class Settings(BaseSettings):
         env_file = ".env"
 
 settings = Settings()
+
+def get_settings():
+    return settings

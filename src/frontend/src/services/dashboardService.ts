@@ -75,6 +75,16 @@ export class DashboardService {
     { value: 'year', label: 'Previous Year', description: 'Compare with last year' },
   ];
 
+  // Cache for dashboard stats
+  private static statsCache: Map<string, { data: DashboardStats; timestamp: number }> = new Map();
+  private static applicationsCache: { data: RecentApplication[]; timestamp: number } | null = null;
+  private static readonly CACHE_DURATION = 30000; // 30 seconds
+
+  // Check if cached data is still valid
+  private static isCacheValid(timestamp: number): boolean {
+    return Date.now() - timestamp < this.CACHE_DURATION;
+  }
+
   // Helper method to get date range for time window
   private static getDateRange(timeWindow: TimeWindow): { start: Date; end: Date; previousStart: Date; previousEnd: Date } {
     const now = new Date();
@@ -152,39 +162,54 @@ export class DashboardService {
 
   // Fetch dashboard statistics with time window
   static async getDashboardStats(timeWindow: TimeWindow = 'day'): Promise<DashboardStats> {
+    // Check cache first
+    const cacheKey = `stats_${timeWindow}`;
+    const cached = this.statsCache.get(cacheKey);
+    if (cached && this.isCacheValid(cached.timestamp)) {
+      return cached.data;
+    }
+
     try {
-      // For now, we'll simulate time-based data since the backend doesn't support date ranges yet
-      // In a real implementation, you would pass date parameters to the API calls
-      const [jobStats, candidateStats, interviewStats] = await Promise.all([
+      // Use Promise.allSettled to handle partial failures gracefully
+      const [jobStatsResult, candidateStatsResult, interviewStatsResult] = await Promise.allSettled([
         api.get('/api/v1/jobs/stats'),
         api.get('/api/v1/candidates/stats'),
-        api.get('/api/v1/interviews/stats').catch(() => ({ data: { data: { today: 0, thisWeek: 0 } } }))
+        api.get('/api/v1/interviews/stats')
       ]);
 
-      const jobs = jobStats.data.data;
-      const candidates = candidateStats.data.data;
-      const interviews = interviewStats.data.data;
+      // Extract data with fallbacks
+      const jobs = jobStatsResult.status === 'fulfilled' ? jobStatsResult.value.data.data : { active: 0, total: 0 };
+      const candidates = candidateStatsResult.status === 'fulfilled' ? candidateStatsResult.value.data.data : { total: 0, hired: 0 };
+      const interviews = interviewStatsResult.status === 'fulfilled' ? interviewStatsResult.value.data.data : { today: 0, thisWeek: 0 };
+
+      // Calculate hire rate safely
+      const hireRate = candidates.total > 0 ? Math.round((candidates.hired / candidates.total) * 100) : 0;
 
       // Simulate historical data based on time window
       const simulatedPrevious = this.simulatePreviousData(timeWindow, {
         activeJobs: jobs.active || 0,
         totalCandidates: candidates.total || 0,
         interviewsToday: interviews.today || 0,
-        hireRate: Math.round((candidates.hired / candidates.total) * 100) || 0
+        hireRate: hireRate
       });
 
-      return {
+      const result = {
         activeJobs: jobs.active || 0,
         totalCandidates: candidates.total || 0,
         interviewsToday: interviews.today || 0,
-        hireRate: Math.round((candidates.hired / candidates.total) * 100) || 0,
+        hireRate: hireRate,
         jobsChange: this.calculateChange(jobs.active || 0, simulatedPrevious.activeJobs),
         candidatesChange: this.calculateChange(candidates.total || 0, simulatedPrevious.totalCandidates),
         interviewsChange: this.calculateChange(interviews.today || 0, simulatedPrevious.interviewsToday),
-        hireRateChange: this.calculateChange(Math.round((candidates.hired / candidates.total) * 100) || 0, simulatedPrevious.hireRate),
+        hireRateChange: this.calculateChange(hireRate, simulatedPrevious.hireRate),
         timeWindow,
         comparisonPeriod: this.formatComparisonPeriod(timeWindow)
       };
+
+      // Cache the result
+      this.statsCache.set(cacheKey, { data: result, timestamp: Date.now() });
+      
+      return result;
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
       
@@ -233,6 +258,11 @@ export class DashboardService {
 
   // Fetch recent applications
   static async getRecentApplications(): Promise<RecentApplication[]> {
+    // Check cache first
+    if (this.applicationsCache && this.isCacheValid(this.applicationsCache.timestamp)) {
+      return this.applicationsCache.data;
+    }
+
     try {
       // Get recent applications from jobs endpoint
       const response = await api.get('/api/v1/jobs', {
@@ -268,7 +298,12 @@ export class DashboardService {
       const applicationArrays = await Promise.all(applicationsPromises);
       const allApplications = applicationArrays.flat();
       
-      return allApplications.slice(0, 4);
+      const result = allApplications.slice(0, 4);
+      
+      // Cache the result
+      this.applicationsCache = { data: result, timestamp: Date.now() };
+      
+      return result;
     } catch (error) {
       console.error('Error fetching recent applications:', error);
       
@@ -324,6 +359,12 @@ export class DashboardService {
       const days = Math.floor(diffInSeconds / 86400);
       return `${days} ${days === 1 ? 'day' : 'days'} ago`;
     }
+  }
+
+  // Clear cache - useful for refresh functionality
+  static clearCache(): void {
+    this.statsCache.clear();
+    this.applicationsCache = null;
   }
 }
 

@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime
 
 from database import get_db, init_db
-from models import Candidate, CandidateExperience, CandidateEducation, CandidateSkill, CandidateResume, CandidateApplication
+from models import Candidate, CandidateExperience, CandidateEducation, CandidateSkill, CandidateResume, JobApplication
 from schemas import (
     CandidateCreate, CandidateUpdate, CandidateResponse,
     ExperienceCreate, ExperienceResponse,
@@ -137,13 +137,13 @@ async def search_candidates(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/api/v1/candidates/stats", response_model=CandidateStats)
+@app.get(f"{settings.api_v1_prefix}/candidates/stats")
 async def get_candidate_stats(db: Session = Depends(get_db)):
-    try:
-        stats = await candidate_service.get_candidate_stats(db)
-        return stats
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    """Get candidate statistics"""
+    candidate_service = CandidateService(db)
+    stats = candidate_service.get_candidate_stats()
+    
+    return {"success": True, "data": stats, "message": "Candidate statistics retrieved successfully"}
 
 # Experience endpoints
 @app.post("/api/v1/candidates/{candidate_id}/experiences", response_model=ExperienceResponse)

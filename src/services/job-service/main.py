@@ -203,7 +203,12 @@ async def get_job_stats(db: Session = Depends(get_db)):
     """Get job statistics"""
     job_service = JobService(db)
     stats = job_service.get_job_stats()
-    return JobStatsResponse(**stats)
+    
+    return JobStatsResponse(
+        success=True,
+        data=stats,
+        message="Job statistics retrieved successfully"
+    )
 
 @app.post(f"{settings.api_v1_prefix}/jobs/{{job_id}}/publish", response_model=JobResponse)
 async def publish_job(

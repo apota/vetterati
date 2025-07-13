@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Box,
   Grid,
@@ -40,7 +40,7 @@ const DashboardPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [timeWindow, setTimeWindow] = useState<TimeWindow>('day');
 
-  const fetchDashboardData = async (selectedTimeWindow: TimeWindow) => {
+  const fetchDashboardData = useCallback(async (selectedTimeWindow: TimeWindow) => {
     try {
       setLoading(true);
       setError(null);
@@ -58,51 +58,56 @@ const DashboardPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchDashboardData(timeWindow);
   }, [timeWindow]);
 
-  const handleTimeWindowChange = (event: SelectChangeEvent<TimeWindow>) => {
+  const handleTimeWindowChange = useCallback((event: SelectChangeEvent<TimeWindow>) => {
     const newTimeWindow = event.target.value as TimeWindow;
     setTimeWindow(newTimeWindow);
-  };
+  }, []);
 
-  const handleRefresh = () => {
+  const handleRefresh = useCallback(() => {
+    DashboardService.clearCache();
     fetchDashboardData(timeWindow);
-  };
+  }, [fetchDashboardData, timeWindow]);
 
-  const statCards = stats ? [
-    {
-      title: 'Active Jobs',
-      value: stats.activeJobs.toString(),
-      icon: <Work />,
-      color: 'primary',
-      change: stats.jobsChange,
-    },
-    {
-      title: 'Total Candidates',
-      value: stats.totalCandidates.toLocaleString(),
-      icon: <People />,
-      color: 'success',
-      change: stats.candidatesChange,
-    },
-    {
-      title: 'Interviews Today',
-      value: stats.interviewsToday.toString(),
-      icon: <Event />,
-      color: 'warning',
-      change: stats.interviewsChange,
-    },
-    {
-      title: 'Hire Rate',
-      value: `${stats.hireRate}%`,
-      icon: <TrendingUp />,
-      color: 'info',
-      change: stats.hireRateChange,
-    },
-  ] : [];
+  const statCards = useMemo(() => {
+    if (!stats) return [];
+    
+    return [
+      {
+        title: 'Active Jobs',
+        value: stats.activeJobs.toString(),
+        icon: <Work />,
+        color: 'primary',
+        change: stats.jobsChange,
+      },
+      {
+        title: 'Total Candidates',
+        value: stats.totalCandidates.toLocaleString(),
+        icon: <People />,
+        color: 'success',
+        change: stats.candidatesChange,
+      },
+      {
+        title: 'Interviews Today',
+        value: stats.interviewsToday.toString(),
+        icon: <Event />,
+        color: 'warning',
+        change: stats.interviewsChange,
+      },
+      {
+        title: 'Hire Rate',
+        value: `${stats.hireRate}%`,
+        icon: <TrendingUp />,
+        color: 'info',
+        change: stats.hireRateChange,
+      },
+    ];
+  }, [stats]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

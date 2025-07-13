@@ -23,6 +23,17 @@ import {
   IconButton,
   Tooltip,
   Skeleton,
+  ButtonBase,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  LinearProgress,
 } from '@mui/material';
 import {
   TrendingUp,
@@ -43,6 +54,11 @@ const DashboardPage: React.FC = () => {
   const [statsError, setStatsError] = useState<string | null>(null);
   const [applicationsError, setApplicationsError] = useState<string | null>(null);
   const [timeWindow, setTimeWindow] = useState<TimeWindow>('day');
+
+  // Modal state for metric breakdowns
+  const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
+  const [metricBreakdownData, setMetricBreakdownData] = useState<any>(null);
+  const [breakdownLoading, setBreakdownLoading] = useState(false);
 
   // Fetch dashboard stats independently
   const fetchDashboardStats = useCallback(async (selectedTimeWindow: TimeWindow) => {
@@ -92,6 +108,95 @@ const DashboardPage: React.FC = () => {
     fetchDashboardStats(timeWindow);
     fetchRecentApplications();
   }, [fetchDashboardStats, fetchRecentApplications, timeWindow]);
+
+  // Fetch metric breakdown data
+  const fetchMetricBreakdown = useCallback(async (metricType: string) => {
+    setBreakdownLoading(true);
+    try {
+      let breakdownData;
+      
+      switch (metricType) {
+        case 'Active Jobs':
+          // Simulate API call for job breakdown
+          await new Promise(resolve => setTimeout(resolve, 800));
+          breakdownData = {
+            title: 'Active Jobs Breakdown',
+            total: stats?.activeJobs || 0,
+            items: [
+              { label: 'Software Engineering', count: 8, percentage: 40, color: '#1976d2' },
+              { label: 'Product Management', count: 5, percentage: 25, color: '#388e3c' },
+              { label: 'Data Science', count: 4, percentage: 20, color: '#f57c00' },
+              { label: 'Design', count: 2, percentage: 10, color: '#7b1fa2' },
+              { label: 'Marketing', count: 1, percentage: 5, color: '#d32f2f' }
+            ]
+          };
+          break;
+          
+        case 'Total Candidates':
+          await new Promise(resolve => setTimeout(resolve, 800));
+          breakdownData = {
+            title: 'Candidates by Status',
+            total: stats?.totalCandidates || 0,
+            items: [
+              { label: 'Active Applications', count: 45, percentage: 60, color: '#1976d2' },
+              { label: 'In Interview Process', count: 18, percentage: 24, color: '#388e3c' },
+              { label: 'Under Review', count: 8, percentage: 11, color: '#f57c00' },
+              { label: 'Offers Extended', count: 4, percentage: 5, color: '#7b1fa2' }
+            ]
+          };
+          break;
+          
+        case 'Interviews Today':
+          await new Promise(resolve => setTimeout(resolve, 800));
+          breakdownData = {
+            title: 'Today\'s Interview Schedule',
+            total: stats?.interviewsToday || 0,
+            items: [
+              { label: 'Technical Interviews', count: 4, percentage: 50, color: '#1976d2' },
+              { label: 'Behavioral Interviews', count: 2, percentage: 25, color: '#388e3c' },
+              { label: 'Final Round', count: 1, percentage: 12.5, color: '#f57c00' },
+              { label: 'Phone Screenings', count: 1, percentage: 12.5, color: '#7b1fa2' }
+            ]
+          };
+          break;
+          
+        case 'Hire Rate':
+          await new Promise(resolve => setTimeout(resolve, 800));
+          breakdownData = {
+            title: 'Hiring Success by Department',
+            total: `${stats?.hireRate || 0}%`,
+            items: [
+              { label: 'Engineering', count: 85, percentage: 85, isPercentage: true, color: '#1976d2' },
+              { label: 'Product', count: 78, percentage: 78, isPercentage: true, color: '#388e3c' },
+              { label: 'Design', count: 72, percentage: 72, isPercentage: true, color: '#f57c00' },
+              { label: 'Marketing', count: 65, percentage: 65, isPercentage: true, color: '#7b1fa2' }
+            ]
+          };
+          break;
+          
+        default:
+          breakdownData = { title: 'Breakdown', total: 0, items: [] };
+      }
+      
+      setMetricBreakdownData(breakdownData);
+    } catch (error) {
+      console.error('Error fetching metric breakdown:', error);
+    } finally {
+      setBreakdownLoading(false);
+    }
+  }, [stats]);
+
+  // Handle metric card click
+  const handleMetricClick = useCallback((metricTitle: string) => {
+    setSelectedMetric(metricTitle);
+    fetchMetricBreakdown(metricTitle);
+  }, [fetchMetricBreakdown]);
+
+  // Close breakdown modal
+  const handleCloseBreakdown = useCallback(() => {
+    setSelectedMetric(null);
+    setMetricBreakdownData(null);
+  }, []);
 
   const statCards = useMemo(() => {
     if (!stats) return [];
@@ -257,27 +362,47 @@ const DashboardPage: React.FC = () => {
           // Show actual stat cards
           statCards.map((stat, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
-              <Card>
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Box sx={{ color: `${stat.color}.main`, mr: 1 }}>
-                      {stat.icon}
+              <ButtonBase
+                onClick={() => handleMetricClick(stat.title)}
+                sx={{
+                  width: '100%',
+                  textAlign: 'left',
+                  borderRadius: 1,
+                  '&:hover': {
+                    '& .MuiCard-root': {
+                      boxShadow: 4,
+                      transform: 'translateY(-2px)',
+                    }
+                  },
+                  transition: 'all 0.2s ease-in-out',
+                }}
+              >
+                <Card sx={{ 
+                  width: '100%',
+                  transition: 'all 0.2s ease-in-out',
+                  cursor: 'pointer'
+                }}>
+                  <CardContent>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Box sx={{ color: `${stat.color}.main`, mr: 1 }}>
+                        {stat.icon}
+                      </Box>
+                      <Typography variant="h6" component="div">
+                        {stat.title}
+                      </Typography>
                     </Box>
-                    <Typography variant="h6" component="div">
-                      {stat.title}
+                    <Typography variant="h4" gutterBottom>
+                      {stat.value}
                     </Typography>
-                  </Box>
-                  <Typography variant="h4" gutterBottom>
-                    {stat.value}
-                  </Typography>
-                  <Chip
-                    label={stat.change}
-                    size="small"
-                    color={stat.color as any}
-                    variant="outlined"
-                  />
-                </CardContent>
-              </Card>
+                    <Chip
+                      label={stat.change}
+                      size="small"
+                      color={stat.color as any}
+                      variant="outlined"
+                    />
+                  </CardContent>
+                </Card>
+              </ButtonBase>
             </Grid>
           ))
         )}
@@ -401,6 +526,68 @@ const DashboardPage: React.FC = () => {
           </Card>
         </Grid>
       </Grid>
+
+      {/* Metric Breakdown Dialog - shown on metric card click */}
+      <Dialog
+        open={!!selectedMetric}
+        onClose={handleCloseBreakdown}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          {breakdownLoading ? (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <CircularProgress size={24} sx={{ mr: 1 }} />
+              Loading Breakdown...
+            </Box>
+          ) : (
+            selectedMetric
+          )}
+        </DialogTitle>
+        <DialogContent>
+          {breakdownLoading ? (
+            <LinearProgress />
+          ) : (
+            metricBreakdownData && (
+              <Box>
+                <Typography variant="h6" gutterBottom>
+                  {metricBreakdownData.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" paragraph>
+                  Total: {metricBreakdownData.total}
+                </Typography>
+                
+                {/* Breakdown items list */}
+                <List>
+                  {metricBreakdownData.items.map((item: any, index: number) => (
+                    <ListItem key={index}>
+                      <ListItemIcon>
+                        <div
+                          style={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: '50%',
+                            backgroundColor: item.color,
+                          }}
+                        />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={item.label}
+                        secondary={`${item.count} (${item.percentage}%)`}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            )
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseBreakdown} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

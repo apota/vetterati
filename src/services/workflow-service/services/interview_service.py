@@ -273,8 +273,8 @@ class InterviewService:
             # Count interviews scheduled for today
             today_result = await db.execute(
                 select(InterviewStep).where(
-                    InterviewStep.scheduled_at >= datetime.combine(today, datetime.min.time()),
-                    InterviewStep.scheduled_at < datetime.combine(today + timedelta(days=1), datetime.min.time())
+                    InterviewStep.scheduled_start >= datetime.combine(today, datetime.min.time()),
+                    InterviewStep.scheduled_start < datetime.combine(today + timedelta(days=1), datetime.min.time())
                 )
             )
             today_count = len(today_result.scalars().all())
@@ -282,7 +282,7 @@ class InterviewService:
             # Count interviews this week
             week_result = await db.execute(
                 select(InterviewStep).where(
-                    InterviewStep.scheduled_at >= datetime.combine(week_start, datetime.min.time())
+                    InterviewStep.scheduled_start >= datetime.combine(week_start, datetime.min.time())
                 )
             )
             week_count = len(week_result.scalars().all())

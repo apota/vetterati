@@ -56,5 +56,17 @@ public class AhpDbContext : DbContext
             entity.Property(e => e.Weights).HasColumnType("jsonb");
             entity.Property(e => e.ComparisonMatrix).HasColumnType("jsonb");
         });
+
+        // Candidate configuration
+        modelBuilder.Entity<Candidate>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Location).HasColumnType("jsonb");
+            entity.Property(e => e.Experience).HasColumnType("jsonb");
+            entity.Property(e => e.Education).HasColumnType("jsonb");
+            entity.Property(e => e.Skills).HasColumnType("jsonb");
+            entity.Property(e => e.CareerMetrics).HasColumnType("jsonb");
+            entity.Ignore(e => e.FullName); // Computed property
+        });
     }
 }

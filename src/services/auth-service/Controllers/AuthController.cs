@@ -217,57 +217,29 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("me")]
-    // [Authorize] // Temporarily disable until JWT auth is fixed
+    // [Authorize] // Temporarily disable until JWT issue is resolved
     public ActionResult<ApiResponse<User>> GetCurrentUser()
     {
         try
         {
-            // For testing, return a demo user
-            var demoUser = new User
+            // Check if there's a demo user context (for demo scenarios)
+            // In a real implementation, this would check JWT claims
+            var demoUsers = GetDemoUserProfiles();
+            
+            // For now, return the first demo user (recruiter)
+            // TODO: This should be replaced with proper JWT authentication
+            var demoUser = demoUsers.FirstOrDefault();
+            
+            if (demoUser == null)
             {
-                Id = Guid.NewGuid(),
-                Email = "demo@example.com",
-                Name = "Demo User",
-                FirstName = "Demo",
-                LastName = "User",
-                Company = "Demo Company",
-                Roles = new List<string> { "Recruiter" },
-                IsActive = true,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-                Preferences = new Dictionary<string, object>
-                {
-                    { "timezone", "UTC" },
-                    { "emailNotifications", true },
-                    { "pushNotifications", true },
-                    { "marketingEmails", false }
-                }
-            };
+                return NotFound(new ApiError 
+                { 
+                    Code = "USER_NOT_FOUND", 
+                    Message = "User not found" 
+                });
+            }
 
             return Ok(new ApiResponse<User> { Data = demoUser });
-
-            // Original code commented out for testing
-            // var userIdClaim = User.FindFirst("sub")?.Value;
-            // if (userIdClaim == null)
-            // {
-            //     return Unauthorized(new ApiError 
-            //     { 
-            //         Code = "UNAUTHORIZED", 
-            //         Message = "User not authenticated" 
-            //     });
-            // }
-
-            // var user = await _context.Users.FindAsync(Guid.Parse(userIdClaim));
-            // if (user == null)
-            // {
-            //     return NotFound(new ApiError 
-            //     { 
-            //         Code = "USER_NOT_FOUND", 
-            //         Message = "User not found" 
-            //     });
-            // }
-
-            // return Ok(new ApiResponse<User> { Data = user });
         }
         catch (Exception ex)
         {
@@ -281,23 +253,24 @@ public class AuthController : ControllerBase
     }
 
     [HttpPut("me")]
-    // [Authorize] // Temporarily disable until JWT auth is fixed
+    // [Authorize] // Temporarily disable until JWT issue is resolved
     public ActionResult<ApiResponse<User>> UpdateProfile([FromBody] UpdateProfileRequest request)
     {
         try
         {
-            // For testing, return a demo updated user
-            var demoUser = new User
+            // For demo purposes, create an updated user based on request
+            // TODO: This should be replaced with proper JWT authentication and database updates
+            var updatedUser = new User
             {
-                Id = Guid.NewGuid(),
-                Email = "demo@example.com",
-                Name = $"{request.FirstName} {request.LastName}",
-                FirstName = request.FirstName ?? "Demo",
-                LastName = request.LastName ?? "User", 
-                Company = request.Company ?? "Demo Company",
-                Roles = new List<string> { "Recruiter" },
+                Id = Guid.Parse("8dfeb904-6902-4097-948a-1c1d4d058013"),
+                Email = "recruiter@company.com",
+                Name = $"{request.FirstName} {request.LastName}".Trim(),
+                FirstName = request.FirstName ?? "Jane",
+                LastName = request.LastName ?? "Recruiter",
+                Company = request.Company ?? "TechCorp",
+                Roles = new List<string> { "recruiter" },
                 IsActive = true,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow.AddDays(-30),
                 UpdatedAt = DateTime.UtcNow,
                 Preferences = request.Preferences ?? new Dictionary<string, object>
                 {
@@ -308,65 +281,84 @@ public class AuthController : ControllerBase
                 }
             };
 
-            return Ok(new ApiResponse<User> { Data = demoUser });
-
-            // Original code commented out for testing
-            // var userIdClaim = User.FindFirst("sub")?.Value;
-            // if (userIdClaim == null)
-            // {
-            //     return Unauthorized(new ApiError 
-            //     { 
-            //         Code = "UNAUTHORIZED", 
-            //         Message = "User not authenticated" 
-            //     });
-            // }
-
-            // var user = await _context.Users.FindAsync(Guid.Parse(userIdClaim));
-            // if (user == null)
-            // {
-            //     return NotFound(new ApiError 
-            //     { 
-            //         Code = "USER_NOT_FOUND", 
-            //         Message = "User not found" 
-            //     });
-            // }
-
-            // // Update profile fields if provided
-            // if (!string.IsNullOrEmpty(request.FirstName))
-            // {
-            //     user.FirstName = request.FirstName;
-            // }
-            
-            // if (!string.IsNullOrEmpty(request.LastName))
-            // {
-            //     user.LastName = request.LastName;
-            // }
-            
-            // if (!string.IsNullOrEmpty(request.Company))
-            // {
-            //     user.Company = request.Company;
-            // }
-
-            // // Update preferences if provided
-            // if (request.Preferences != null)
-            // {
-            //     user.Preferences = request.Preferences;
-            // }
-
-            // user.UpdatedAt = DateTime.UtcNow;
-            // await _context.SaveChangesAsync();
-
-            // return Ok(new ApiResponse<User> { Data = user });
+            return Ok(new ApiResponse<User> { Data = updatedUser });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error updating profile");
+            _logger.LogError(ex, "Error updating user profile");
             return StatusCode(500, new ApiError 
             { 
                 Code = "INTERNAL_ERROR", 
                 Message = "An error occurred while updating profile" 
             });
         }
+    }
+
+    private List<User> GetDemoUserProfiles()
+    {
+        return new List<User>
+        {
+            new User
+            {
+                Id = Guid.Parse("8dfeb904-6902-4097-948a-1c1d4d058013"),
+                Email = "recruiter@company.com",
+                Name = "Jane Recruiter",
+                FirstName = "Jane",
+                LastName = "Recruiter",
+                Company = "TechCorp",
+                Roles = new List<string> { "recruiter" },
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow.AddDays(-30),
+                UpdatedAt = DateTime.UtcNow,
+                Preferences = new Dictionary<string, object>
+                {
+                    { "timezone", "UTC" },
+                    { "emailNotifications", true },
+                    { "pushNotifications", true },
+                    { "marketingEmails", false }
+                }
+            },
+            new User
+            {
+                Id = Guid.Parse("a1b2c3d4-5678-9012-3456-789012345678"),
+                Email = "admin@vetterati.com",
+                Name = "Admin User",
+                FirstName = "Admin",
+                LastName = "User",
+                Company = "Vetterati",
+                Roles = new List<string> { "admin", "recruiter" },
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow.AddDays(-60),
+                UpdatedAt = DateTime.UtcNow,
+                Preferences = new Dictionary<string, object>
+                {
+                    { "timezone", "UTC" },
+                    { "emailNotifications", true },
+                    { "pushNotifications", true },
+                    { "marketingEmails", true }
+                }
+            },
+            new User
+            {
+                Id = Guid.Parse("b2c3d4e5-6789-0123-4567-890123456789"),
+                Email = "manager@company.com",
+                Name = "John Manager",
+                FirstName = "John",
+                LastName = "Manager",
+                Company = "TechCorp",
+                Roles = new List<string> { "hiring_manager" },
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow.AddDays(-45),
+                UpdatedAt = DateTime.UtcNow,
+                Preferences = new Dictionary<string, object>
+                {
+                    { "timezone", "America/New_York" },
+                    { "emailNotifications", true },
+                    { "pushNotifications", false },
+                    { "marketingEmails", false }
+                }
+            }
+        };
     }
 
     [HttpPost("register")]
@@ -905,13 +897,36 @@ public class AuthController : ControllerBase
                     Roles = roles,
                     IsActive = true,
                     CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    UpdatedAt = DateTime.UtcNow,
+                    Preferences = new Dictionary<string, object>
+                    {
+                        { "timezone", "UTC" },
+                        { "emailNotifications", true },
+                        { "pushNotifications", true },
+                        { "marketingEmails", false }
+                    }
                 };
 
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Created new demo user: {Email} with role: {Role}", email, request.Role);
+            }
+            else
+            {
+                // Ensure existing demo users have preferences
+                if (user.Preferences == null || !user.Preferences.Any())
+                {
+                    user.Preferences = new Dictionary<string, object>
+                    {
+                        { "timezone", "UTC" },
+                        { "emailNotifications", true },
+                        { "pushNotifications", true },
+                        { "marketingEmails", false }
+                    };
+                    _context.Users.Update(user);
+                    await _context.SaveChangesAsync();
+                }
             }
 
             // Update last login

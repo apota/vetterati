@@ -8,6 +8,7 @@ using System.Text.Json;
 using BCrypt.Net;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace AuthService.Controllers;
 
@@ -272,35 +273,88 @@ public class AuthController : ControllerBase
     }
 
     [HttpPut("me")]
-    // [Authorize] // Temporarily disable until JWT issue is resolved
-    public ActionResult<ApiResponse<User>> UpdateProfile([FromBody] UpdateProfileRequest request)
+    // [Authorize] // Temporarily removed for debugging
+    public async Task<ActionResult<ApiResponse<User>>> UpdateProfile([FromBody] UpdateProfileRequest request)
     {
         try
         {
-            // For demo purposes, create an updated user based on request
-            // TODO: This should be replaced with proper JWT authentication and database updates
-            var updatedUser = new User
-            {
-                Id = Guid.Parse("8dfeb904-6902-4097-948a-1c1d4d058013"),
-                Email = "recruiter@company.com",
-                Name = $"{request.FirstName} {request.LastName}".Trim(),
-                FirstName = request.FirstName ?? "Jane",
-                LastName = request.LastName ?? "Recruiter",
-                Company = request.Company ?? "TechCorp",
-                Roles = new List<string> { "recruiter" },
-                IsActive = true,
-                CreatedAt = DateTime.UtcNow.AddDays(-30),
-                UpdatedAt = DateTime.UtcNow,
-                Preferences = request.Preferences ?? new Dictionary<string, object>
-                {
-                    { "timezone", "UTC" },
-                    { "emailNotifications", true },
-                    { "pushNotifications", true },
-                    { "marketingEmails", false }
-                }
-            };
+            Console.WriteLine("=== PROFILE UPDATE STARTED ===");
+            _logger.LogInformation("=== PROFILE UPDATE STARTED ===");
+            _logger.LogInformation("UpdateProfile called with request: {Request}", JsonSerializer.Serialize(request));
 
-            return Ok(new ApiResponse<User> { Data = updatedUser });
+            // Get the current user ID from JWT token
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            _logger.LogInformation("User ID from JWT: {UserId}", userIdClaim);
+
+            if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            {
+                _logger.LogWarning("Invalid or missing user token. UserIdClaim: {UserIdClaim}", userIdClaim);
+                return Unauthorized(new ApiError 
+                { 
+                    Code = "UNAUTHORIZED", 
+                    Message = "Invalid or missing user token" 
+                });
+            }
+
+            // Find the user in the database
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                _logger.LogWarning("User not found in database with ID: {UserId}", userId);
+                return NotFound(new ApiError 
+                { 
+                    Code = "USER_NOT_FOUND", 
+                    Message = "User not found" 
+                });
+            }
+
+            _logger.LogInformation("Found user: {UserId}, Current: {FirstName} {LastName} - {Company}", 
+                userId, user.FirstName, user.LastName, user.Company);
+
+            // Update user properties
+            if (!string.IsNullOrEmpty(request.FirstName))
+            {
+                _logger.LogInformation("Updating FirstName from {Old} to {New}", user.FirstName, request.FirstName);
+                user.FirstName = request.FirstName;
+            }
+            
+            if (!string.IsNullOrEmpty(request.LastName))
+            {
+                _logger.LogInformation("Updating LastName from {Old} to {New}", user.LastName, request.LastName);
+                user.LastName = request.LastName;
+            }
+            
+            if (!string.IsNullOrEmpty(request.Company))
+            {
+                _logger.LogInformation("Updating Company from {Old} to {New}", user.Company, request.Company);
+                user.Company = request.Company;
+            }
+            
+            if (request.Preferences != null)
+            {
+                _logger.LogInformation("Updating Preferences");
+                user.Preferences = request.Preferences;
+            }
+
+            // Update the Name field based on FirstName and LastName
+            if (!string.IsNullOrEmpty(request.FirstName) || !string.IsNullOrEmpty(request.LastName))
+            {
+                var newName = $"{user.FirstName} {user.LastName}".Trim();
+                _logger.LogInformation("Updating Name from {Old} to {New}", user.Name, newName);
+                user.Name = newName;
+            }
+
+            // Update the UpdatedAt timestamp
+            user.UpdatedAt = DateTime.UtcNow;
+
+            // Save changes to database
+            _logger.LogInformation("Saving changes to database...");
+            var changeCount = await _context.SaveChangesAsync();
+            _logger.LogInformation("Database changes saved. Changes made: {ChangeCount}", changeCount);
+
+            _logger.LogInformation("User profile updated successfully for user {UserId}", userId);
+
+            return Ok(new ApiResponse<User> { Data = user });
         }
         catch (Exception ex)
         {

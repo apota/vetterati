@@ -64,11 +64,11 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  AccessToken: string;
-  RefreshToken: string;
-  TokenType: string;
-  ExpiresIn: number;
-  User: User;
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
+  expiresIn: number;
+  user: User;
 }
 
 export interface ApiResponse<T> {
@@ -149,8 +149,8 @@ export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/api/v1/auth/email-login', credentials);
     const loginData = response.data.data;
-    if (loginData.RefreshToken) {
-      localStorage.setItem('refresh_token', loginData.RefreshToken);
+    if (loginData.refreshToken) {
+      localStorage.setItem('refresh_token', loginData.refreshToken);
     }
     return loginData;
   },
@@ -158,8 +158,8 @@ export const authService = {
   register: async (userData: RegisterRequest): Promise<LoginResponse> => {
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/api/v1/auth/register', userData);
     const loginData = response.data.data;
-    if (loginData.RefreshToken) {
-      localStorage.setItem('refresh_token', loginData.RefreshToken);
+    if (loginData.refreshToken) {
+      localStorage.setItem('refresh_token', loginData.refreshToken);
     }
     return loginData;
   },
@@ -204,8 +204,8 @@ export const authService = {
   demoLogin: async (role: string): Promise<LoginResponse> => {
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/api/v1/auth/demo-login', { role });
     const loginData = response.data.data;
-    if (loginData.RefreshToken) {
-      localStorage.setItem('refresh_token', loginData.RefreshToken);
+    if (loginData.refreshToken) {
+      localStorage.setItem('refresh_token', loginData.refreshToken);
     }
     return loginData;
   },

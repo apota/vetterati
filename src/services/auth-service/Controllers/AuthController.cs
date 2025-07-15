@@ -253,20 +253,12 @@ public class AuthController : ControllerBase
                 }
             }
             
-            // If no valid token, check for demo user fallback
-            var demoUsers = GetDemoUserProfiles();
-            var demoUser = demoUsers.FirstOrDefault();
-            
-            if (demoUser == null)
-            {
-                return NotFound(new ApiError 
-                { 
-                    Code = "USER_NOT_FOUND", 
-                    Message = "User not found" 
-                });
-            }
-
-            return Ok(new ApiResponse<User> { Data = demoUser });
+            // If no valid token, return unauthorized
+            return Unauthorized(new ApiError 
+            { 
+                Code = "UNAUTHORIZED", 
+                Message = "Authentication required" 
+            });
         }
         catch (Exception ex)
         {

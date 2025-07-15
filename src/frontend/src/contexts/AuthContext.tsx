@@ -137,19 +137,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           dispatch({ type: 'LOGIN_FAILURE' });
         }
       } else {
-        // Try to get user info without token (for demo mode)
-        try {
-          console.log('AuthContext: Fetching user info without token...');
-          const userInfo = await authService.getUserInfo();
-          console.log('AuthContext: User info received without token:', userInfo);
-          dispatch({
-            type: 'LOGIN_SUCCESS',
-            payload: { user: userInfo, token: null },
-          });
-        } catch (error) {
-          console.error('AuthContext: Error fetching user info without token:', error);
-          dispatch({ type: 'SET_LOADING', payload: false });
-        }
+        console.log('AuthContext: No token found, user not authenticated');
+        dispatch({ type: 'SET_LOADING', payload: false });
       }
     };
 
@@ -160,10 +149,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     dispatch({ type: 'LOGIN_START' });
     try {
       const response = await authService.login({ email, password });
-      localStorage.setItem('token', response.AccessToken);
+      localStorage.setItem('token', response.accessToken);
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: { user: response.User, token: response.AccessToken },
+        payload: { user: response.user, token: response.accessToken },
       });
     } catch (error) {
       dispatch({ type: 'LOGIN_FAILURE' });
@@ -175,10 +164,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     dispatch({ type: 'LOGIN_START' });
     try {
       const response = await authService.demoLogin(role);
-      localStorage.setItem('token', response.AccessToken);
+      localStorage.setItem('token', response.accessToken);
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: { user: response.User, token: response.AccessToken },
+        payload: { user: response.user, token: response.accessToken },
       });
     } catch (error) {
       dispatch({ type: 'LOGIN_FAILURE' });
@@ -212,8 +201,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const refreshToken = localStorage.getItem('refresh_token');
       if (refreshToken) {
         const response = await authService.refresh({ refresh_token: refreshToken });
-        localStorage.setItem('token', response.AccessToken);
-        dispatch({ type: 'REFRESH_TOKEN', payload: { token: response.AccessToken } });
+        localStorage.setItem('token', response.accessToken);
+        dispatch({ type: 'REFRESH_TOKEN', payload: { token: response.accessToken } });
       }
     } catch (error) {
       logout();

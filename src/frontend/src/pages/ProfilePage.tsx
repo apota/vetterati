@@ -26,7 +26,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { authService } from '../services/authService';
 
 const ProfilePage: React.FC = () => {
-  const { user, refreshUser } = useAuth();
+  const { user, refreshUser, isAuthenticated } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,37 +46,42 @@ const ProfilePage: React.FC = () => {
     }
   });
 
-  // Always fetch profile data directly, but respect authentication
+  // Fetch profile data
   useEffect(() => {
     const fetchProfile = async () => {
+      setIsLoading(true);
+      setError(null);
+      
       try {
         console.log('ProfilePage: Fetching profile data...');
-        // Check if we have a token in localStorage
-        const token = localStorage.getItem('token');
-        let userInfo;
+        console.log('ProfilePage: isAuthenticated:', isAuthenticated);
+        console.log('ProfilePage: user from context:', user);
         
-        if (token) {
-          // If we have a token, the authService will automatically include it
-          console.log('ProfilePage: Using token for authenticated request');
-          userInfo = await authService.getUserInfo();
+        if (isAuthenticated) {
+          // Use user from context if available, otherwise fetch from API
+          if (user) {
+            console.log('ProfilePage: Using user from context');
+            setProfileData(user);
+          } else {
+            console.log('ProfilePage: Fetching from API...');
+            const userInfo = await authService.getUserInfo();
+            console.log('ProfilePage: Profile data received:', userInfo);
+            setProfileData(userInfo);
+          }
         } else {
-          // If no token, we'll get the fallback demo user
-          console.log('ProfilePage: No token found, getting default user');
-          userInfo = await authService.getUserInfo();
+          console.log('ProfilePage: User not authenticated');
+          setError('Please log in to view your profile');
         }
-        
-        console.log('ProfilePage: Profile data received:', userInfo);
-        setProfileData(userInfo);
-        setIsLoading(false);
       } catch (err) {
         console.error('ProfilePage: Error fetching profile:', err);
         setError('Failed to load profile data');
+      } finally {
         setIsLoading(false);
       }
     };
 
     fetchProfile();
-  }, []);
+  }, [isAuthenticated, user]); // Re-fetch when authentication state or user changes
 
   const currentUser = user || profileData;
 

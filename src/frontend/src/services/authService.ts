@@ -100,6 +100,24 @@ export interface User {
   lastLoginAt?: string;
   createdAt: string;
   updatedAt: string;
+  preferences?: {
+    timezone?: string;
+    emailNotifications?: boolean;
+    pushNotifications?: boolean;
+    marketingEmails?: boolean;
+  };
+}
+
+export interface UpdateProfileRequest {
+  firstName?: string;
+  lastName?: string;
+  company?: string;
+  preferences?: {
+    timezone?: string;
+    emailNotifications?: boolean;
+    pushNotifications?: boolean;
+    marketingEmails?: boolean;
+  };
 }
 
 export interface ForgotPasswordRequest {
@@ -176,6 +194,11 @@ export const authService = {
 
   resetPassword: async (request: ResetPasswordRequest): Promise<void> => {
     await api.post('/api/v1/auth/reset-password', request);
+  },
+
+  updateProfile: async (request: UpdateProfileRequest): Promise<User> => {
+    const response: AxiosResponse<ApiResponse<User>> = await api.put('/api/v1/auth/me', request);
+    return response.data.data;
   },
 
   demoLogin: async (role: string): Promise<LoginResponse> => {

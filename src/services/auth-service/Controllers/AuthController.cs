@@ -253,6 +253,69 @@ public class AuthController : ControllerBase
         }
     }
 
+    [HttpPut("me")]
+    public async Task<ActionResult<ApiResponse<User>>> UpdateProfile([FromBody] UpdateProfileRequest request)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst("sub")?.Value;
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new ApiError 
+                { 
+                    Code = "UNAUTHORIZED", 
+                    Message = "User not authenticated" 
+                });
+            }
+
+            var user = await _context.Users.FindAsync(Guid.Parse(userIdClaim));
+            if (user == null)
+            {
+                return NotFound(new ApiError 
+                { 
+                    Code = "USER_NOT_FOUND", 
+                    Message = "User not found" 
+                });
+            }
+
+            // Update profile fields if provided
+            if (!string.IsNullOrEmpty(request.FirstName))
+            {
+                user.FirstName = request.FirstName;
+            }
+            
+            if (!string.IsNullOrEmpty(request.LastName))
+            {
+                user.LastName = request.LastName;
+            }
+            
+            if (!string.IsNullOrEmpty(request.Company))
+            {
+                user.Company = request.Company;
+            }
+
+            // Update preferences if provided
+            if (request.Preferences != null)
+            {
+                user.Preferences = request.Preferences;
+            }
+
+            user.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse<User> { Data = user });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating profile");
+            return StatusCode(500, new ApiError 
+            { 
+                Code = "INTERNAL_ERROR", 
+                Message = "An error occurred while updating profile" 
+            });
+        }
+    }
+
     [HttpPost("register")]
     public async Task<ActionResult<ApiResponse<LoginResponse>>> Register([FromBody] RegisterRequest? request)
     {

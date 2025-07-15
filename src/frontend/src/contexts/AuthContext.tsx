@@ -13,6 +13,12 @@ interface User {
   lastLoginAt?: string;
   createdAt: string;
   updatedAt: string;
+  preferences?: {
+    timezone?: string;
+    emailNotifications?: boolean;
+    pushNotifications?: boolean;
+    marketingEmails?: boolean;
+  };
 }
 
 interface AuthState {
@@ -28,6 +34,7 @@ interface AuthContextType extends AuthState {
   register: (userData: RegisterData) => Promise<any>;
   logout: () => void;
   refreshToken: () => Promise<void>;
+  refreshUser: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string, confirmPassword: string) => Promise<void>;
   verifyResetToken: (token: string) => Promise<boolean>;
@@ -195,6 +202,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const refreshUser = async () => {
+    try {
+      const userInfo = await authService.getUserInfo();
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload: { user: userInfo, token: state.token! },
+      });
+    } catch (error) {
+      console.error('Error refreshing user:', error);
+    }
+  };
+
   const forgotPassword = async (email: string) => {
     await authService.forgotPassword({ email });
   };
@@ -214,6 +233,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     register,
     logout,
     refreshToken,
+    refreshUser,
     forgotPassword,
     resetPassword,
     verifyResetToken,

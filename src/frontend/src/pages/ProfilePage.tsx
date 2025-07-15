@@ -28,9 +28,10 @@ import { authService } from '../services/authService';
 const ProfilePage: React.FC = () => {
   const { user, refreshUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [profileData, setProfileData] = useState<any>(null);
   
   const [formData, setFormData] = useState({
     firstName: '',
@@ -45,22 +46,56 @@ const ProfilePage: React.FC = () => {
     }
   });
 
+  // Always fetch profile data directly, but respect authentication
   useEffect(() => {
-    if (user) {
+    const fetchProfile = async () => {
+      try {
+        console.log('ProfilePage: Fetching profile data...');
+        // Check if we have a token in localStorage
+        const token = localStorage.getItem('token');
+        let userInfo;
+        
+        if (token) {
+          // If we have a token, the authService will automatically include it
+          console.log('ProfilePage: Using token for authenticated request');
+          userInfo = await authService.getUserInfo();
+        } else {
+          // If no token, we'll get the fallback demo user
+          console.log('ProfilePage: No token found, getting default user');
+          userInfo = await authService.getUserInfo();
+        }
+        
+        console.log('ProfilePage: Profile data received:', userInfo);
+        setProfileData(userInfo);
+        setIsLoading(false);
+      } catch (err) {
+        console.error('ProfilePage: Error fetching profile:', err);
+        setError('Failed to load profile data');
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const currentUser = user || profileData;
+
+  useEffect(() => {
+    if (currentUser) {
       setFormData({
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        email: user.email || '',
-        company: user.company || '',
+        firstName: currentUser.firstName || '',
+        lastName: currentUser.lastName || '',
+        email: currentUser.email || '',
+        company: currentUser.company || '',
         preferences: {
-          timezone: user.preferences?.timezone || 'UTC',
-          emailNotifications: user.preferences?.emailNotifications ?? true,
-          pushNotifications: user.preferences?.pushNotifications ?? true,
-          marketingEmails: user.preferences?.marketingEmails ?? false
+          timezone: currentUser.preferences?.timezone || 'UTC',
+          emailNotifications: currentUser.preferences?.emailNotifications ?? true,
+          pushNotifications: currentUser.preferences?.pushNotifications ?? true,
+          marketingEmails: currentUser.preferences?.marketingEmails ?? false
         }
       });
     }
-  }, [user]);
+  }, [currentUser]);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({
@@ -103,17 +138,17 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleCancel = () => {
-    if (user) {
+    if (currentUser) {
       setFormData({
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        email: user.email || '',
-        company: user.company || '',
+        firstName: currentUser.firstName || '',
+        lastName: currentUser.lastName || '',
+        email: currentUser.email || '',
+        company: currentUser.company || '',
         preferences: {
-          timezone: user.preferences?.timezone || 'UTC',
-          emailNotifications: user.preferences?.emailNotifications ?? true,
-          pushNotifications: user.preferences?.pushNotifications ?? true,
-          marketingEmails: user.preferences?.marketingEmails ?? false
+          timezone: currentUser.preferences?.timezone || 'UTC',
+          emailNotifications: currentUser.preferences?.emailNotifications ?? true,
+          pushNotifications: currentUser.preferences?.pushNotifications ?? true,
+          marketingEmails: currentUser.preferences?.marketingEmails ?? false
         }
       });
     }
@@ -137,10 +172,26 @@ const ProfilePage: React.FC = () => {
     'Australia/Sydney'
   ];
 
-  if (!user) {
+  if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
         <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+        <Typography color="error">{error}</Typography>
+      </Box>
+    );
+  }
+
+  if (!currentUser) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+        <Typography>No profile data available</Typography>
       </Box>
     );
   }
@@ -267,20 +318,20 @@ const ProfilePage: React.FC = () => {
                   fontSize: '3rem'
                 }}
               >
-                {user.firstName?.[0] || user.name?.[0] || user.email[0]}
+                {currentUser.firstName?.[0] || currentUser.name?.[0] || currentUser.email[0]}
               </Avatar>
               <Typography variant="h6" gutterBottom>
-                {user.firstName && user.lastName 
-                  ? `${user.firstName} ${user.lastName}`
-                  : user.name || user.email
+                {currentUser.firstName && currentUser.lastName 
+                  ? `${currentUser.firstName} ${currentUser.lastName}`
+                  : currentUser.name || currentUser.email
                 }
               </Typography>
               <Typography variant="body2" color="text.secondary" gutterBottom>
-                {user.email}
+                {currentUser.email}
               </Typography>
               <Box sx={{ mt: 2 }}>
                 <Chip 
-                  label={user.roles?.[0] || 'User'} 
+                  label={currentUser.roles?.[0] || 'User'} 
                   size="small" 
                   color="primary"
                 />

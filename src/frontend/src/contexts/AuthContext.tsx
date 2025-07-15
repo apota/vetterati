@@ -51,7 +51,7 @@ interface RegisterData {
 
 type AuthAction =
   | { type: 'LOGIN_START' }
-  | { type: 'LOGIN_SUCCESS'; payload: { user: User; token: string } }
+  | { type: 'LOGIN_SUCCESS'; payload: { user: User; token: string | null } }
   | { type: 'LOGIN_FAILURE' }
   | { type: 'LOGOUT' }
   | { type: 'REFRESH_TOKEN'; payload: { token: string } }
@@ -118,20 +118,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const initializeAuth = async () => {
+      console.log('AuthContext: Initializing auth...');
       const token = localStorage.getItem('token');
+      console.log('AuthContext: Token from localStorage:', token ? 'exists' : 'null');
+      
       if (token) {
         try {
+          console.log('AuthContext: Fetching user info with token...');
           const userInfo = await authService.getUserInfo();
+          console.log('AuthContext: User info received:', userInfo);
           dispatch({
             type: 'LOGIN_SUCCESS',
             payload: { user: userInfo, token },
           });
         } catch (error) {
+          console.error('AuthContext: Error fetching user info with token:', error);
           localStorage.removeItem('token');
           dispatch({ type: 'LOGIN_FAILURE' });
         }
       } else {
-        dispatch({ type: 'SET_LOADING', payload: false });
+        // Try to get user info without token (for demo mode)
+        try {
+          console.log('AuthContext: Fetching user info without token...');
+          const userInfo = await authService.getUserInfo();
+          console.log('AuthContext: User info received without token:', userInfo);
+          dispatch({
+            type: 'LOGIN_SUCCESS',
+            payload: { user: userInfo, token: null },
+          });
+        } catch (error) {
+          console.error('AuthContext: Error fetching user info without token:', error);
+          dispatch({ type: 'SET_LOADING', payload: false });
+        }
       }
     };
 

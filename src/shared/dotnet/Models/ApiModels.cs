@@ -97,9 +97,22 @@ public class ForgotPasswordRequest
 
 public class ResetPasswordRequest
 {
+    [Required]
     public string Token { get; set; } = string.Empty;
+    
+    [Required]
     public string NewPassword { get; set; } = string.Empty;
+    
+    [Required]
     public string ConfirmPassword { get; set; } = string.Empty;
+}
+
+public class UpdateProfileRequest
+{
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? Company { get; set; }
+    public Dictionary<string, object>? Preferences { get; set; }
 }
 
 public class VerifyResetTokenRequest

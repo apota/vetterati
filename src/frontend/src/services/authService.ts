@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -64,11 +64,11 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  AccessToken: string;
-  RefreshToken: string;
-  TokenType: string;
-  ExpiresIn: number;
-  User: User;
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
+  expiresIn: number;
+  user: User;
 }
 
 export interface ApiResponse<T> {
@@ -100,6 +100,24 @@ export interface User {
   lastLoginAt?: string;
   createdAt: string;
   updatedAt: string;
+  preferences?: {
+    timezone?: string;
+    emailNotifications?: boolean;
+    pushNotifications?: boolean;
+    marketingEmails?: boolean;
+  };
+}
+
+export interface UpdateProfileRequest {
+  firstName?: string;
+  lastName?: string;
+  company?: string;
+  preferences?: {
+    timezone?: string;
+    emailNotifications?: boolean;
+    pushNotifications?: boolean;
+    marketingEmails?: boolean;
+  };
 }
 
 export interface ForgotPasswordRequest {
@@ -131,8 +149,8 @@ export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/api/v1/auth/email-login', credentials);
     const loginData = response.data.data;
-    if (loginData.RefreshToken) {
-      localStorage.setItem('refresh_token', loginData.RefreshToken);
+    if (loginData.refreshToken) {
+      localStorage.setItem('refresh_token', loginData.refreshToken);
     }
     return loginData;
   },
@@ -140,8 +158,8 @@ export const authService = {
   register: async (userData: RegisterRequest): Promise<LoginResponse> => {
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/api/v1/auth/register', userData);
     const loginData = response.data.data;
-    if (loginData.RefreshToken) {
-      localStorage.setItem('refresh_token', loginData.RefreshToken);
+    if (loginData.refreshToken) {
+      localStorage.setItem('refresh_token', loginData.refreshToken);
     }
     return loginData;
   },
@@ -178,11 +196,16 @@ export const authService = {
     await api.post('/api/v1/auth/reset-password', request);
   },
 
+  updateProfile: async (request: UpdateProfileRequest): Promise<User> => {
+    const response: AxiosResponse<ApiResponse<User>> = await api.put('/api/v1/auth/me', request);
+    return response.data.data;
+  },
+
   demoLogin: async (role: string): Promise<LoginResponse> => {
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/api/v1/auth/demo-login', { role });
     const loginData = response.data.data;
-    if (loginData.RefreshToken) {
-      localStorage.setItem('refresh_token', loginData.RefreshToken);
+    if (loginData.refreshToken) {
+      localStorage.setItem('refresh_token', loginData.refreshToken);
     }
     return loginData;
   },

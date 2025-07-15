@@ -63,6 +63,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     handleProfileMenuClose();
   };
 
+  const handleProfileClick = () => {
+    navigate('/profile');
+    handleProfileMenuClose();
+  };
+
   const menuItems = [
     { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
     { text: 'Jobs', icon: <Work />, path: '/jobs' },
@@ -196,7 +201,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           horizontal: 'right',
         }}
       >
-        <MenuItem onClick={handleProfileMenuClose}>
+        <MenuItem onClick={handleProfileClick}>
           <ListItemIcon>
             <AccountCircle fontSize="small" />
           </ListItemIcon>

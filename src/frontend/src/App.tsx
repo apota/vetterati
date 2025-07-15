@@ -11,6 +11,7 @@ import JobsPage from './pages/JobsPage';
 import CandidatesPage from './pages/CandidatesPage';
 import InterviewsPage from './pages/InterviewsPage';
 import AnalyticsPage from './pages/AnalyticsPage';
+import ProfilePage from './pages/ProfilePage';
 import Layout from './components/Layout/Layout';
 import LoadingSpinner from './components/Common/LoadingSpinner';
 
@@ -42,6 +43,7 @@ const App: React.FC = () => {
         <Route path="/candidates" element={<CandidatesPage />} />
         <Route path="/interviews" element={<InterviewsPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/login" element={<Navigate to="/dashboard" replace />} />
         <Route path="/register" element={<Navigate to="/dashboard" replace />} />
         <Route path="/forgot-password" element={<Navigate to="/dashboard" replace />} />

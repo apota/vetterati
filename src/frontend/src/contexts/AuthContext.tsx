@@ -13,6 +13,12 @@ interface User {
   lastLoginAt?: string;
   createdAt: string;
   updatedAt: string;
+  preferences?: {
+    timezone?: string;
+    emailNotifications?: boolean;
+    pushNotifications?: boolean;
+    marketingEmails?: boolean;
+  };
 }
 
 interface AuthState {
@@ -28,6 +34,7 @@ interface AuthContextType extends AuthState {
   register: (userData: RegisterData) => Promise<any>;
   logout: () => void;
   refreshToken: () => Promise<void>;
+  refreshUser: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string, confirmPassword: string) => Promise<void>;
   verifyResetToken: (token: string) => Promise<boolean>;
@@ -44,7 +51,7 @@ interface RegisterData {
 
 type AuthAction =
   | { type: 'LOGIN_START' }
-  | { type: 'LOGIN_SUCCESS'; payload: { user: User; token: string } }
+  | { type: 'LOGIN_SUCCESS'; payload: { user: User; token: string | null } }
   | { type: 'LOGIN_FAILURE' }
   | { type: 'LOGOUT' }
   | { type: 'REFRESH_TOKEN'; payload: { token: string } }
@@ -111,19 +118,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const initializeAuth = async () => {
+      console.log('AuthContext: Initializing auth...');
       const token = localStorage.getItem('token');
+      console.log('AuthContext: Token from localStorage:', token ? 'exists' : 'null');
+      
       if (token) {
         try {
+          console.log('AuthContext: Fetching user info with token...');
           const userInfo = await authService.getUserInfo();
+          console.log('AuthContext: User info received:', userInfo);
           dispatch({
             type: 'LOGIN_SUCCESS',
             payload: { user: userInfo, token },
           });
         } catch (error) {
+          console.error('AuthContext: Error fetching user info with token:', error);
           localStorage.removeItem('token');
           dispatch({ type: 'LOGIN_FAILURE' });
         }
       } else {
+        console.log('AuthContext: No token found, user not authenticated');
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     };
@@ -135,10 +149,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     dispatch({ type: 'LOGIN_START' });
     try {
       const response = await authService.login({ email, password });
-      localStorage.setItem('token', response.AccessToken);
+      localStorage.setItem('token', response.accessToken);
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: { user: response.User, token: response.AccessToken },
+        payload: { user: response.user, token: response.accessToken },
       });
     } catch (error) {
       dispatch({ type: 'LOGIN_FAILURE' });
@@ -150,10 +164,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     dispatch({ type: 'LOGIN_START' });
     try {
       const response = await authService.demoLogin(role);
-      localStorage.setItem('token', response.AccessToken);
+      localStorage.setItem('token', response.accessToken);
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: { user: response.User, token: response.AccessToken },
+        payload: { user: response.user, token: response.accessToken },
       });
     } catch (error) {
       dispatch({ type: 'LOGIN_FAILURE' });
@@ -187,11 +201,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const refreshToken = localStorage.getItem('refresh_token');
       if (refreshToken) {
         const response = await authService.refresh({ refresh_token: refreshToken });
-        localStorage.setItem('token', response.AccessToken);
-        dispatch({ type: 'REFRESH_TOKEN', payload: { token: response.AccessToken } });
+        localStorage.setItem('token', response.accessToken);
+        dispatch({ type: 'REFRESH_TOKEN', payload: { token: response.accessToken } });
       }
     } catch (error) {
       logout();
+    }
+  };
+
+  const refreshUser = async () => {
+    try {
+      const userInfo = await authService.getUserInfo();
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload: { user: userInfo, token: state.token! },
+      });
+    } catch (error) {
+      console.error('Error refreshing user:', error);
     }
   };
 
@@ -214,6 +240,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     register,
     logout,
     refreshToken,
+    refreshUser,
     forgotPassword,
     resetPassword,
     verifyResetToken,

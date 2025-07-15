@@ -48,8 +48,8 @@ public class JwtService : IJwtService
         }
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"] ?? "vetterati-ats",
-            audience: _configuration["Jwt:Audience"] ?? "vetterati-ats",
+            issuer: _configuration["Jwt:Issuer"] ?? "vetterati_auth",
+            audience: _configuration["Jwt:Audience"] ?? "vetterati_app",
             claims: claims,
             expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: credentials

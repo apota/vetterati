@@ -217,17 +217,44 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("me")]
-    // [Authorize] // Temporarily disable until JWT issue is resolved
     public ActionResult<ApiResponse<User>> GetCurrentUser()
     {
         try
         {
-            // Check if there's a demo user context (for demo scenarios)
-            // In a real implementation, this would check JWT claims
-            var demoUsers = GetDemoUserProfiles();
+            // Extract JWT token from Authorization header
+            var authHeader = Request.Headers["Authorization"].FirstOrDefault();
+            if (authHeader != null && authHeader.StartsWith("Bearer "))
+            {
+                var token = authHeader.Substring("Bearer ".Length).Trim();
+                
+                try
+                {
+                    // Validate and decode JWT token
+                    var principal = _jwtService.GetPrincipalFromExpiredToken(token);
+                    
+                    if (principal != null)
+                    {
+                        // Get user ID from token claims
+                        var userIdClaim = principal.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+                        if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out var userId))
+                        {
+                            // Get user from database
+                            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+                            if (user != null)
+                            {
+                                return Ok(new ApiResponse<User> { Data = user });
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Invalid JWT token provided");
+                }
+            }
             
-            // For now, return the first demo user (recruiter)
-            // TODO: This should be replaced with proper JWT authentication
+            // If no valid token, check for demo user fallback
+            var demoUsers = GetDemoUserProfiles();
             var demoUser = demoUsers.FirstOrDefault();
             
             if (demoUser == null)

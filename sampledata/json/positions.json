@@ -1,296 +1,53 @@
 [
   {
-    "id": "f8708572-7e93-4e40-b9d5-a535f01c06b2",
-    "title": "Machine Learning Engineer",
+    "id": "2a02e1ef-de96-4684-8139-3919a7cead6f",
+    "title": "Team Lead",
     "company": {
-      "name": "EY",
+      "name": "Slack",
       "size": "Large",
-      "industry": "Technology"
+      "industry": "Healthcare"
     },
-    "location": "West Christopherburgh, NM",
-    "remote_policy": "Remote",
-    "employment_type": "Full-time",
-    "department": "Data",
-    "level": "Principal",
-    "description": "Whether take sell sing total. Science majority ago shake. Factor together food article land good music. Coach minute family.",
+    "location": "Smithport, FL",
+    "remote_policy": "Hybrid",
+    "employment_type": "Internship",
+    "department": "Management",
+    "level": "Senior",
+    "description": "Political try require country push. Month girl mention any continue. There affect me resource buy.",
     "responsibilities": [
-      "Miss best white option listen where cell.",
-      "Teach stuff draw weight turn already.",
-      "Scene name including question voice must control.",
-      "Republican argue unit appear.",
-      "Trial for much mention page suggest eight."
+      "Whom ready sit remain serious.",
+      "Get attack mother environmental.",
+      "Structure a hair happen worker step government.",
+      "Successful something use every.",
+      "Sense hard dog leave.",
+      "Part always project scene throw like.",
+      "North should produce boy such thought history stop.",
+      "Dinner avoid son get five many city."
     ],
     "requirements": {
       "education": "Master's degree preferred",
       "experience": {
-        "min_years": 0,
-        "max_years": 7,
-        "description": "0-7 years of relevant experience"
+        "min_years": 1,
+        "max_years": 6,
+        "description": "1-6 years of relevant experience"
       },
       "skills": {
         "required": [
-          "Kotlin",
-          "Illustrator",
-          "Sketch",
+          "Jupyter",
           "PyTorch",
-          "Matplotlib",
-          "Spring Boot",
-          "ASP.NET Core",
-          "JavaScript"
-        ],
-        "preferred": [
-          "Docker",
-          "GitHub Actions",
-          "GitLab CI",
-          "Premiere Pro",
-          "Sketch",
-          "Strategic Planning"
-        ]
-      },
-      "certifications": [
-        "Scrum Master Certification"
-      ]
-    },
-    "salary": {
-      "min": 91393,
-      "max": 156257,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-07",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Angela Wilson",
-      "email": "fieldsgary@example.org",
-      "title": "HR Manager"
-    },
-    "team_size": 4,
-    "reports_to": "VP of Engineering",
-    "created_at": "2025-07-16T15:46:21",
-    "updated_at": "2025-07-12T06:26:10"
-  },
-  {
-    "id": "554c6d9a-5b62-4dd5-8f2e-0ce758a10616",
-    "title": "Brand Manager",
-    "company": {
-      "name": "Microsoft",
-      "size": "Startup",
-      "industry": "E-commerce"
-    },
-    "location": "Hayesville, MI",
-    "remote_policy": "On-site",
-    "employment_type": "Contract",
-    "department": "Marketing",
-    "level": "Entry",
-    "description": "Leader conference really. Why read sit list able. Purpose him drug laugh. Usually once brother risk American return Mr.",
-    "responsibilities": [
-      "Hand the interesting guy.",
-      "Already provide husband number thousand information.",
-      "Low beat day life.",
-      "Probably song white method.",
-      "Movie knowledge Mr."
-    ],
-    "requirements": {
-      "education": "Master's degree preferred",
-      "experience": {
-        "min_years": 7,
-        "max_years": 11,
-        "description": "7-11 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "SASS",
-          "Photoshop",
-          "Blender",
-          "Sketch",
-          "After Effects",
-          "Hadoop",
+          "Scikit-learn",
           "TensorFlow",
-          "NumPy"
-        ],
-        "preferred": [
-          "jQuery",
-          "Bootstrap",
-          "Material-UI",
-          "Angular",
+          "MongoDB",
+          "Ruby on Rails",
+          "FastAPI",
+          "Communication",
+          "Mentoring",
+          "Scrum",
           "Problem Solving"
-        ]
-      },
-      "certifications": [
-        "Certified Kubernetes Administrator"
-      ]
-    },
-    "salary": {
-      "min": 137733,
-      "max": 203509,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-05",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "Oscar Green",
-      "email": "karenrobertson@example.net",
-      "title": "Engineering Manager"
-    },
-    "team_size": 6,
-    "reports_to": "Director of Engineering",
-    "created_at": "2025-07-16T15:45:50",
-    "updated_at": "2025-07-15T06:18:45"
-  },
-  {
-    "id": "976928ab-0f23-478b-9297-4d45da37e88e",
-    "title": "Staff Software Engineer",
-    "company": {
-      "name": "Stripe",
-      "size": "Enterprise",
-      "industry": "Consulting"
-    },
-    "location": "Gregoryshire, AR",
-    "remote_policy": "Remote",
-    "employment_type": "Full-time",
-    "department": "Engineering",
-    "level": "Mid",
-    "description": "Out public kind each school none. Low rate range rich worry mean. Trial only food send type. Night responsibility a thank attack wait. Heavy model girl agent.",
-    "responsibilities": [
-      "Say those center heart year have kitchen management.",
-      "Success professional national cell.",
-      "Authority turn billion.",
-      "Federal sit spring source.",
-      "Body me ok.",
-      "General official always box someone truth."
-    ],
-    "requirements": {
-      "education": "Master's degree preferred",
-      "experience": {
-        "min_years": 2,
-        "max_years": 9,
-        "description": "2-9 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "GitLab CI",
-          "R",
-          "SASS",
-          "Material-UI",
-          "jQuery",
-          "Webpack",
-          "Redis",
-          "TensorFlow",
-          "Ruby"
         ],
         "preferred": [
-          "Mentoring",
-          "Team Management",
-          "Tailwind CSS",
-          "Angular",
-          "React",
-          "Android Development",
-          "Cordova",
-          "Ionic"
-        ]
-      },
-      "certifications": [
-        "AWS Certified Solutions Architect",
-        "Scrum Master Certification"
-      ]
-    },
-    "salary": {
-      "min": 101443,
-      "max": 148876,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-07",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Jennifer Bond",
-      "email": "claytonrhonda@example.com",
-      "title": "Product Manager"
-    },
-    "team_size": 7,
-    "reports_to": "CTO",
-    "created_at": "2025-07-16T15:44:26",
-    "updated_at": "2025-07-09T21:22:52"
-  },
-  {
-    "id": "bf83cd38-9feb-4d1c-bcf9-344aec4b93cb",
-    "title": "Technical Product Manager",
-    "company": {
-      "name": "Lyft",
-      "size": "Startup",
-      "industry": "Consulting"
-    },
-    "location": "East Steven, MS",
-    "remote_policy": "Remote",
-    "employment_type": "Part-time",
-    "department": "Product",
-    "level": "Mid",
-    "description": "Set quality commercial animal cover. Similar let area their sure character able support. Prevent bit wall bag law hot. Television attention opportunity inside top above.",
-    "responsibilities": [
-      "Realize represent land bag everything discussion.",
-      "Size hour because theory win.",
-      "Career live simply science.",
-      "Everything production base Mrs.",
-      "Right history total size."
-    ],
-    "requirements": {
-      "education": "Master's degree preferred",
-      "experience": {
-        "min_years": 0,
-        "max_years": 8,
-        "description": "0-8 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Team Management",
-          "Leadership",
-          "Project Management",
-          "Mentoring",
-          "Tailwind CSS",
-          "HTML5",
-          "CSS3",
-          "Webpack",
-          "TypeScript",
-          "MATLAB"
-        ],
-        "preferred": [
-          "SQL Server",
-          "DynamoDB",
-          "SQLite"
+          "Scala",
+          "React Native",
+          "Agile"
         ]
       },
       "certifications": [
@@ -298,169 +55,8 @@
       ]
     },
     "salary": {
-      "min": 79318,
-      "max": 147294,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-08",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Paige Alexander",
-      "email": "everettmichael@example.net",
-      "title": "Product Manager"
-    },
-    "team_size": 14,
-    "reports_to": "Senior Engineering Manager",
-    "created_at": "2025-07-16T15:43:57",
-    "updated_at": "2025-07-10T16:31:36"
-  },
-  {
-    "id": "e2c3240c-6d9d-4711-8f20-606f843562d3",
-    "title": "Associate Product Manager",
-    "company": {
-      "name": "Canva",
-      "size": "Startup",
-      "industry": "Healthcare"
-    },
-    "location": "North Rachelside, MA",
-    "remote_policy": "Remote",
-    "employment_type": "Part-time",
-    "department": "Product",
-    "level": "Principal",
-    "description": "Listen manage recent offer. Condition allow identify us Mr subject. Others still usually see. Information lot letter hard later often.",
-    "responsibilities": [
-      "Service his loss continue.",
-      "Thought sign million whom member nothing.",
-      "Weight doctor still author manage west might.",
-      "Often education opportunity medical station event.",
-      "Three school job see although popular list green."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
-      "experience": {
-        "min_years": 4,
-        "max_years": 10,
-        "description": "4-10 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Material-UI",
-          "LESS",
-          "Tailwind CSS",
-          "JavaScript",
-          "R",
-          "Perl",
-          "Swift",
-          "Apache Spark"
-        ],
-        "preferred": [
-          "DynamoDB",
-          "Apache Spark",
-          "Azure"
-        ]
-      },
-      "certifications": [
-        "AWS Certified Solutions Architect",
-        "AWS Certified Solutions Architect"
-      ]
-    },
-    "salary": {
-      "min": 105012,
-      "max": 173614,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-15",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "John Rivera",
-      "email": "justinolson@example.org",
-      "title": "HR Manager"
-    },
-    "team_size": 12,
-    "reports_to": "VP of Engineering",
-    "created_at": "2025-07-16T15:45:24",
-    "updated_at": "2025-07-10T04:19:23"
-  },
-  {
-    "id": "b7647d01-d51e-41d9-a4f6-ce6f4e02281f",
-    "title": "Marketing Manager",
-    "company": {
-      "name": "Uber",
-      "size": "Enterprise",
-      "industry": "Healthcare"
-    },
-    "location": "East Tracyshire, MH",
-    "remote_policy": "Remote",
-    "employment_type": "Full-time",
-    "department": "Marketing",
-    "level": "Senior",
-    "description": "Foot sell important down. Keep person white argue value. Necessary our night use. Join big two bad worry financial.",
-    "responsibilities": [
-      "Road Mrs president network off.",
-      "Way lawyer institution particular there.",
-      "Wear stay song especially.",
-      "Fact particularly our property word event word.",
-      "Commercial ever instead author just yeah.",
-      "Positive plant small assume be pattern both including."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
-      "experience": {
-        "min_years": 0,
-        "max_years": 4,
-        "description": "0-4 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Java",
-          "C#",
-          "Python",
-          "R",
-          "React",
-          "Material-UI",
-          "Cassandra"
-        ],
-        "preferred": [
-          "Angular",
-          "Tailwind CSS",
-          "Webpack",
-          "Pandas",
-          "TensorFlow",
-          "NumPy"
-        ]
-      },
-      "certifications": [
-        "PMP Certification",
-        "PMP Certification"
-      ]
-    },
-    "salary": {
-      "min": 112810,
-      "max": 140002,
+      "min": 93311,
+      "max": 122870,
       "currency": "USD",
       "type": "Annual"
     },
@@ -476,1395 +72,66 @@
     ],
     "application_deadline": "2025-07-30",
     "posted_date": "2025-07-12",
-    "status": "Active",
-    "hiring_manager": {
-      "name": "Christina Howard",
-      "email": "james11@example.net",
-      "title": "Engineering Manager"
-    },
-    "team_size": 10,
-    "reports_to": "Product Manager",
-    "created_at": "2025-07-16T15:44:50",
-    "updated_at": "2025-07-13T13:41:28"
-  },
-  {
-    "id": "3b20f8f3-8bfd-4ae6-8a76-af8000538883",
-    "title": "Principal Software Engineer",
-    "company": {
-      "name": "Canva",
-      "size": "Mid-size",
-      "industry": "Media"
-    },
-    "location": "Grahamtown, CA",
-    "remote_policy": "On-site",
-    "employment_type": "Contract",
-    "department": "Engineering",
-    "level": "Mid",
-    "description": "Region cold power year for like position. Film leg fish feeling deep move pretty. Compare defense rock week main morning arm. Statement within region note interest choice.",
-    "responsibilities": [
-      "View half ready.",
-      "First role woman spring team wait.",
-      "She almost improve cold source walk thing.",
-      "Prepare detail also line.",
-      "Not not attack home.",
-      "Degree however range share position.",
-      "Hospital political five though picture."
-    ],
-    "requirements": {
-      "education": "Relevant experience in lieu of degree",
-      "experience": {
-        "min_years": 1,
-        "max_years": 6,
-        "description": "1-6 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "PyTorch",
-          "Sketch",
-          "ASP.NET Core",
-          "Node.js",
-          "SQLite",
-          "Xamarin",
-          "Project Management"
-        ],
-        "preferred": [
-          "ASP.NET Core",
-          "Laravel",
-          "Flask",
-          "Scikit-learn",
-          "TensorFlow",
-          "Hadoop"
-        ]
-      },
-      "certifications": [
-        "Google Cloud Professional",
-        "Microsoft Azure Fundamentals"
-      ]
-    },
-    "salary": {
-      "min": 75550,
-      "max": 105498,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-13",
     "status": "Filled",
     "hiring_manager": {
-      "name": "Kristopher Bush",
-      "email": "jaredmaldonado@example.org",
-      "title": "Senior Engineering Manager"
+      "name": "Rebecca Taylor",
+      "email": "patricia36@example.com",
+      "title": "Director of Engineering"
     },
-    "team_size": 3,
+    "team_size": 19,
     "reports_to": "Engineering Manager",
-    "created_at": "2025-07-16T15:45:15",
-    "updated_at": "2025-07-13T16:12:16"
+    "created_at": "2025-07-16T16:50:08",
+    "updated_at": "2025-07-13T12:18:46"
   },
   {
-    "id": "bf1fccb1-75de-4e4d-8c33-69d7a88230ac",
-    "title": "Research Scientist",
+    "id": "a512bd75-870b-493d-9fcc-65e8ba73430b",
+    "title": "Design Lead",
     "company": {
-      "name": "Snapchat",
-      "size": "Startup",
-      "industry": "Media"
-    },
-    "location": "West Pamelastad, NH",
-    "remote_policy": "Hybrid",
-    "employment_type": "Part-time",
-    "department": "Data",
-    "level": "Principal",
-    "description": "Amount international until claim involve yard approach. Receive letter side believe true song. Nation special son career knowledge page home why. Address nice western. Realize fine possible test career politics son. Meeting start require live of.",
-    "responsibilities": [
-      "Rich keep table when whether understand.",
-      "Fish table dinner arm.",
-      "Perhaps course according daughter office small book fish.",
-      "Whom benefit around turn.",
-      "Owner game drive wait plan me."
-    ],
-    "requirements": {
-      "education": "Master's degree preferred",
-      "experience": {
-        "min_years": 0,
-        "max_years": 7,
-        "description": "0-7 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "CSS3",
-          "Angular",
-          "C#",
-          "Java",
-          "ASP.NET Core",
-          "FastAPI"
-        ],
-        "preferred": [
-          "SASS",
-          "Vue.js",
-          "Material-UI",
-          "Tailwind CSS",
-          "Leadership"
-        ]
-      },
-      "certifications": [
-        "Google Cloud Professional",
-        "Scrum Master Certification"
-      ]
-    },
-    "salary": {
-      "min": 98056,
-      "max": 171520,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-09",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Julia Brown",
-      "email": "michael71@example.com",
-      "title": "Engineering Manager"
-    },
-    "team_size": 15,
-    "reports_to": "Engineering Manager",
-    "created_at": "2025-07-16T15:45:02",
-    "updated_at": "2025-07-11T19:26:07"
-  },
-  {
-    "id": "94b5da8c-7536-469a-b41e-f0ae95ddc103",
-    "title": "MLOps Engineer",
-    "company": {
-      "name": "Airbnb",
-      "size": "Mid-size",
-      "industry": "Finance"
-    },
-    "location": "Nicoleborough, CA",
-    "remote_policy": "Hybrid",
-    "employment_type": "Part-time",
-    "department": "Data",
-    "level": "Lead",
-    "description": "Lawyer happen police trouble military number Mrs apply. Them all laugh audience. Or must able poor strong certainly fish. Argue account eight.",
-    "responsibilities": [
-      "Within common smile couple church pattern.",
-      "Possible party himself newspaper.",
-      "Dog actually manager wait else discuss up.",
-      "Start may candidate own.",
-      "Break deal laugh maintain."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
-      "experience": {
-        "min_years": 6,
-        "max_years": 14,
-        "description": "6-14 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Android Development",
-          "Cordova",
-          "Blender",
-          "Seaborn",
-          "TensorFlow",
-          "Apache Spark",
-          "Jupyter",
-          "Cassandra"
-        ],
-        "preferred": [
-          "Scikit-learn",
-          "PyTorch",
-          "NumPy",
-          "Docker"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 118872,
-      "max": 167455,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-05",
-    "status": "Active",
-    "hiring_manager": {
-      "name": "Megan Barron",
-      "email": "mark27@example.net",
-      "title": "Engineering Manager"
-    },
-    "team_size": 20,
-    "reports_to": "CTO",
-    "created_at": "2025-07-16T15:43:45",
-    "updated_at": "2025-07-15T08:14:13"
-  },
-  {
-    "id": "7d2c3ea8-dbd9-40ec-8b76-ce23ee93d781",
-    "title": "Senior Data Scientist",
-    "company": {
-      "name": "Stripe",
-      "size": "Enterprise",
-      "industry": "E-commerce"
-    },
-    "location": "South Yolanda, VA",
-    "remote_policy": "On-site",
-    "employment_type": "Part-time",
-    "department": "Data",
-    "level": "Senior",
-    "description": "Play whether response heart. Perhaps type whatever. Thought trouble chance example PM event air stop. Cup raise inside phone get until city.",
-    "responsibilities": [
-      "I make see including less program face purpose.",
-      "Card else huge behavior.",
-      "Term even large identify computer company why.",
-      "Its information small magazine before.",
-      "Look painting up other create.",
-      "On pass decide what.",
-      "Paper this age until.",
-      "Huge unit available five."
-    ],
-    "requirements": {
-      "education": "Master's degree preferred",
-      "experience": {
-        "min_years": 8,
-        "max_years": 14,
-        "description": "8-14 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "AWS",
-          "Figma",
-          "Illustrator",
-          "Blender",
-          "Canva",
-          "Node.js",
-          "Spring Boot",
-          "ASP.NET Core",
-          "Ionic",
-          "Android Development",
-          "Unity",
-          "Xamarin"
-        ],
-        "preferred": [
-          "Ionic",
-          "Webpack",
-          "Bootstrap"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 182314,
-      "max": 256869,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-13",
-    "status": "Active",
-    "hiring_manager": {
-      "name": "Curtis Leonard",
-      "email": "christopherstewart@example.net",
-      "title": "VP of Engineering"
-    },
-    "team_size": 10,
-    "reports_to": "Director of Engineering",
-    "created_at": "2025-07-16T15:46:33",
-    "updated_at": "2025-07-14T08:15:13"
-  },
-  {
-    "id": "4628eb50-23b5-4b20-be16-875b451bd2b9",
-    "title": "Data Engineer",
-    "company": {
-      "name": "Infosys",
-      "size": "Startup",
-      "industry": "Education"
-    },
-    "location": "West Bruceview, VA",
-    "remote_policy": "On-site",
-    "employment_type": "Part-time",
-    "department": "Data",
-    "level": "Lead",
-    "description": "Natural since matter class. Current fall learn people nearly later general. Size compare community born. Those success act city. Successful second exactly talk along.",
-    "responsibilities": [
-      "Standard main future city respond.",
-      "Station give generation certain green team key industry.",
-      "Shake production onto protect end television area.",
-      "Heavy write base peace cold cup last."
-    ],
-    "requirements": {
-      "education": "Bachelor's degree or equivalent",
-      "experience": {
-        "min_years": 7,
-        "max_years": 11,
-        "description": "7-11 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Premiere Pro",
-          "Azure",
-          "Jenkins",
-          "Google Cloud",
-          "Swift",
-          "Agile",
-          "Team Management",
-          "Public Speaking",
-          "FastAPI",
-          "jQuery"
-        ],
-        "preferred": [
-          "Docker",
-          "AWS",
-          "Terraform",
-          "Azure",
-          "Webpack",
-          "LESS",
-          "jQuery",
-          "MySQL"
-        ]
-      },
-      "certifications": [
-        "Certified Kubernetes Administrator",
-        "AWS Certified Solutions Architect"
-      ]
-    },
-    "salary": {
-      "min": 136638,
-      "max": 174163,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-02",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "Elizabeth Scott",
-      "email": "dlopez@example.com",
-      "title": "VP of Engineering"
-    },
-    "team_size": 21,
-    "reports_to": "Product Manager",
-    "created_at": "2025-07-16T15:46:04",
-    "updated_at": "2025-07-10T02:08:35"
-  },
-  {
-    "id": "4402fb6f-aeb6-4c9c-aed8-fdaf6d6dc122",
-    "title": "Technical Lead",
-    "company": {
-      "name": "Meta",
-      "size": "Enterprise",
-      "industry": "Finance"
-    },
-    "location": "North Richard, MS",
-    "remote_policy": "On-site",
-    "employment_type": "Full-time",
-    "department": "Management",
-    "level": "Principal",
-    "description": "Personal daughter law entire tend. Guy fast physical activity. Or her by each. Information myself turn. Name or trip cover east body form.",
-    "responsibilities": [
-      "Out toward teach again response.",
-      "Can moment evening require generation leave perform year.",
-      "Development interesting prove hair specific.",
-      "Decide arrive herself born maybe word record.",
-      "Suggest time it too inside kind employee.",
-      "Policy top mention past different.",
-      "Body statement light."
-    ],
-    "requirements": {
-      "education": "Relevant experience in lieu of degree",
-      "experience": {
-        "min_years": 1,
-        "max_years": 6,
-        "description": "1-6 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Kotlin",
-          "JavaScript",
-          "Scala",
-          "Rust",
-          "Phoenix",
-          "Flask",
-          "Spring Boot",
-          "Kubernetes",
-          "SQLite",
-          "C#",
-          "React Native"
-        ],
-        "preferred": [
-          "LESS",
-          "Cordova",
-          "Flutter",
-          "Android Development"
-        ]
-      },
-      "certifications": [
-        "Microsoft Azure Fundamentals",
-        "PMP Certification"
-      ]
-    },
-    "salary": {
-      "min": 98128,
-      "max": 173132,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-08",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Carrie Rice",
-      "email": "meyerstephanie@example.net",
-      "title": "Engineering Manager"
-    },
-    "team_size": 4,
-    "reports_to": "Senior Engineering Manager",
-    "created_at": "2025-07-16T15:45:18",
-    "updated_at": "2025-07-13T09:24:54"
-  },
-  {
-    "id": "4f1b5a44-825c-4506-8bb9-b946ed183478",
-    "title": "Business Intelligence Developer",
-    "company": {
-      "name": "Snapchat",
-      "size": "Large",
-      "industry": "Finance"
-    },
-    "location": "Rickeybury, CA",
-    "remote_policy": "On-site",
-    "employment_type": "Internship",
-    "department": "Data",
-    "level": "Senior",
-    "description": "Computer none year poor audience. Table nation only. Quite kind piece hospital high.",
-    "responsibilities": [
-      "Same success art store ahead plant away.",
-      "Know line main use behavior fight.",
-      "Side owner blue training resource next easy.",
-      "Sea else drive no official message.",
-      "Consumer feeling security she affect on.",
-      "Dark write whom animal common without."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
-      "experience": {
-        "min_years": 0,
-        "max_years": 5,
-        "description": "0-5 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Illustrator",
-          "Adobe XD",
-          "Phoenix",
-          "Docker",
-          "GitHub Actions",
-          "Jenkins",
-          "Elasticsearch",
-          "SQL Server",
-          "Redis",
-          "MySQL",
-          "Jupyter",
-          "Flutter"
-        ],
-        "preferred": [
-          "Pandas",
-          "Hadoop",
-          "Sketch",
-          "Docker",
-          "Jenkins",
-          "GitHub Actions",
-          "Kubernetes",
-          "HTML5"
-        ]
-      },
-      "certifications": [
-        "PMP Certification",
-        "AWS Certified Solutions Architect"
-      ]
-    },
-    "salary": {
-      "min": 89384,
-      "max": 123834,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-13",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "Stephanie Mills",
-      "email": "robertgallegos@example.org",
-      "title": "Product Manager"
-    },
-    "team_size": 16,
-    "reports_to": "Senior Engineering Manager",
-    "created_at": "2025-07-16T15:44:05",
-    "updated_at": "2025-07-09T16:18:03"
-  },
-  {
-    "id": "0bc0a360-72f9-4318-8aab-bbff1c75e833",
-    "title": "Research Scientist",
-    "company": {
-      "name": "Airbnb",
-      "size": "Startup",
-      "industry": "Finance"
-    },
-    "location": "Port Ashleyhaven, ME",
-    "remote_policy": "On-site",
-    "employment_type": "Full-time",
-    "department": "Data",
-    "level": "Principal",
-    "description": "Act woman share option produce specific building. Artist under past arm audience bar purpose. Care unit like price fly.",
-    "responsibilities": [
-      "Center away perform time learn.",
-      "Garden political along.",
-      "Carry nation own understand deal area everything pay.",
-      "Stuff live hold capital commercial camera."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
-      "experience": {
-        "min_years": 2,
-        "max_years": 10,
-        "description": "2-10 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Node.js",
-          "Phoenix",
-          "Spring Boot",
-          "Django",
-          "Rust",
-          "Scala",
-          "Go",
-          "Leadership",
-          "Illustrator"
-        ],
-        "preferred": [
-          "jQuery",
-          "Kotlin",
-          "TypeScript",
-          "Perl",
-          "JavaScript",
-          "Google Cloud",
-          "Ansible"
-        ]
-      },
-      "certifications": [
-        "Scrum Master Certification",
-        "Google Cloud Professional"
-      ]
-    },
-    "salary": {
-      "min": 132769,
-      "max": 178408,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-07",
-    "status": "Active",
-    "hiring_manager": {
-      "name": "Kimberly Hanson",
-      "email": "josephcochran@example.org",
-      "title": "VP of Engineering"
-    },
-    "team_size": 14,
-    "reports_to": "Product Manager",
-    "created_at": "2025-07-16T15:45:19",
-    "updated_at": "2025-07-13T08:28:05"
-  },
-  {
-    "id": "cbe564b1-3693-4221-8e32-2b096b1d8f3a",
-    "title": "Data Analyst",
-    "company": {
-      "name": "Nvidia",
+      "name": "TCS",
       "size": "Large",
       "industry": "Consulting"
     },
-    "location": "South Kaitlyn, WV",
-    "remote_policy": "Remote",
-    "employment_type": "Part-time",
-    "department": "Data",
-    "level": "Entry",
-    "description": "Lay per tell simply paper. Leave where create economy morning. Learn miss before democratic different.",
-    "responsibilities": [
-      "More movement create fear.",
-      "Low tell government next realize.",
-      "Operation surface change huge drug value.",
-      "Call particular health prepare expert ahead always.",
-      "Week seek road investment plan.",
-      "Prepare miss card two.",
-      "Happy him suggest something hard environmental will office."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
-      "experience": {
-        "min_years": 6,
-        "max_years": 11,
-        "description": "6-11 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Android Development",
-          "Flutter",
-          "Unity",
-          "Agile",
-          "SQL Server",
-          "Bootstrap",
-          "Vue.js",
-          "Rust",
-          "Node.js",
-          "Leadership",
-          "Public Speaking",
-          "Redis"
-        ],
-        "preferred": [
-          "InDesign",
-          "Photoshop",
-          "Figma",
-          "React Native",
-          "Cordova",
-          "Xamarin"
-        ]
-      },
-      "certifications": [
-        "PMP Certification"
-      ]
-    },
-    "salary": {
-      "min": 152574,
-      "max": 182180,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-04",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "John Arnold",
-      "email": "carlos59@example.com",
-      "title": "Product Manager"
-    },
-    "team_size": 4,
-    "reports_to": "Senior Engineering Manager",
-    "created_at": "2025-07-16T15:45:55",
-    "updated_at": "2025-07-12T12:32:54"
-  },
-  {
-    "id": "53a625f2-e5c5-4d03-8fac-effb4def6588",
-    "title": "Staff Software Engineer",
-    "company": {
-      "name": "Canva",
-      "size": "Large",
-      "industry": "Technology"
-    },
-    "location": "North Larry, AR",
-    "remote_policy": "Remote",
-    "employment_type": "Contract",
-    "department": "Engineering",
-    "level": "Lead",
-    "description": "Character seem son generation number. Hit serve information really. Threat issue run south. Explain finally beautiful war executive.",
-    "responsibilities": [
-      "Discussion project size sort with.",
-      "Sometimes long beyond before relate.",
-      "Million sign stop fight.",
-      "Push consumer life.",
-      "Save stop situation respond value set skill."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
-      "experience": {
-        "min_years": 6,
-        "max_years": 14,
-        "description": "6-14 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "SQL Server",
-          "Redis",
-          "Kotlin",
-          "Ansible",
-          "Laravel",
-          "ASP.NET Core",
-          "Jupyter",
-          "C++",
-          "Problem Solving"
-        ],
-        "preferred": [
-          "Flask",
-          "Laravel",
-          "ASP.NET Core",
-          "Node.js",
-          "Android Development",
-          "Rust",
-          "Swift"
-        ]
-      },
-      "certifications": [
-        "Google Cloud Professional"
-      ]
-    },
-    "salary": {
-      "min": 166740,
-      "max": 241452,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-15",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Michelle Walker",
-      "email": "patrickmyers@example.net",
-      "title": "Director of Engineering"
-    },
-    "team_size": 16,
-    "reports_to": "Engineering Manager",
-    "created_at": "2025-07-16T15:44:11",
-    "updated_at": "2025-07-13T04:57:58"
-  },
-  {
-    "id": "f15c015f-d336-44dc-a6ce-39ef2e308632",
-    "title": "Security Engineer",
-    "company": {
-      "name": "Apple",
-      "size": "Startup",
-      "industry": "Technology"
-    },
-    "location": "Greenport, ME",
-    "remote_policy": "Remote",
-    "employment_type": "Contract",
-    "department": "Engineering",
-    "level": "Lead",
-    "description": "Act of right garden many important large. I election another culture here four. Child whose meet factor back condition business treat. Agree night this history and concern poor most.",
-    "responsibilities": [
-      "Law whole region cost score.",
-      "Others when popular.",
-      "Wonder present road arrive large fly.",
-      "Focus affect late imagine idea someone public full."
-    ],
-    "requirements": {
-      "education": "Master's degree preferred",
-      "experience": {
-        "min_years": 6,
-        "max_years": 10,
-        "description": "6-10 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "React Native",
-          "Flutter",
-          "Cordova",
-          "Angular",
-          "Material-UI",
-          "Webpack",
-          "Kubernetes"
-        ],
-        "preferred": [
-          "Webpack",
-          "NumPy",
-          "Hadoop",
-          "Pandas",
-          "MySQL",
-          "PostgreSQL"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 162083,
-      "max": 185030,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-10",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "Vanessa Willis",
-      "email": "omiller@example.org",
-      "title": "HR Manager"
-    },
-    "team_size": 15,
-    "reports_to": "Product Manager",
-    "created_at": "2025-07-16T15:46:23",
-    "updated_at": "2025-07-10T08:28:42"
-  },
-  {
-    "id": "b3ef4fcb-0a02-4f48-8496-283b6f4ae5a3",
-    "title": "Content Marketing Manager",
-    "company": {
-      "name": "Meta",
-      "size": "Startup",
-      "industry": "Finance"
-    },
-    "location": "Harringtonton, UT",
-    "remote_policy": "Remote",
-    "employment_type": "Full-time",
-    "department": "Marketing",
-    "level": "Senior",
-    "description": "Win decade series message until. Hour view consider. Kind forget without. Scene sort husband wear. Chair operation make team.",
-    "responsibilities": [
-      "Buy career mission product.",
-      "Wrong seek wide can able young never player.",
-      "Off world ever.",
-      "Pm choose former around realize spring.",
-      "Hear test always."
-    ],
-    "requirements": {
-      "education": "Master's degree preferred",
-      "experience": {
-        "min_years": 2,
-        "max_years": 9,
-        "description": "2-9 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "SQLite",
-          "DynamoDB",
-          "Redis",
-          "Elasticsearch",
-          "Team Management",
-          "Public Speaking",
-          "Mentoring"
-        ],
-        "preferred": [
-          "Android Development",
-          "Bootstrap",
-          "Tailwind CSS",
-          "LESS",
-          "CSS3",
-          "Django"
-        ]
-      },
-      "certifications": [
-        "Google Cloud Professional"
-      ]
-    },
-    "salary": {
-      "min": 86110,
-      "max": 123382,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-08",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "Jimmy Cervantes",
-      "email": "ruthcohen@example.com",
-      "title": "Senior Engineering Manager"
-    },
-    "team_size": 6,
-    "reports_to": "Product Manager",
-    "created_at": "2025-07-16T15:46:23",
-    "updated_at": "2025-07-14T22:00:13"
-  },
-  {
-    "id": "e9d1e43a-2c3f-459d-9ec0-3317f75ba64c",
-    "title": "UX Researcher",
-    "company": {
-      "name": "Capgemini",
-      "size": "Enterprise",
-      "industry": "Healthcare"
-    },
-    "location": "Port Heather, MN",
+    "location": "Lake Shane, VA",
     "remote_policy": "Hybrid",
-    "employment_type": "Part-time",
-    "department": "Design",
-    "level": "Principal",
-    "description": "Up piece according through discover including. Dream catch industry morning themselves a eat. Born community big choose. Admit probably prevent performance serve.",
-    "responsibilities": [
-      "Team attorney dark sport.",
-      "Strategy person wall hard authority day.",
-      "Institution a factor close and.",
-      "Project key point stock.",
-      "Chair trouble cultural.",
-      "Structure that pick although.",
-      "Design ever all music sign."
-    ],
-    "requirements": {
-      "education": "Bachelor's degree or equivalent",
-      "experience": {
-        "min_years": 2,
-        "max_years": 9,
-        "description": "2-9 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Sketch",
-          "Illustrator",
-          "InDesign",
-          "Matplotlib",
-          "Laravel",
-          "Ruby on Rails",
-          "Spring Boot",
-          "Phoenix",
-          "SASS",
-          "Vue.js",
-          "Angular",
-          "CSS3"
-        ],
-        "preferred": [
-          "Jenkins",
-          "Docker",
-          "Terraform",
-          "Google Cloud",
-          "ASP.NET Core"
-        ]
-      },
-      "certifications": [
-        "Google Cloud Professional",
-        "PMP Certification"
-      ]
-    },
-    "salary": {
-      "min": 123138,
-      "max": 160255,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-06",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Tammie Hill",
-      "email": "fhill@example.org",
-      "title": "Engineering Manager"
-    },
-    "team_size": 12,
-    "reports_to": "VP of Engineering",
-    "created_at": "2025-07-16T15:45:48",
-    "updated_at": "2025-07-11T23:18:29"
-  },
-  {
-    "id": "da5279ed-035b-43cd-8af6-4b01a8d25531",
-    "title": "Brand Manager",
-    "company": {
-      "name": "Figma",
-      "size": "Enterprise",
-      "industry": "Government"
-    },
-    "location": "North Nicholas, DC",
-    "remote_policy": "On-site",
-    "employment_type": "Contract",
-    "department": "Marketing",
-    "level": "Entry",
-    "description": "Admit enjoy mind knowledge no sure. Customer kid weight offer area. Change own certain value.",
-    "responsibilities": [
-      "Other inside organization maybe return true.",
-      "Ball probably huge maybe add worker.",
-      "College source me leg.",
-      "Too crime next for rather cut meeting.",
-      "Car really lay hospital including specific."
-    ],
-    "requirements": {
-      "education": "Bachelor's degree or equivalent",
-      "experience": {
-        "min_years": 1,
-        "max_years": 9,
-        "description": "1-9 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Premiere Pro",
-          "Blender",
-          "InDesign",
-          "Canva",
-          "Matplotlib",
-          "TensorFlow",
-          "Seaborn",
-          "Public Speaking",
-          "Team Management",
-          "Leadership",
-          "Agile"
-        ],
-        "preferred": [
-          "TypeScript",
-          "MATLAB",
-          "Jenkins"
-        ]
-      },
-      "certifications": [
-        "Microsoft Azure Fundamentals",
-        "Certified Kubernetes Administrator"
-      ]
-    },
-    "salary": {
-      "min": 120726,
-      "max": 189349,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-06",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Antonio Zuniga",
-      "email": "ramirezkathy@example.net",
-      "title": "VP of Engineering"
-    },
-    "team_size": 22,
-    "reports_to": "Senior Engineering Manager",
-    "created_at": "2025-07-16T15:44:37",
-    "updated_at": "2025-07-13T15:00:46"
-  },
-  {
-    "id": "154e6c18-0eca-4273-a495-404c0acedb3b",
-    "title": "UX Researcher",
-    "company": {
-      "name": "EY",
-      "size": "Large",
-      "industry": "Healthcare"
-    },
-    "location": "Edwardsside, DC",
-    "remote_policy": "Remote",
     "employment_type": "Internship",
     "department": "Design",
-    "level": "Principal",
-    "description": "Certainly too court speech sport. Various they out. Adult land cost arm. She occur leave perhaps opportunity high health.",
+    "level": "Mid",
+    "description": "Everybody base his I simply history. Last with throughout under build account. Option but simple cause tell what. School politics trip thus behavior green behavior. Population worry of window television every.",
     "responsibilities": [
-      "Son eat few reason always former give recently.",
-      "Next rise magazine movement remain from to bag.",
-      "Environment knowledge child attorney quickly discover pattern.",
-      "Campaign cause my opportunity color.",
-      "Ago despite dark miss off picture.",
-      "Yard car thus chair.",
-      "Most near put realize hotel."
+      "News surface necessary population say environmental check.",
+      "Pass growth customer seem four way often.",
+      "Doctor edge defense will car why record guess.",
+      "Lay cause involve hour.",
+      "Nor claim create detail.",
+      "Fly site remember yes.",
+      "Sell hundred respond instead."
     ],
     "requirements": {
-      "education": "Advanced degree required",
+      "education": "Master's degree preferred",
       "experience": {
         "min_years": 5,
-        "max_years": 10,
-        "description": "5-10 years of relevant experience"
+        "max_years": 11,
+        "description": "5-11 years of relevant experience"
       },
       "skills": {
         "required": [
-          "Communication",
-          "Mentoring",
-          "SQLite",
-          "Oracle",
-          "Elasticsearch",
-          "Redis",
-          "Sketch",
-          "Photoshop",
-          "Unreal Engine",
-          "Cordova"
-        ],
-        "preferred": [
-          "GitLab CI",
-          "Kotlin",
-          "Scala",
-          "SASS",
-          "jQuery",
-          "React",
-          "Bootstrap",
-          "TensorFlow"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 151148,
-      "max": 177998,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-07",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "Tiffany Phillips",
-      "email": "adam34@example.com",
-      "title": "HR Manager"
-    },
-    "team_size": 22,
-    "reports_to": "Senior Engineering Manager",
-    "created_at": "2025-07-16T15:44:53",
-    "updated_at": "2025-07-12T19:48:02"
-  },
-  {
-    "id": "6272eb9d-b49c-4358-be31-ab763af13721",
-    "title": "Marketing Manager",
-    "company": {
-      "name": "Amazon",
-      "size": "Enterprise",
-      "industry": "Consulting"
-    },
-    "location": "Paulport, DC",
-    "remote_policy": "Hybrid",
-    "employment_type": "Internship",
-    "department": "Marketing",
-    "level": "Senior",
-    "description": "All rich game long to work. Pull music society apply reduce low four. Operation item hour resource. Where final special. Toward second weight pay. Accept race risk investment air order believe.",
-    "responsibilities": [
-      "Simple fish lot ten into manage.",
-      "Ahead stay chance hold more join inside treat.",
-      "Goal how their too say there.",
-      "Natural mother believe learn.",
-      "Arm machine ever eye board month factor.",
-      "Prevent industry natural who.",
-      "Back although power response.",
-      "Finally common catch section."
-    ],
-    "requirements": {
-      "education": "Bachelor's degree or equivalent",
-      "experience": {
-        "min_years": 8,
-        "max_years": 13,
-        "description": "8-13 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Docker",
-          "Azure",
-          "Android Development",
-          "Ionic",
-          "React Native",
-          "Matplotlib",
-          "Apache Spark",
-          "Material-UI",
-          "Bootstrap",
-          "SASS",
-          "Jupyter"
-        ],
-        "preferred": [
-          "React Native",
-          "Adobe XD",
-          "Illustrator",
-          "Sketch",
-          "TensorFlow"
-        ]
-      },
-      "certifications": [
-        "Certified Kubernetes Administrator",
-        "AWS Certified Solutions Architect"
-      ]
-    },
-    "salary": {
-      "min": 116259,
-      "max": 137279,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-07",
-    "status": "Active",
-    "hiring_manager": {
-      "name": "Ronald Hebert",
-      "email": "kellerchase@example.org",
-      "title": "HR Manager"
-    },
-    "team_size": 13,
-    "reports_to": "VP of Engineering",
-    "created_at": "2025-07-16T15:43:56",
-    "updated_at": "2025-07-14T11:50:31"
-  },
-  {
-    "id": "709eb212-8f4f-4696-b1a5-7637ce7bbdcb",
-    "title": "Product Owner",
-    "company": {
-      "name": "Uber",
-      "size": "Startup",
-      "industry": "E-commerce"
-    },
-    "location": "North Kellyfort, PW",
-    "remote_policy": "On-site",
-    "employment_type": "Contract",
-    "department": "Product",
-    "level": "Lead",
-    "description": "Senior everybody modern type door. State machine huge guy possible speak. Establish pretty similar always a dinner fire four. Size market she majority factor under in.",
-    "responsibilities": [
-      "Decision week gas condition air tough another.",
-      "Crime find my go.",
-      "Wind hour himself until.",
-      "Receive notice buy less foot traditional.",
-      "Agent believe skill religious industry budget.",
-      "Health government personal use really."
-    ],
-    "requirements": {
-      "education": "Relevant experience in lieu of degree",
-      "experience": {
-        "min_years": 3,
-        "max_years": 9,
-        "description": "3-9 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Jupyter",
-          "Apache Spark",
-          "PyTorch",
-          "Matplotlib",
-          "Photoshop",
-          "Sketch"
-        ],
-        "preferred": [
-          "Scrum",
-          "Project Management",
-          "Bootstrap",
-          "SQLite",
           "PostgreSQL",
-          "Redis",
-          "Oracle"
+          "Oracle",
+          "MongoDB",
+          "Perl",
+          "Go",
+          "Hadoop",
+          "Apache Spark",
+          "AWS"
+        ],
+        "preferred": [
+          "Google Cloud",
+          "MongoDB",
+          "Project Management",
+          "Problem Solving",
+          "Public Speaking",
+          "Team Management",
+          "InDesign"
         ]
       },
       "certifications": [
@@ -1872,8 +139,8 @@
       ]
     },
     "salary": {
-      "min": 112263,
-      "max": 163055,
+      "min": 118582,
+      "max": 188881,
       "currency": "USD",
       "type": "Annual"
     },
@@ -1888,39 +155,41 @@
       "Stock options"
     ],
     "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-09",
-    "status": "Active",
+    "posted_date": "2025-07-06",
+    "status": "Filled",
     "hiring_manager": {
-      "name": "Nicole Patton",
-      "email": "millercristina@example.net",
-      "title": "Director of Engineering"
+      "name": "Elizabeth Johnson",
+      "email": "rodriguezantonio@example.org",
+      "title": "VP of Engineering"
     },
-    "team_size": 16,
-    "reports_to": "CTO",
-    "created_at": "2025-07-16T15:44:49",
-    "updated_at": "2025-07-14T11:25:20"
+    "team_size": 7,
+    "reports_to": "Senior Engineering Manager",
+    "created_at": "2025-07-16T16:49:30",
+    "updated_at": "2025-07-15T15:07:07"
   },
   {
-    "id": "9bc17b3a-7281-4cc6-af8d-20dde77c2c84",
-    "title": "Engineering Manager",
+    "id": "0124d0d6-e8b8-4c75-a2a7-9353d237a11f",
+    "title": "VP of Engineering",
     "company": {
-      "name": "Airbnb",
-      "size": "Enterprise",
-      "industry": "Government"
+      "name": "Apple",
+      "size": "Mid-size",
+      "industry": "Media"
     },
-    "location": "Rhondastad, PR",
+    "location": "North Stevenville, RI",
     "remote_policy": "Remote",
-    "employment_type": "Contract",
+    "employment_type": "Internship",
     "department": "Management",
-    "level": "Senior",
-    "description": "There practice arm fish. This operation born until any economy news figure. Brother way impact fly leader have discussion. Economy power know need best tree gun memory. Different particular manage ask fear.",
+    "level": "Entry",
+    "description": "Arrive off data technology. Strategy sound put say long morning. Debate level small score. Myself board executive region western she black eye. Stand traditional civil close find responsibility. Party feeling well inside peace.",
     "responsibilities": [
-      "Black approach these.",
-      "Only computer writer here rise enjoy fine agent.",
-      "Position involve interview join action radio want.",
-      "Drop themselves though appear east benefit or.",
-      "Conference must report create great.",
-      "Contain parent mother through perform."
+      "Particularly because camera strong American.",
+      "News back serve whom character base more.",
+      "Toward claim sing price consider quality other.",
+      "Coach free or why base question.",
+      "Difficult good fact they miss society bill.",
+      "Soon boy rise.",
+      "Second next painting.",
+      "Follow shake leader story available."
     ],
     "requirements": {
       "education": "Master's degree preferred",
@@ -1931,31 +200,29 @@
       },
       "skills": {
         "required": [
-          "HTML5",
-          "Tailwind CSS",
-          "Scikit-learn",
-          "Azure",
-          "Jenkins",
-          "Kubernetes",
-          "Project Management",
-          "Strategic Planning",
-          "Agile"
+          "InDesign",
+          "Premiere Pro",
+          "Sketch",
+          "Adobe XD",
+          "Swift",
+          "R",
+          "Java",
+          "Docker",
+          "Redis"
         ],
         "preferred": [
-          "Docker",
-          "C#",
-          "SQL Server",
-          "Oracle",
-          "SQLite"
+          "Mentoring",
+          "Scrum",
+          "Project Management",
+          "Strategic Planning",
+          "Unreal Engine"
         ]
       },
-      "certifications": [
-        "Scrum Master Certification"
-      ]
+      "certifications": []
     },
     "salary": {
-      "min": 104233,
-      "max": 176998,
+      "min": 101887,
+      "max": 159575,
       "currency": "USD",
       "type": "Annual"
     },
@@ -1971,232 +238,73 @@
     ],
     "application_deadline": "2025-07-30",
     "posted_date": "2025-07-13",
-    "status": "Active",
+    "status": "Paused",
     "hiring_manager": {
-      "name": "Joshua Randall",
-      "email": "rrodriguez@example.org",
+      "name": "Regina Alexander",
+      "email": "vgreen@example.net",
       "title": "HR Manager"
     },
-    "team_size": 9,
-    "reports_to": "Product Manager",
-    "created_at": "2025-07-16T15:45:03",
-    "updated_at": "2025-07-10T12:03:01"
+    "team_size": 12,
+    "reports_to": "CTO",
+    "created_at": "2025-07-16T16:49:12",
+    "updated_at": "2025-07-16T14:02:01"
   },
   {
-    "id": "a0114bea-f6ce-4b3c-b025-07df88ae1593",
-    "title": "UX Researcher",
+    "id": "0be5db8f-b8a1-4a1b-92fe-1447a6d58321",
+    "title": "Brand Manager",
     "company": {
-      "name": "Meta",
-      "size": "Startup",
-      "industry": "Consulting"
+      "name": "Intel",
+      "size": "Enterprise",
+      "industry": "Education"
     },
-    "location": "Palmerview, SC",
+    "location": "Wadeton, PW",
     "remote_policy": "Remote",
-    "employment_type": "Contract",
-    "department": "Design",
-    "level": "Principal",
-    "description": "Draw thought administration side his catch near. Such school organization support. Need others head worker help challenge drive. Successful present hundred our. Laugh understand reach partner.",
+    "employment_type": "Full-time",
+    "department": "Marketing",
+    "level": "Lead",
+    "description": "Recently audience customer treat person. Cost movie experience imagine direction live. Prevent tree course per stand theory chance. Fish pattern analysis.",
     "responsibilities": [
-      "Future song can environmental.",
-      "Door together mouth.",
-      "Inside media your can explain southern.",
-      "Decade weight would also leg.",
-      "Action spend sometimes can certain.",
-      "Firm begin provide attention range sometimes area.",
-      "Peace wait use.",
-      "Instead ask few thing discussion accept expert laugh."
+      "Gas own also commercial beyond foreign parent.",
+      "Suddenly first stage statement radio affect.",
+      "Official mind interesting per.",
+      "Miss but parent technology everyone difference.",
+      "Detail relationship yeah language.",
+      "Though skill above we."
     ],
     "requirements": {
-      "education": "Bachelor's degree or equivalent",
+      "education": "Relevant experience in lieu of degree",
       "experience": {
-        "min_years": 8,
+        "min_years": 3,
         "max_years": 11,
-        "description": "8-11 years of relevant experience"
+        "description": "3-11 years of relevant experience"
       },
       "skills": {
         "required": [
-          "LESS",
-          "Vue.js",
-          "SASS",
-          "Tailwind CSS",
-          "Seaborn",
-          "NumPy",
-          "TensorFlow"
+          "Swift",
+          "TypeScript",
+          "R",
+          "Rust",
+          "Android Development",
+          "Unreal Engine",
+          "Flutter",
+          "Xamarin",
+          "Oracle",
+          "Terraform"
         ],
         "preferred": [
-          "React Native",
-          "Xamarin",
-          "Unity",
-          "Node.js",
-          "Flask",
-          "Phoenix",
-          "Material-UI"
+          "Tailwind CSS",
+          "SASS",
+          "jQuery"
         ]
       },
       "certifications": [
-        "PMP Certification"
+        "Microsoft Azure Fundamentals",
+        "AWS Certified Solutions Architect"
       ]
     },
     "salary": {
-      "min": 165330,
-      "max": 210574,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-14",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Patrick Nolan",
-      "email": "bhicks@example.net",
-      "title": "HR Manager"
-    },
-    "team_size": 18,
-    "reports_to": "Director of Engineering",
-    "created_at": "2025-07-16T15:45:21",
-    "updated_at": "2025-07-11T19:16:28"
-  },
-  {
-    "id": "0ae29fee-6165-431c-a6c8-e0ea8805efd9",
-    "title": "Product Manager",
-    "company": {
-      "name": "Intel",
-      "size": "Large",
-      "industry": "Technology"
-    },
-    "location": "Donnamouth, OK",
-    "remote_policy": "On-site",
-    "employment_type": "Full-time",
-    "department": "Product",
-    "level": "Lead",
-    "description": "Produce people front wear third. Operation tell board five foot. Before itself free sense drop. Manager building culture start shoulder yourself. Condition this think attention evidence.",
-    "responsibilities": [
-      "Beyond account prove until assume.",
-      "Maybe build he since right listen information.",
-      "Federal party machine tonight.",
-      "Operation able lay same degree.",
-      "Large his sound thousand."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
-      "experience": {
-        "min_years": 7,
-        "max_years": 13,
-        "description": "7-13 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Django",
-          "Ruby on Rails",
-          "Bootstrap",
-          "Tailwind CSS",
-          "React",
-          "CSS3"
-        ],
-        "preferred": [
-          "Premiere Pro",
-          "After Effects",
-          "Figma",
-          "PHP",
-          "Python",
-          "Swift"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 103466,
-      "max": 162260,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-14",
-    "status": "Active",
-    "hiring_manager": {
-      "name": "Jennifer Adams",
-      "email": "mary02@example.net",
-      "title": "VP of Engineering"
-    },
-    "team_size": 19,
-    "reports_to": "VP of Engineering",
-    "created_at": "2025-07-16T15:44:44",
-    "updated_at": "2025-07-16T06:12:52"
-  },
-  {
-    "id": "b081bdf8-329e-4b13-8b70-e72079c205d5",
-    "title": "Product Manager",
-    "company": {
-      "name": "KPMG",
-      "size": "Startup",
-      "industry": "Education"
-    },
-    "location": "Williamsmouth, KS",
-    "remote_policy": "Hybrid",
-    "employment_type": "Full-time",
-    "department": "Product",
-    "level": "Principal",
-    "description": "Piece wrong order significant when summer. Third pattern drop believe risk big. Carry note news theory talk leader.",
-    "responsibilities": [
-      "Word whether action interest.",
-      "Hour final effect go.",
-      "Defense operation Mrs although way his son set.",
-      "Result pull team degree board.",
-      "Morning great suggest carry bill.",
-      "Build form air bar."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
-      "experience": {
-        "min_years": 0,
-        "max_years": 8,
-        "description": "0-8 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "React",
-          "Vue.js",
-          "Adobe XD",
-          "Sketch",
-          "Communication",
-          "Docker",
-          "Kubernetes"
-        ],
-        "preferred": [
-          "Project Management",
-          "Strategic Planning",
-          "DynamoDB",
-          "SQLite",
-          "Flutter",
-          "Xamarin",
-          "Unreal Engine"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 92254,
-      "max": 159591,
+      "min": 115244,
+      "max": 191391,
       "currency": "USD",
       "type": "Annual"
     },
@@ -2212,529 +320,42 @@
     ],
     "application_deadline": "2025-07-30",
     "posted_date": "2025-07-15",
-    "status": "Paused",
+    "status": "Filled",
     "hiring_manager": {
-      "name": "Bryan Perry",
-      "email": "kenneth80@example.org",
-      "title": "Engineering Manager"
+      "name": "Dana Ortiz DDS",
+      "email": "acox@example.org",
+      "title": "Product Manager"
     },
-    "team_size": 25,
-    "reports_to": "Engineering Manager",
-    "created_at": "2025-07-16T15:46:14",
-    "updated_at": "2025-07-10T08:01:47"
+    "team_size": 23,
+    "reports_to": "Product Manager",
+    "created_at": "2025-07-16T16:49:39",
+    "updated_at": "2025-07-13T21:21:32"
   },
   {
-    "id": "cc7c230d-c780-4fc3-9b2d-4592aeb8ae43",
-    "title": "UX Designer",
+    "id": "14730cb0-3615-48ac-986f-a1be464868d1",
+    "title": "CTO",
     "company": {
-      "name": "Notion",
-      "size": "Startup",
-      "industry": "Education"
+      "name": "Netflix",
+      "size": "Enterprise",
+      "industry": "Healthcare"
     },
-    "location": "Port Reginaborough, MS",
+    "location": "East Briannafurt, NM",
     "remote_policy": "Hybrid",
-    "employment_type": "Internship",
-    "department": "Design",
-    "level": "Principal",
-    "description": "Space stock relationship environment stand sea about rest. Training toward radio animal run concern. Create follow rule scene special simply. Project help seat such law that final. Off south visit store people machine.",
-    "responsibilities": [
-      "Even shoulder indicate base.",
-      "He environment also some camera animal determine.",
-      "Too seven light field rock whole investment.",
-      "Our control discussion point some current."
-    ],
-    "requirements": {
-      "education": "Relevant experience in lieu of degree",
-      "experience": {
-        "min_years": 0,
-        "max_years": 5,
-        "description": "0-5 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Elasticsearch",
-          "SQL Server",
-          "DynamoDB",
-          "iOS Development",
-          "Blender",
-          "Premiere Pro"
-        ],
-        "preferred": [
-          "React",
-          "SASS",
-          "Angular"
-        ]
-      },
-      "certifications": [
-        "Microsoft Azure Fundamentals"
-      ]
-    },
-    "salary": {
-      "min": 101274,
-      "max": 175699,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-10",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Veronica Cruz",
-      "email": "carrie50@example.net",
-      "title": "VP of Engineering"
-    },
-    "team_size": 5,
-    "reports_to": "Senior Engineering Manager",
-    "created_at": "2025-07-16T15:44:08",
-    "updated_at": "2025-07-10T17:14:45"
-  },
-  {
-    "id": "2e0a9ac6-664e-477f-b5c0-116467d2e76b",
-    "title": "Content Marketing Manager",
-    "company": {
-      "name": "Google",
-      "size": "Mid-size",
-      "industry": "Finance"
-    },
-    "location": "New Terrancebury, PA",
-    "remote_policy": "On-site",
     "employment_type": "Contract",
-    "department": "Marketing",
-    "level": "Principal",
-    "description": "Place phone though player item. Resource worry wait likely eight manage. Road teach land instead four whole half. Democratic start movie bed.",
+    "department": "Management",
+    "level": "Lead",
+    "description": "Data join Congress need health choice film. Under window project stop fire manager. White condition international but street middle somebody. Really vote nearly subject break model usually beautiful. Happen fly store. Culture law today need others reflect.",
     "responsibilities": [
-      "Rate soon return actually cut painting.",
-      "Also blue left back.",
-      "National goal end body size.",
-      "South travel trouble history man try color.",
-      "Forward great offer staff crime role camera.",
-      "Result major people sea left activity."
+      "President eight Republican political reason field deal.",
+      "Office late would sound.",
+      "Federal blue product operation organization write set.",
+      "These since grow upon.",
+      "Physical several back.",
+      "Way me several little week walk little.",
+      "Hotel card arrive forget free."
     ],
     "requirements": {
       "education": "Relevant experience in lieu of degree",
-      "experience": {
-        "min_years": 1,
-        "max_years": 9,
-        "description": "1-9 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Canva",
-          "JavaScript",
-          "Python",
-          "C++",
-          "Elasticsearch",
-          "GitLab CI"
-        ],
-        "preferred": [
-          "Seaborn",
-          "Hadoop",
-          "Scala",
-          "Leadership",
-          "SQLite"
-        ]
-      },
-      "certifications": [
-        "Microsoft Azure Fundamentals"
-      ]
-    },
-    "salary": {
-      "min": 106129,
-      "max": 183506,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-04",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "Desiree Lewis",
-      "email": "batesgerald@example.com",
-      "title": "Director of Engineering"
-    },
-    "team_size": 13,
-    "reports_to": "Director of Engineering",
-    "created_at": "2025-07-16T15:44:43",
-    "updated_at": "2025-07-13T22:01:32"
-  },
-  {
-    "id": "8abea15a-6f11-48b3-a39d-89917b8ddf04",
-    "title": "Senior Software Engineer",
-    "company": {
-      "name": "Netflix",
-      "size": "Startup",
-      "industry": "Healthcare"
-    },
-    "location": "West Elizabeth, MH",
-    "remote_policy": "Remote",
-    "employment_type": "Internship",
-    "department": "Engineering",
-    "level": "Entry",
-    "description": "Food have final war word. Decision she then bad lot travel. Organization whether explain company piece simply.",
-    "responsibilities": [
-      "Any change message.",
-      "Born bar population purpose player hear help claim.",
-      "Hand example almost.",
-      "Should director able program thank.",
-      "This change list information.",
-      "Myself go thus."
-    ],
-    "requirements": {
-      "education": "Bachelor's degree or equivalent",
-      "experience": {
-        "min_years": 3,
-        "max_years": 7,
-        "description": "3-7 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "FastAPI",
-          "Node.js",
-          "Express.js",
-          "Django",
-          "Unreal Engine",
-          "Ionic",
-          "Flutter",
-          "React Native",
-          "Canva",
-          "Rust",
-          "Pandas"
-        ],
-        "preferred": [
-          "DynamoDB",
-          "Cassandra",
-          "Apache Spark",
-          "Pandas",
-          "Seaborn",
-          "Jupyter",
-          "Java"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 101833,
-      "max": 129509,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-08",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Karen Hurley",
-      "email": "daniellefigueroa@example.com",
-      "title": "Product Manager"
-    },
-    "team_size": 10,
-    "reports_to": "VP of Engineering",
-    "created_at": "2025-07-16T15:46:09",
-    "updated_at": "2025-07-13T16:59:35"
-  },
-  {
-    "id": "f4b92075-7af5-4d1f-be14-7f5ee9fa9f18",
-    "title": "Head of Product",
-    "company": {
-      "name": "Wipro",
-      "size": "Startup",
-      "industry": "Media"
-    },
-    "location": "Walkerton, MH",
-    "remote_policy": "Remote",
-    "employment_type": "Internship",
-    "department": "Product",
-    "level": "Senior",
-    "description": "Mention decision happen carry. Social oil line yourself. Another per not agree under project. Participant we ready thank by. Few side couple now subject some.",
-    "responsibilities": [
-      "Hope reality alone Mr bill person once.",
-      "Ground century happen.",
-      "Again bar thousand instead art specific there.",
-      "Through news since war everybody firm life.",
-      "Foreign say show road keep.",
-      "Day north remember specific.",
-      "Plan game their."
-    ],
-    "requirements": {
-      "education": "Bachelor's degree or equivalent",
-      "experience": {
-        "min_years": 5,
-        "max_years": 11,
-        "description": "5-11 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Mentoring",
-          "Team Management",
-          "Project Management",
-          "Leadership",
-          "Figma",
-          "Canva",
-          "Adobe XD"
-        ],
-        "preferred": [
-          "Communication",
-          "jQuery",
-          "HTML5",
-          "Bootstrap",
-          "Node.js"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 110552,
-      "max": 160135,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-04",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "Jason Vasquez",
-      "email": "ipayne@example.org",
-      "title": "Engineering Manager"
-    },
-    "team_size": 11,
-    "reports_to": "Director of Engineering",
-    "created_at": "2025-07-16T15:45:20",
-    "updated_at": "2025-07-12T21:24:30"
-  },
-  {
-    "id": "21740fba-4c14-4454-9ff6-adcb7bf6c680",
-    "title": "Software Engineer",
-    "company": {
-      "name": "Netflix",
-      "size": "Mid-size",
-      "industry": "Media"
-    },
-    "location": "West Jerry, FM",
-    "remote_policy": "Remote",
-    "employment_type": "Part-time",
-    "department": "Engineering",
-    "level": "Entry",
-    "description": "Course break certainly forward yourself. At personal collection national. Star environmental wide product magazine buy society. Produce hair black modern act military head.",
-    "responsibilities": [
-      "There more factor think.",
-      "Bill religious lead police dog begin.",
-      "Rule party skill attention hear reflect radio.",
-      "Decide able recently particularly draw goal adult.",
-      "Sister man including answer.",
-      "Cost someone group recent voice.",
-      "Bring south ten through.",
-      "Site yourself president set throughout player example."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
-      "experience": {
-        "min_years": 1,
-        "max_years": 6,
-        "description": "1-6 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "MySQL",
-          "Cassandra",
-          "PostgreSQL",
-          "Team Management",
-          "Public Speaking",
-          "Leadership",
-          "Docker",
-          "GitHub Actions",
-          "Google Cloud",
-          "AWS",
-          "Pandas",
-          "TensorFlow"
-        ],
-        "preferred": [
-          "GitHub Actions",
-          "AWS",
-          "Elasticsearch",
-          "DynamoDB",
-          "C#",
-          "Perl",
-          "MATLAB"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 79482,
-      "max": 127070,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-14",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Francisco Chavez",
-      "email": "melanie30@example.com",
-      "title": "HR Manager"
-    },
-    "team_size": 8,
-    "reports_to": "VP of Engineering",
-    "created_at": "2025-07-16T15:46:19",
-    "updated_at": "2025-07-10T15:26:03"
-  },
-  {
-    "id": "3c5cdc2c-3fb3-4bae-a17c-d9006cf356d6",
-    "title": "Senior Data Scientist",
-    "company": {
-      "name": "Notion",
-      "size": "Large",
-      "industry": "Healthcare"
-    },
-    "location": "Joshuamouth, VT",
-    "remote_policy": "Remote",
-    "employment_type": "Part-time",
-    "department": "Data",
-    "level": "Lead",
-    "description": "Sport among safe surface. Police rise beyond police sure. Military station office democratic. Next democratic she. Claim close support cause buy. Question political indeed card why last meeting.",
-    "responsibilities": [
-      "Like mean mind establish be mission evening.",
-      "Realize nature animal.",
-      "Call recognize quickly marriage necessary hour.",
-      "Security view today say under.",
-      "Unit just close account."
-    ],
-    "requirements": {
-      "education": "Bachelor's degree or equivalent",
-      "experience": {
-        "min_years": 4,
-        "max_years": 12,
-        "description": "4-12 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "iOS Development",
-          "React Native",
-          "C++",
-          "MATLAB",
-          "C#",
-          "Scrum",
-          "Public Speaking",
-          "Blender",
-          "Illustrator"
-        ],
-        "preferred": [
-          "CSS3",
-          "SASS",
-          "Public Speaking",
-          "Node.js",
-          "Seaborn",
-          "Matplotlib"
-        ]
-      },
-      "certifications": [
-        "Google Cloud Professional",
-        "Scrum Master Certification"
-      ]
-    },
-    "salary": {
-      "min": 120520,
-      "max": 169403,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-03",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Mary Thomas",
-      "email": "jennifermartin@example.com",
-      "title": "Product Manager"
-    },
-    "team_size": 20,
-    "reports_to": "Senior Engineering Manager",
-    "created_at": "2025-07-16T15:44:55",
-    "updated_at": "2025-07-10T00:51:07"
-  },
-  {
-    "id": "6983fc92-4328-4219-acf1-20200839edb6",
-    "title": "UX Designer",
-    "company": {
-      "name": "TCS",
-      "size": "Startup",
-      "industry": "Education"
-    },
-    "location": "North Danielborough, SC",
-    "remote_policy": "Remote",
-    "employment_type": "Full-time",
-    "department": "Design",
-    "level": "Senior",
-    "description": "Politics energy writer. Bill hour throw person either. Message best idea no fire star impact medical. Wall view trade true follow people.",
-    "responsibilities": [
-      "If teacher owner old how mother budget catch.",
-      "North daughter together hit through today affect.",
-      "Somebody last whose.",
-      "Agree market history community effort job.",
-      "Some yard home know peace.",
-      "Six little attack live responsibility bag.",
-      "Century hot than life wind experience staff lose."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
       "experience": {
         "min_years": 3,
         "max_years": 11,
@@ -2742,29 +363,29 @@
       },
       "skills": {
         "required": [
-          "Ionic",
-          "Cordova",
-          "PyTorch",
-          "NumPy",
-          "Seaborn",
-          "Hadoop",
-          "After Effects"
+          "Figma",
+          "Blender",
+          "Premiere Pro",
+          "Sketch",
+          "Flutter",
+          "Ionic"
         ],
         "preferred": [
-          "Terraform",
-          "Kubernetes",
-          "Phoenix",
-          "Flask"
+          "Canva",
+          "Sketch",
+          "InDesign",
+          "Seaborn",
+          "PyTorch"
         ]
       },
       "certifications": [
-        "PMP Certification",
-        "Microsoft Azure Fundamentals"
+        "Microsoft Azure Fundamentals",
+        "PMP Certification"
       ]
     },
     "salary": {
-      "min": 135129,
-      "max": 196680,
+      "min": 123871,
+      "max": 161002,
       "currency": "USD",
       "type": "Annual"
     },
@@ -2779,77 +400,71 @@
       "Stock options"
     ],
     "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-14",
+    "posted_date": "2025-07-15",
     "status": "Active",
     "hiring_manager": {
-      "name": "Victoria Smith",
-      "email": "nealeric@example.org",
+      "name": "Jenny Drake",
+      "email": "woodsemily@example.org",
       "title": "Engineering Manager"
     },
-    "team_size": 13,
-    "reports_to": "Product Manager",
-    "created_at": "2025-07-16T15:45:06",
-    "updated_at": "2025-07-16T00:58:39"
+    "team_size": 3,
+    "reports_to": "Engineering Manager",
+    "created_at": "2025-07-16T16:51:04",
+    "updated_at": "2025-07-10T04:51:34"
   },
   {
-    "id": "ead3dc91-63f3-4671-83ed-baea02db1ca2",
-    "title": "Head of Product",
+    "id": "ea6f2acb-bf42-4a59-bd94-79063fd352d8",
+    "title": "Brand Manager",
     "company": {
-      "name": "Salesforce",
+      "name": "Zoom",
       "size": "Enterprise",
-      "industry": "Government"
+      "industry": "Technology"
     },
-    "location": "Edwardsland, DC",
-    "remote_policy": "Hybrid",
-    "employment_type": "Internship",
-    "department": "Product",
-    "level": "Lead",
-    "description": "Box personal western president but. House serious door half. Speech marriage there traditional officer. Available evening radio new prove shoulder. Method rest beautiful fall voice his. Reality create occur else team.",
+    "location": "Gregorybury, LA",
+    "remote_policy": "Remote",
+    "employment_type": "Contract",
+    "department": "Marketing",
+    "level": "Entry",
+    "description": "Member road during theory. Hair rate light evening reason wrong magazine red. Determine politics avoid she let region. Study human thought service kid although. Run even remain center next carry. Heart near meeting rule.",
     "responsibilities": [
-      "Address behavior race senior several even.",
-      "Soldier cell thank truth interview need player million.",
-      "Bit accept cost others less attention.",
-      "Door word stuff pressure enough analysis husband international.",
-      "Politics professor even decide pass two.",
-      "Well interest suggest light statement.",
-      "Ability Mrs who ground within nature.",
-      "Success significant throughout senior most."
+      "Good different require garden.",
+      "Store important care best important value.",
+      "Somebody traditional religious but citizen rate.",
+      "Radio difference young talk."
     ],
     "requirements": {
-      "education": "Advanced degree required",
+      "education": "Master's degree preferred",
       "experience": {
-        "min_years": 6,
-        "max_years": 14,
-        "description": "6-14 years of relevant experience"
+        "min_years": 0,
+        "max_years": 6,
+        "description": "0-6 years of relevant experience"
       },
       "skills": {
         "required": [
-          "Adobe XD",
-          "Perl",
-          "Java",
+          "Photoshop",
+          "Leadership",
+          "Problem Solving",
+          "Team Management",
           "Scrum",
-          "Project Management",
-          "MongoDB",
-          "Cassandra",
-          "MySQL"
+          "Bootstrap",
+          "Material-UI",
+          "Docker",
+          "Xamarin"
         ],
         "preferred": [
-          "InDesign",
-          "After Effects",
-          "Premiere Pro",
-          "Canva",
-          "NumPy",
-          "Spring Boot"
+          "Unity",
+          "Flutter",
+          "Cordova",
+          "Ionic"
         ]
       },
       "certifications": [
-        "AWS Certified Solutions Architect",
-        "PMP Certification"
+        "AWS Certified Solutions Architect"
       ]
     },
     "salary": {
-      "min": 126736,
-      "max": 177044,
+      "min": 63338,
+      "max": 138430,
       "currency": "USD",
       "type": "Annual"
     },
@@ -2867,62 +482,68 @@
     "posted_date": "2025-07-11",
     "status": "Active",
     "hiring_manager": {
-      "name": "Michael Humphrey",
-      "email": "garrisonkaren@example.com",
-      "title": "Director of Engineering"
+      "name": "Joe Walls DDS",
+      "email": "olawrence@example.net",
+      "title": "Senior Engineering Manager"
     },
-    "team_size": 14,
-    "reports_to": "VP of Engineering",
-    "created_at": "2025-07-16T15:44:18",
-    "updated_at": "2025-07-12T07:27:16"
+    "team_size": 10,
+    "reports_to": "Engineering Manager",
+    "created_at": "2025-07-16T16:51:45",
+    "updated_at": "2025-07-12T16:48:48"
   },
   {
-    "id": "7c318cf0-64cb-45f7-8f99-9b041412263d",
-    "title": "Senior Engineering Manager",
+    "id": "fc1e9a31-7a5b-4e15-8a0d-b00badbfb38b",
+    "title": "Product Designer",
     "company": {
-      "name": "Figma",
-      "size": "Mid-size",
-      "industry": "Finance"
+      "name": "Nvidia",
+      "size": "Enterprise",
+      "industry": "Media"
     },
-    "location": "Dixonland, NC",
-    "remote_policy": "On-site",
-    "employment_type": "Contract",
-    "department": "Management",
-    "level": "Entry",
-    "description": "Effect already name skin individual. Stay page tonight four something why. Partner really increase size interest establish finally. Either image Republican. Mr statement sea sure more.",
+    "location": "New Amy, CA",
+    "remote_policy": "Remote",
+    "employment_type": "Internship",
+    "department": "Design",
+    "level": "Senior",
+    "description": "Behind station family skin form nearly dark. Value vote appear or environment theory. Wide of morning laugh second. Win serious century control part.",
     "responsibilities": [
-      "Sing close on record property she.",
-      "Contain put owner south story protect.",
-      "Skin system decision meet office to.",
-      "Too use specific certainly ground sense president stop.",
-      "Admit everybody grow picture.",
-      "Down collection my.",
-      "Finish edge quality shoulder offer."
+      "Certainly notice image tell may station determine.",
+      "Last both picture product get.",
+      "Author behind ability three discover fine.",
+      "Pay less office other.",
+      "Grow space sport boy challenge light.",
+      "Agent white standard hand network source itself.",
+      "Mind mouth court free risk field."
     ],
     "requirements": {
-      "education": "Advanced degree required",
+      "education": "Master's degree preferred",
       "experience": {
-        "min_years": 4,
-        "max_years": 9,
-        "description": "4-9 years of relevant experience"
+        "min_years": 0,
+        "max_years": 7,
+        "description": "0-7 years of relevant experience"
       },
       "skills": {
         "required": [
+          "Mentoring",
           "Communication",
-          "Cassandra",
-          "PostgreSQL",
-          "Elasticsearch",
-          "Google Cloud",
-          "Kubernetes",
-          "Illustrator",
-          "After Effects",
-          "Adobe XD",
-          "Premiere Pro"
+          "Flutter",
+          "React Native",
+          "Ionic",
+          "Cordova",
+          "MySQL",
+          "Scala",
+          "Go",
+          "Swift",
+          "Sketch"
         ],
         "preferred": [
+          "SQLite",
           "Cassandra",
-          "PostgreSQL",
-          "Oracle"
+          "DynamoDB",
+          "Elasticsearch",
+          "Problem Solving",
+          "Scala",
+          "TypeScript",
+          "Perl"
         ]
       },
       "certifications": [
@@ -2930,8 +551,8 @@
       ]
     },
     "salary": {
-      "min": 93606,
-      "max": 141293,
+      "min": 75903,
+      "max": 124903,
       "currency": "USD",
       "type": "Annual"
     },
@@ -2946,466 +567,77 @@
       "Stock options"
     ],
     "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-15",
-    "status": "Filled",
+    "posted_date": "2025-07-11",
+    "status": "Active",
     "hiring_manager": {
-      "name": "Steven Andrews",
-      "email": "martingardner@example.net",
-      "title": "Product Manager"
+      "name": "Allen Rodriguez",
+      "email": "evansvictoria@example.net",
+      "title": "VP of Engineering"
     },
-    "team_size": 18,
-    "reports_to": "Director of Engineering",
-    "created_at": "2025-07-16T15:45:19",
-    "updated_at": "2025-07-15T23:47:41"
+    "team_size": 6,
+    "reports_to": "Senior Engineering Manager",
+    "created_at": "2025-07-16T16:51:44",
+    "updated_at": "2025-07-14T15:43:51"
   },
   {
-    "id": "a672f7c1-a4b7-48d6-b37b-35d210ccd3de",
-    "title": "Director of Engineering",
+    "id": "eb70db36-57e3-4173-b821-aec9a3d6a4cf",
+    "title": "Senior Software Engineer",
     "company": {
-      "name": "Stripe",
+      "name": "Meta",
       "size": "Startup",
-      "industry": "Media"
+      "industry": "Education"
     },
-    "location": "Amyville, AS",
-    "remote_policy": "Remote",
+    "location": "Morrisstad, MN",
+    "remote_policy": "On-site",
     "employment_type": "Internship",
-    "department": "Management",
-    "level": "Principal",
-    "description": "Start peace to quite base theory value. Than push claim assume car special future. Professor teach month. Career table sound moment field size. Ok money social. Series president represent record get suggest statement.",
+    "department": "Engineering",
+    "level": "Mid",
+    "description": "Letter music base course let surface suddenly gun. Certain miss get well contain professional. System moment scene agency offer yourself every think. Particular debate might major world coach middle. Parent tell husband force. Employee account policy treatment ever Mrs.",
     "responsibilities": [
-      "Your sing hundred community PM nor.",
-      "Policy ball any live care nor.",
-      "Firm cold usually site.",
-      "Father true professor."
+      "Others fact modern scene still.",
+      "Religious media summer believe same price.",
+      "Else director throughout second.",
+      "Ready suddenly set market throughout its red along."
     ],
     "requirements": {
-      "education": "Relevant experience in lieu of degree",
+      "education": "Advanced degree required",
       "experience": {
-        "min_years": 8,
-        "max_years": 12,
-        "description": "8-12 years of relevant experience"
+        "min_years": 1,
+        "max_years": 7,
+        "description": "1-7 years of relevant experience"
       },
       "skills": {
         "required": [
-          "Flask",
-          "Phoenix",
-          "Problem Solving",
-          "Mentoring",
-          "Pandas",
-          "Seaborn",
-          "TensorFlow",
-          "NumPy",
-          "Android Development",
-          "Ionic",
-          "Unity",
-          "Unreal Engine"
+          "Jenkins",
+          "GitLab CI",
+          "Kubernetes",
+          "Google Cloud",
+          "Illustrator",
+          "Apache Spark",
+          "CSS3",
+          "React",
+          "LESS",
+          "Material-UI",
+          "Scala",
+          "Tailwind CSS"
         ],
         "preferred": [
-          "MongoDB",
-          "Cassandra",
-          "SQLite",
+          "Unity",
+          "Ionic",
+          "Xamarin",
+          "ASP.NET Core",
+          "Laravel",
           "MySQL"
         ]
       },
       "certifications": [
-        "AWS Certified Solutions Architect"
+        "Microsoft Azure Fundamentals",
+        "Scrum Master Certification"
       ]
     },
     "salary": {
-      "min": 162840,
-      "max": 237683,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-03",
-    "status": "Active",
-    "hiring_manager": {
-      "name": "Judy Wallace",
-      "email": "scampbell@example.org",
-      "title": "HR Manager"
-    },
-    "team_size": 7,
-    "reports_to": "Director of Engineering",
-    "created_at": "2025-07-16T15:45:51",
-    "updated_at": "2025-07-14T00:54:10"
-  },
-  {
-    "id": "40f7432c-c68d-484b-a264-edfb37891c9e",
-    "title": "MLOps Engineer",
-    "company": {
-      "name": "Discord",
-      "size": "Large",
-      "industry": "Media"
-    },
-    "location": "Owensmouth, MD",
-    "remote_policy": "Hybrid",
-    "employment_type": "Internship",
-    "department": "Data",
-    "level": "Entry",
-    "description": "Morning television push police task care. Choose central traditional when follow international sometimes special. Wait try view attention tend. Place true blue marriage thousand teach response.",
-    "responsibilities": [
-      "Toward our parent lay history short enjoy.",
-      "Whatever industry draw write visit score.",
-      "Them rule sister put.",
-      "Others us stuff throughout good executive computer interesting.",
-      "Require sport evening half run lay.",
-      "Get likely lead cut.",
-      "Policy tell door benefit others visit reality.",
-      "Specific trip individual picture night."
-    ],
-    "requirements": {
-      "education": "Bachelor's degree or equivalent",
-      "experience": {
-        "min_years": 2,
-        "max_years": 7,
-        "description": "2-7 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Jenkins",
-          "FastAPI",
-          "Flask",
-          "Photoshop",
-          "InDesign",
-          "Sketch",
-          "After Effects",
-          "Public Speaking",
-          "Mentoring"
-        ],
-        "preferred": [
-          "Ionic",
-          "Cordova",
-          "Xamarin",
-          "Communication",
-          "Mentoring"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 121997,
-      "max": 147006,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-03",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Jason Randolph",
-      "email": "derrickprince@example.com",
-      "title": "Director of Engineering"
-    },
-    "team_size": 16,
-    "reports_to": "Engineering Manager",
-    "created_at": "2025-07-16T15:46:02",
-    "updated_at": "2025-07-13T11:49:09"
-  },
-  {
-    "id": "572c3278-dd9a-4e06-8c98-f303a1a8b2d0",
-    "title": "Technical Lead",
-    "company": {
-      "name": "Lyft",
-      "size": "Mid-size",
-      "industry": "E-commerce"
-    },
-    "location": "Lake Walter, MI",
-    "remote_policy": "Remote",
-    "employment_type": "Part-time",
-    "department": "Management",
-    "level": "Senior",
-    "description": "Language remember form own. Affect among interesting huge mean finally. Here not out receive military third. Himself board require away chair. Cell street option dream.",
-    "responsibilities": [
-      "Health management according.",
-      "Address scene pull others.",
-      "Information majority city current or tell.",
-      "Man question investment represent somebody gas.",
-      "Administration newspaper face outside turn decade century."
-    ],
-    "requirements": {
-      "education": "Relevant experience in lieu of degree",
-      "experience": {
-        "min_years": 0,
-        "max_years": 6,
-        "description": "0-6 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Cordova",
-          "Unreal Engine",
-          "Jenkins",
-          "AWS",
-          "LESS",
-          "Material-UI",
-          "jQuery"
-        ],
-        "preferred": [
-          "Flask",
-          "MySQL",
-          "After Effects",
-          "Illustrator",
-          "Photoshop",
-          "Sketch",
-          "TensorFlow",
-          "Jupyter"
-        ]
-      },
-      "certifications": [
-        "Scrum Master Certification",
-        "PMP Certification"
-      ]
-    },
-    "salary": {
-      "min": 88756,
-      "max": 140773,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-07",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "Benjamin Burton",
-      "email": "zroach@example.org",
-      "title": "Director of Engineering"
-    },
-    "team_size": 23,
-    "reports_to": "Engineering Manager",
-    "created_at": "2025-07-16T15:44:31",
-    "updated_at": "2025-07-12T04:18:04"
-  },
-  {
-    "id": "6d06ecd6-b7aa-4be2-99be-4725a48e1ad1",
-    "title": "UI Designer",
-    "company": {
-      "name": "PwC",
-      "size": "Large",
-      "industry": "Technology"
-    },
-    "location": "Morrowville, MN",
-    "remote_policy": "Hybrid",
-    "employment_type": "Part-time",
-    "department": "Design",
-    "level": "Lead",
-    "description": "Away break build. Argue strong administration one nearly behavior parent. Pay science cut forget country first. Occur do everything break. Allow anyone carry consumer free.",
-    "responsibilities": [
-      "Garden blood everything size new total.",
-      "Prepare bit west family.",
-      "Purpose as like Congress unit safe six.",
-      "Treatment upon respond my travel."
-    ],
-    "requirements": {
-      "education": "Relevant experience in lieu of degree",
-      "experience": {
-        "min_years": 0,
-        "max_years": 8,
-        "description": "0-8 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "NumPy",
-          "PyTorch",
-          "Scikit-learn",
-          "Pandas",
-          "Ruby",
-          "JavaScript",
-          "C++",
-          "Problem Solving"
-        ],
-        "preferred": [
-          "Bootstrap",
-          "React",
-          "Webpack"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 98796,
-      "max": 171285,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-15",
-    "status": "Paused",
-    "hiring_manager": {
-      "name": "Alejandra Lynch",
-      "email": "philip56@example.org",
-      "title": "Director of Engineering"
-    },
-    "team_size": 15,
-    "reports_to": "Product Manager",
-    "created_at": "2025-07-16T15:45:53",
-    "updated_at": "2025-07-12T21:58:00"
-  },
-  {
-    "id": "01b67de9-fec9-494c-8c87-08a0e4d88e39",
-    "title": "Team Lead",
-    "company": {
-      "name": "Figma",
-      "size": "Enterprise",
-      "industry": "Media"
-    },
-    "location": "West Jenniferberg, WY",
-    "remote_policy": "Hybrid",
-    "employment_type": "Internship",
-    "department": "Management",
-    "level": "Principal",
-    "description": "Spend per total become service. Offer interesting learn. Smile eight keep outside town responsibility stock. Above before style.",
-    "responsibilities": [
-      "Among television choice form service sit some manager.",
-      "Building modern machine collection west building lead.",
-      "Because executive pretty join single network popular.",
-      "Require among agreement serve."
-    ],
-    "requirements": {
-      "education": "Relevant experience in lieu of degree",
-      "experience": {
-        "min_years": 1,
-        "max_years": 8,
-        "description": "1-8 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Xamarin",
-          "Ansible",
-          "AWS",
-          "Docker",
-          "Jenkins",
-          "PostgreSQL"
-        ],
-        "preferred": [
-          "Rust",
-          "C++",
-          "Ruby",
-          "NumPy",
-          "Oracle",
-          "DynamoDB"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 69333,
-      "max": 122753,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-06",
-    "status": "Active",
-    "hiring_manager": {
-      "name": "Erik Wade",
-      "email": "underwoodadam@example.com",
-      "title": "Senior Engineering Manager"
-    },
-    "team_size": 13,
-    "reports_to": "Engineering Manager",
-    "created_at": "2025-07-16T15:44:50",
-    "updated_at": "2025-07-13T15:06:26"
-  },
-  {
-    "id": "31f40c73-859d-427d-ba6a-8da32981663f",
-    "title": "Lead Software Engineer",
-    "company": {
-      "name": "IBM",
-      "size": "Large",
-      "industry": "Government"
-    },
-    "location": "West Emilyfort, KY",
-    "remote_policy": "Hybrid",
-    "employment_type": "Part-time",
-    "department": "Engineering",
-    "level": "Principal",
-    "description": "Difference debate listen he. Charge offer development ok out at. Else together conference board. Total candidate about total. About air push security. Show season exist cause can direction responsibility.",
-    "responsibilities": [
-      "Another if this very make.",
-      "Tree baby though ground open likely.",
-      "Common since address sit leg somebody.",
-      "Give drug happen between Mr plan.",
-      "Fall stage computer compare.",
-      "Her against benefit well energy.",
-      "Project career field whether Republican."
-    ],
-    "requirements": {
-      "education": "Relevant experience in lieu of degree",
-      "experience": {
-        "min_years": 2,
-        "max_years": 8,
-        "description": "2-8 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "R",
-          "Ansible",
-          "Phoenix",
-          "Node.js",
-          "Laravel",
-          "Express.js"
-        ],
-        "preferred": [
-          "Leadership",
-          "Ruby",
-          "R"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 104375,
-      "max": 165759,
+      "min": 88991,
+      "max": 136726,
       "currency": "USD",
       "type": "Annual"
     },
@@ -3421,393 +653,72 @@
     ],
     "application_deadline": "2025-07-30",
     "posted_date": "2025-07-09",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "Ruben Ward",
-      "email": "ellisevan@example.org",
-      "title": "HR Manager"
-    },
-    "team_size": 18,
-    "reports_to": "Director of Engineering",
-    "created_at": "2025-07-16T15:46:28",
-    "updated_at": "2025-07-12T08:27:40"
-  },
-  {
-    "id": "fc762527-122f-4bfd-b75f-4d414e252558",
-    "title": "Staff Software Engineer",
-    "company": {
-      "name": "Uber",
-      "size": "Large",
-      "industry": "Education"
-    },
-    "location": "New Cynthia, ID",
-    "remote_policy": "Hybrid",
-    "employment_type": "Contract",
-    "department": "Engineering",
-    "level": "Principal",
-    "description": "Ball hold image author they. Road daughter significant strategy list total forward. New finish while school structure four sound. Model scene us culture trade building conference. Civil social leave phone their.",
-    "responsibilities": [
-      "Partner crime easy sport whole realize inside.",
-      "Choose actually rich its.",
-      "Bit common Mr heart another product.",
-      "Between six person finally.",
-      "Almost property interview city.",
-      "Fine option response miss."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
-      "experience": {
-        "min_years": 8,
-        "max_years": 14,
-        "description": "8-14 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "TypeScript",
-          "PHP",
-          "TensorFlow",
-          "Hadoop",
-          "Jupyter",
-          "Azure",
-          "Jenkins"
-        ],
-        "preferred": [
-          "Problem Solving",
-          "Azure",
-          "Jenkins",
-          "Kubernetes",
-          "Google Cloud",
-          "Tailwind CSS",
-          "Angular"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 137842,
-      "max": 180690,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-02",
     "status": "Paused",
     "hiring_manager": {
-      "name": "Karen Jenkins",
-      "email": "tturner@example.com",
-      "title": "VP of Engineering"
+      "name": "Kimberly Weber",
+      "email": "jamieduncan@example.net",
+      "title": "Product Manager"
     },
-    "team_size": 25,
-    "reports_to": "Product Manager",
-    "created_at": "2025-07-16T15:44:48",
-    "updated_at": "2025-07-11T04:56:55"
+    "team_size": 22,
+    "reports_to": "Engineering Manager",
+    "created_at": "2025-07-16T16:51:12",
+    "updated_at": "2025-07-14T12:43:01"
   },
   {
-    "id": "4f359d89-1f06-4d2a-a1e2-5230d1195f7b",
-    "title": "Team Lead",
+    "id": "686000ce-75be-4fe5-a245-b0c99eabf6ce",
+    "title": "AI Engineer",
     "company": {
       "name": "Slack",
-      "size": "Large",
-      "industry": "Media"
+      "size": "Enterprise",
+      "industry": "E-commerce"
     },
-    "location": "Mollyton, OK",
+    "location": "Lake Brittanyburgh, VI",
     "remote_policy": "Hybrid",
-    "employment_type": "Part-time",
-    "department": "Management",
-    "level": "Entry",
-    "description": "Green again major. Model century light. People pull red rate brother case cup. Bill various enough. Western capital talk never box impact. Option guess as production.",
+    "employment_type": "Internship",
+    "department": "Data",
+    "level": "Senior",
+    "description": "Military hear save. Network always reduce attention. List purpose when account.",
     "responsibilities": [
-      "Ready born couple president do final life.",
-      "Prove form throw then cause week notice.",
-      "Wall available writer week.",
-      "Half partner get whole.",
-      "Lot husband sign then radio reality.",
-      "Each tend not network animal.",
-      "Job color couple stock dinner knowledge how.",
-      "Institution company month party."
+      "Future direction he wrong part probably happy.",
+      "Able available hit grow program in former.",
+      "Piece few point in.",
+      "Training themselves head group seem back.",
+      "Else detail summer wear customer former."
     ],
     "requirements": {
-      "education": "Bachelor's degree or equivalent",
+      "education": "Relevant experience in lieu of degree",
       "experience": {
-        "min_years": 1,
-        "max_years": 5,
-        "description": "1-5 years of relevant experience"
+        "min_years": 6,
+        "max_years": 10,
+        "description": "6-10 years of relevant experience"
       },
       "skills": {
         "required": [
-          "Agile",
-          "PostgreSQL",
-          "Oracle",
-          "MySQL",
-          "SQL Server",
-          "Bootstrap",
-          "jQuery",
+          "JavaScript",
+          "Java",
+          "TypeScript",
+          "Swift",
+          "Phoenix",
+          "NumPy",
+          "Jupyter",
+          "Apache Spark",
+          "Pandas",
           "Ionic",
-          "Android Development",
-          "Flutter",
+          "Elasticsearch",
           "Leadership"
         ],
         "preferred": [
-          "MongoDB",
-          "Elasticsearch",
-          "Django",
-          "Laravel"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 102324,
-      "max": 170507,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-06",
-    "status": "Active",
-    "hiring_manager": {
-      "name": "Ryan Ortiz",
-      "email": "joseph13@example.org",
-      "title": "Engineering Manager"
-    },
-    "team_size": 9,
-    "reports_to": "Engineering Manager",
-    "created_at": "2025-07-16T15:45:45",
-    "updated_at": "2025-07-15T16:01:12"
-  },
-  {
-    "id": "fbc0e439-1d9a-4ea5-a62e-c14c5de8562b",
-    "title": "UX Researcher",
-    "company": {
-      "name": "Discord",
-      "size": "Large",
-      "industry": "Healthcare"
-    },
-    "location": "Costaside, MS",
-    "remote_policy": "Hybrid",
-    "employment_type": "Full-time",
-    "department": "Design",
-    "level": "Principal",
-    "description": "Success customer send four remain hear admit particular. Out loss green good thing. Control reach white rest eight at natural police. Share final thought reveal its painting collection.",
-    "responsibilities": [
-      "Decade onto plan.",
-      "Blood health sing.",
-      "Respond leave someone agree clearly.",
-      "Pass wife focus economy economy quality.",
-      "Only pattern myself door.",
-      "Heavy difficult among in activity hear.",
-      "News forward without place night.",
-      "Effect much people hit so discover."
-    ],
-    "requirements": {
-      "education": "Bachelor's degree or equivalent",
-      "experience": {
-        "min_years": 8,
-        "max_years": 12,
-        "description": "8-12 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "SASS",
-          "Vue.js",
-          "Tailwind CSS",
-          "Jenkins",
-          "Ansible",
-          "Azure",
-          "Terraform"
-        ],
-        "preferred": [
-          "Pandas",
-          "Scikit-learn",
-          "Project Management",
-          "PostgreSQL",
-          "MySQL",
-          "MongoDB",
-          "Oracle"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 169657,
-      "max": 210021,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-07",
-    "status": "Active",
-    "hiring_manager": {
-      "name": "Natalie Hernandez",
-      "email": "susan49@example.com",
-      "title": "Senior Engineering Manager"
-    },
-    "team_size": 22,
-    "reports_to": "CTO",
-    "created_at": "2025-07-16T15:45:57",
-    "updated_at": "2025-07-15T12:30:46"
-  },
-  {
-    "id": "346129e9-70b0-4c51-8515-89ca8000cd1d",
-    "title": "Visual Designer",
-    "company": {
-      "name": "Tesla",
-      "size": "Mid-size",
-      "industry": "Education"
-    },
-    "location": "North Jeffreymouth, WA",
-    "remote_policy": "Remote",
-    "employment_type": "Contract",
-    "department": "Design",
-    "level": "Principal",
-    "description": "North believe today large. New security positive thousand save tell second. Professional box contain TV relate very stuff true. Order prove interesting question though. Travel wonder today upon. Plant character expert father recent major.",
-    "responsibilities": [
-      "Beat wall life prove picture theory.",
-      "Establish total four daughter focus.",
-      "Pick Republican relate miss my window.",
-      "Camera put own condition.",
-      "Plant thank between few.",
-      "Occur woman several tax government traditional."
-    ],
-    "requirements": {
-      "education": "Relevant experience in lieu of degree",
-      "experience": {
-        "min_years": 1,
-        "max_years": 6,
-        "description": "1-6 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "TensorFlow",
-          "Scikit-learn",
-          "Node.js",
-          "Ruby on Rails",
-          "ASP.NET Core",
-          "Phoenix",
-          "Agile",
-          "Adobe XD",
-          "Canva",
-          "Sketch",
-          "Blender"
-        ],
-        "preferred": [
-          "Adobe XD",
-          "GitHub Actions",
-          "AWS"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 82014,
-      "max": 158648,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-15",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "James Taylor",
-      "email": "fadams@example.com",
-      "title": "Senior Engineering Manager"
-    },
-    "team_size": 9,
-    "reports_to": "CTO",
-    "created_at": "2025-07-16T15:46:25",
-    "updated_at": "2025-07-14T06:34:11"
-  },
-  {
-    "id": "e879450b-577c-423d-b281-d7b49b5ba1c0",
-    "title": "Product Designer",
-    "company": {
-      "name": "Salesforce",
-      "size": "Enterprise",
-      "industry": "Technology"
-    },
-    "location": "North Tiffanymouth, MD",
-    "remote_policy": "Remote",
-    "employment_type": "Contract",
-    "department": "Design",
-    "level": "Principal",
-    "description": "Life site it able. With whom article television. Ten leg hard above prevent. Difficult long law scientist. Win political impact enjoy above everybody usually. Along bank safe represent audience.",
-    "responsibilities": [
-      "Lot economic down authority reality.",
-      "Available weight debate.",
-      "Build finally heavy but four boy inside.",
-      "Like into ball through always prevent nation.",
-      "Five establish among push glass onto prove suffer.",
-      "Nothing figure ground sense need model soon.",
-      "Pm any be even create tonight."
-    ],
-    "requirements": {
-      "education": "Relevant experience in lieu of degree",
-      "experience": {
-        "min_years": 1,
-        "max_years": 8,
-        "description": "1-8 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Blender",
-          "Illustrator",
-          "Django",
-          "Spring Boot",
-          "Ruby on Rails",
+          "Docker",
           "AWS",
-          "Azure"
-        ],
-        "preferred": [
-          "Kotlin",
-          "TypeScript",
-          "Go"
+          "Google Cloud",
+          "Adobe XD"
         ]
       },
       "certifications": []
     },
     "salary": {
-      "min": 124965,
-      "max": 176752,
+      "min": 128571,
+      "max": 160286,
       "currency": "USD",
       "type": "Annual"
     },
@@ -3822,152 +733,77 @@
       "Stock options"
     ],
     "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-06",
-    "status": "Filled",
-    "hiring_manager": {
-      "name": "Shawn Lamb",
-      "email": "swilliams@example.net",
-      "title": "HR Manager"
-    },
-    "team_size": 15,
-    "reports_to": "Director of Engineering",
-    "created_at": "2025-07-16T15:46:21",
-    "updated_at": "2025-07-16T07:10:58"
-  },
-  {
-    "id": "ec7e5b72-7a93-4fab-9328-c9df94a7288e",
-    "title": "Technical Product Manager",
-    "company": {
-      "name": "Capgemini",
-      "size": "Startup",
-      "industry": "Education"
-    },
-    "location": "Jacquelineville, OH",
-    "remote_policy": "Remote",
-    "employment_type": "Part-time",
-    "department": "Product",
-    "level": "Entry",
-    "description": "If environmental increase worker. There when program number end media point oil. Attention minute project work despite debate present.",
-    "responsibilities": [
-      "Civil by point pass do wrong.",
-      "Ability new have mother face.",
-      "Decision treat should stuff family.",
-      "Adult approach factor smile smile most.",
-      "Ask low could kind newspaper situation find.",
-      "Especially thousand building add see.",
-      "Record child cover fill."
-    ],
-    "requirements": {
-      "education": "Advanced degree required",
-      "experience": {
-        "min_years": 1,
-        "max_years": 6,
-        "description": "1-6 years of relevant experience"
-      },
-      "skills": {
-        "required": [
-          "Spring Boot",
-          "Ruby on Rails",
-          "Laravel",
-          "Python",
-          "Java",
-          "Kotlin",
-          "React Native",
-          "LESS"
-        ],
-        "preferred": [
-          "Phoenix",
-          "Ruby on Rails",
-          "FastAPI",
-          "Laravel",
-          "DynamoDB"
-        ]
-      },
-      "certifications": []
-    },
-    "salary": {
-      "min": 82338,
-      "max": 108026,
-      "currency": "USD",
-      "type": "Annual"
-    },
-    "benefits": [
-      "Health insurance",
-      "Dental insurance",
-      "Vision insurance",
-      "401(k) matching",
-      "Paid time off",
-      "Professional development budget",
-      "Flexible work hours",
-      "Stock options"
-    ],
-    "application_deadline": "2025-07-30",
-    "posted_date": "2025-07-12",
+    "posted_date": "2025-07-10",
     "status": "Paused",
     "hiring_manager": {
-      "name": "Aaron Peterson",
-      "email": "john48@example.net",
-      "title": "Product Manager"
+      "name": "Mr. Andrew Curtis",
+      "email": "alice23@example.com",
+      "title": "HR Manager"
     },
-    "team_size": 11,
-    "reports_to": "CTO",
-    "created_at": "2025-07-16T15:46:23",
-    "updated_at": "2025-07-14T09:02:50"
+    "team_size": 9,
+    "reports_to": "Product Manager",
+    "created_at": "2025-07-16T16:49:57",
+    "updated_at": "2025-07-14T04:47:20"
   },
   {
-    "id": "8eab300b-249e-47e9-b1a5-5ce27d8bbacc",
+    "id": "02e28d4d-deab-43d4-b1cf-373920bf3e32",
     "title": "Senior Product Manager",
     "company": {
-      "name": "Salesforce",
+      "name": "Oracle",
       "size": "Startup",
-      "industry": "Government"
+      "industry": "Education"
     },
-    "location": "Griffintown, MP",
-    "remote_policy": "On-site",
-    "employment_type": "Internship",
+    "location": "Amandaburgh, MO",
+    "remote_policy": "Hybrid",
+    "employment_type": "Full-time",
     "department": "Product",
-    "level": "Senior",
-    "description": "Factor just personal floor full ago political. Rock affect notice. Mother include sense discuss local this gas. Treat box available little. Learn sound sister prove call look. Record expert at miss Democrat material.",
+    "level": "Mid",
+    "description": "Set bag consumer figure author where bag artist. Citizen team attorney key. Argue see build Republican camera question. Then everybody room million side son whole.",
     "responsibilities": [
-      "Notice still because author go fight there.",
-      "Ok PM town four future ability.",
-      "Size work region.",
-      "Memory attorney fine remain discuss defense."
+      "Such experience effort range since fire bank.",
+      "Wide work myself team road news factor crime.",
+      "Military find them shoulder trip action thousand.",
+      "There property know none policy.",
+      "Tv teacher tell see individual.",
+      "Writer concern kind many skill.",
+      "Hundred member notice program herself public.",
+      "Maintain fast thousand newspaper pass behind time."
     ],
     "requirements": {
-      "education": "Relevant experience in lieu of degree",
+      "education": "Master's degree preferred",
       "experience": {
-        "min_years": 7,
-        "max_years": 11,
-        "description": "7-11 years of relevant experience"
+        "min_years": 5,
+        "max_years": 9,
+        "description": "5-9 years of relevant experience"
       },
       "skills": {
         "required": [
-          "Sketch",
-          "Photoshop",
-          "Unreal Engine",
+          "Ansible",
+          "Kubernetes",
+          "Team Management",
+          "Public Speaking",
+          "Flutter",
           "Unity",
-          "Pandas",
-          "Ansible"
+          "Xamarin",
+          "Unreal Engine",
+          "NumPy",
+          "Android Development",
+          "Hadoop"
         ],
         "preferred": [
-          "Scala",
-          "TypeScript",
-          "Elasticsearch",
-          "Oracle",
-          "PostgreSQL",
+          "React Native",
           "Express.js",
-          "FastAPI"
+          "Spring Boot",
+          "ASP.NET Core",
+          "Ruby on Rails",
+          "Jenkins"
         ]
       },
-      "certifications": [
-        "Scrum Master Certification",
-        "Scrum Master Certification"
-      ]
+      "certifications": []
     },
     "salary": {
-      "min": 110306,
-      "max": 179294,
+      "min": 92709,
+      "max": 158360,
       "currency": "USD",
       "type": "Annual"
     },
@@ -3985,38 +821,360 @@
     "posted_date": "2025-07-03",
     "status": "Filled",
     "hiring_manager": {
-      "name": "Lindsey Collier",
-      "email": "doylemichael@example.com",
-      "title": "Engineering Manager"
+      "name": "Jeremy Wheeler",
+      "email": "owensjeremy@example.com",
+      "title": "Senior Engineering Manager"
     },
-    "team_size": 6,
-    "reports_to": "Senior Engineering Manager",
-    "created_at": "2025-07-16T15:45:29",
-    "updated_at": "2025-07-15T15:25:31"
+    "team_size": 19,
+    "reports_to": "VP of Engineering",
+    "created_at": "2025-07-16T16:51:24",
+    "updated_at": "2025-07-13T00:32:27"
   },
   {
-    "id": "f74b2d1c-1904-4b4d-b71d-4b9e26c1dfc9",
-    "title": "Associate Product Manager",
+    "id": "943b1ebb-7302-454b-8fa1-4c7b346a1fb8",
+    "title": "Visual Designer",
     "company": {
-      "name": "Stripe",
+      "name": "Tesla",
       "size": "Large",
-      "industry": "Finance"
+      "industry": "Education"
     },
-    "location": "Sydneyshire, IL",
-    "remote_policy": "Hybrid",
-    "employment_type": "Contract",
-    "department": "Product",
-    "level": "Senior",
-    "description": "Open add very blood institution security. Speech large for suggest. Rather executive mother son out. Pick than grow could pretty rich option. Free seven reach most cold reduce be.",
+    "location": "Bellshire, MT",
+    "remote_policy": "On-site",
+    "employment_type": "Part-time",
+    "department": "Design",
+    "level": "Entry",
+    "description": "Science move half. Good office model across condition. Case source area home season. Well reality want significant over four agent child.",
     "responsibilities": [
-      "Issue probably listen understand require even.",
-      "Real both forget think natural.",
-      "Simple quality employee bed figure drug cover.",
-      "Listen speak home glass clear get close.",
-      "Military imagine paper force."
+      "Song yard human win color letter.",
+      "Ask street recent must himself improve sell.",
+      "Commercial board edge with tax no oil.",
+      "So place respond."
+    ],
+    "requirements": {
+      "education": "Relevant experience in lieu of degree",
+      "experience": {
+        "min_years": 1,
+        "max_years": 5,
+        "description": "1-5 years of relevant experience"
+      },
+      "skills": {
+        "required": [
+          "Matplotlib",
+          "Hadoop",
+          "Jupyter",
+          "Communication",
+          "Leadership",
+          "Public Speaking",
+          "Team Management",
+          "iOS Development",
+          "React Native",
+          "Xamarin"
+        ],
+        "preferred": [
+          "Cassandra",
+          "JavaScript",
+          "Perl",
+          "Figma",
+          "InDesign"
+        ]
+      },
+      "certifications": []
+    },
+    "salary": {
+      "min": 116740,
+      "max": 179826,
+      "currency": "USD",
+      "type": "Annual"
+    },
+    "benefits": [
+      "Health insurance",
+      "Dental insurance",
+      "Vision insurance",
+      "401(k) matching",
+      "Paid time off",
+      "Professional development budget",
+      "Flexible work hours",
+      "Stock options"
+    ],
+    "application_deadline": "2025-07-30",
+    "posted_date": "2025-07-06",
+    "status": "Filled",
+    "hiring_manager": {
+      "name": "Margaret Jensen",
+      "email": "campbellchristine@example.com",
+      "title": "VP of Engineering"
+    },
+    "team_size": 9,
+    "reports_to": "VP of Engineering",
+    "created_at": "2025-07-16T16:51:33",
+    "updated_at": "2025-07-16T15:41:43"
+  },
+  {
+    "id": "58d32a29-4877-489a-a831-016212fa67c4",
+    "title": "Team Lead",
+    "company": {
+      "name": "Nvidia",
+      "size": "Startup",
+      "industry": "Healthcare"
+    },
+    "location": "West Hollyberg, MD",
+    "remote_policy": "On-site",
+    "employment_type": "Internship",
+    "department": "Management",
+    "level": "Senior",
+    "description": "Benefit everybody personal pattern. Power realize customer with my. Fund life provide form author method. Raise team she. Note beat probably second according success.",
+    "responsibilities": [
+      "Improve cost prevent want laugh government.",
+      "Drop box tell.",
+      "Similar husband manager forward business majority.",
+      "Apply list manage thank goal heart.",
+      "Represent truth protect so citizen take.",
+      "Brother blood agree enjoy focus trial situation.",
+      "Where hit industry probably college.",
+      "Ago region society summer."
     ],
     "requirements": {
       "education": "Bachelor's degree or equivalent",
+      "experience": {
+        "min_years": 4,
+        "max_years": 9,
+        "description": "4-9 years of relevant experience"
+      },
+      "skills": {
+        "required": [
+          "HTML5",
+          "LESS",
+          "Vue.js",
+          "Sketch",
+          "InDesign",
+          "Kubernetes",
+          "Android Development",
+          "iOS Development",
+          "React Native",
+          "Bootstrap",
+          "Problem Solving"
+        ],
+        "preferred": [
+          "CSS3",
+          "SASS",
+          "Angular"
+        ]
+      },
+      "certifications": [
+        "Scrum Master Certification"
+      ]
+    },
+    "salary": {
+      "min": 137076,
+      "max": 209150,
+      "currency": "USD",
+      "type": "Annual"
+    },
+    "benefits": [
+      "Health insurance",
+      "Dental insurance",
+      "Vision insurance",
+      "401(k) matching",
+      "Paid time off",
+      "Professional development budget",
+      "Flexible work hours",
+      "Stock options"
+    ],
+    "application_deadline": "2025-07-30",
+    "posted_date": "2025-07-08",
+    "status": "Paused",
+    "hiring_manager": {
+      "name": "Brian Moore",
+      "email": "adrianavaldez@example.org",
+      "title": "Product Manager"
+    },
+    "team_size": 17,
+    "reports_to": "Senior Engineering Manager",
+    "created_at": "2025-07-16T16:51:15",
+    "updated_at": "2025-07-15T08:15:05"
+  },
+  {
+    "id": "ea162f8d-9840-4fb5-aff1-5e8619425c2b",
+    "title": "Senior Engineering Manager",
+    "company": {
+      "name": "Adobe",
+      "size": "Large",
+      "industry": "Finance"
+    },
+    "location": "East Mary, WY",
+    "remote_policy": "Hybrid",
+    "employment_type": "Full-time",
+    "department": "Management",
+    "level": "Entry",
+    "description": "Take live board race hit. Paper dinner order agency manager public. Into product wonder find particularly.",
+    "responsibilities": [
+      "Ability cell generation plan.",
+      "Site arm section.",
+      "Fact national drive necessary here young event.",
+      "Next hard television between hundred pass return.",
+      "Campaign boy top travel."
+    ],
+    "requirements": {
+      "education": "Advanced degree required",
+      "experience": {
+        "min_years": 2,
+        "max_years": 9,
+        "description": "2-9 years of relevant experience"
+      },
+      "skills": {
+        "required": [
+          "Seaborn",
+          "Apache Spark",
+          "Public Speaking",
+          "Leadership",
+          "Strategic Planning"
+        ],
+        "preferred": [
+          "FastAPI",
+          "ASP.NET Core",
+          "Ruby on Rails",
+          "Phoenix",
+          "Strategic Planning",
+          "Hadoop"
+        ]
+      },
+      "certifications": [
+        "AWS Certified Solutions Architect"
+      ]
+    },
+    "salary": {
+      "min": 78022,
+      "max": 122018,
+      "currency": "USD",
+      "type": "Annual"
+    },
+    "benefits": [
+      "Health insurance",
+      "Dental insurance",
+      "Vision insurance",
+      "401(k) matching",
+      "Paid time off",
+      "Professional development budget",
+      "Flexible work hours",
+      "Stock options"
+    ],
+    "application_deadline": "2025-07-30",
+    "posted_date": "2025-07-05",
+    "status": "Filled",
+    "hiring_manager": {
+      "name": "Randy Harris",
+      "email": "elizabethdaniel@example.net",
+      "title": "Senior Engineering Manager"
+    },
+    "team_size": 5,
+    "reports_to": "CTO",
+    "created_at": "2025-07-16T16:51:08",
+    "updated_at": "2025-07-10T19:49:33"
+  },
+  {
+    "id": "d741562b-dc97-47ea-bfa9-37bcb3eb93a2",
+    "title": "Business Intelligence Developer",
+    "company": {
+      "name": "Amazon",
+      "size": "Large",
+      "industry": "Healthcare"
+    },
+    "location": "North Laura, TX",
+    "remote_policy": "Remote",
+    "employment_type": "Internship",
+    "department": "Data",
+    "level": "Mid",
+    "description": "Eye example explain concern true direction treatment read. Next stage it form suggest security us. Seem crime station respond machine.",
+    "responsibilities": [
+      "Hope arrive south.",
+      "Detail return civil he figure mind anything.",
+      "Surface lead young data its north.",
+      "Man anyone per.",
+      "Bag party security yourself between within."
+    ],
+    "requirements": {
+      "education": "Advanced degree required",
+      "experience": {
+        "min_years": 1,
+        "max_years": 9,
+        "description": "1-9 years of relevant experience"
+      },
+      "skills": {
+        "required": [
+          "AWS",
+          "Google Cloud",
+          "Kubernetes",
+          "Illustrator",
+          "InDesign",
+          "Adobe XD",
+          "Blender",
+          "SASS",
+          "Material-UI"
+        ],
+        "preferred": [
+          "Swift",
+          "Kotlin",
+          "Jupyter",
+          "Hadoop"
+        ]
+      },
+      "certifications": [
+        "Certified Kubernetes Administrator",
+        "Google Cloud Professional"
+      ]
+    },
+    "salary": {
+      "min": 119330,
+      "max": 161939,
+      "currency": "USD",
+      "type": "Annual"
+    },
+    "benefits": [
+      "Health insurance",
+      "Dental insurance",
+      "Vision insurance",
+      "401(k) matching",
+      "Paid time off",
+      "Professional development budget",
+      "Flexible work hours",
+      "Stock options"
+    ],
+    "application_deadline": "2025-07-30",
+    "posted_date": "2025-07-15",
+    "status": "Paused",
+    "hiring_manager": {
+      "name": "Heather Griffin",
+      "email": "basskyle@example.net",
+      "title": "Product Manager"
+    },
+    "team_size": 19,
+    "reports_to": "Product Manager",
+    "created_at": "2025-07-16T16:50:47",
+    "updated_at": "2025-07-15T18:25:03"
+  },
+  {
+    "id": "54e3f928-2193-4ad0-bda8-ff3605988e88",
+    "title": "UX Researcher",
+    "company": {
+      "name": "Infosys",
+      "size": "Large",
+      "industry": "E-commerce"
+    },
+    "location": "Michaelstad, NC",
+    "remote_policy": "Hybrid",
+    "employment_type": "Contract",
+    "department": "Design",
+    "level": "Mid",
+    "description": "Community member individual approach. He general together. First base allow risk account finally central. Director work discussion across major probably.",
+    "responsibilities": [
+      "Finally their letter degree.",
+      "Upon evidence whatever continue do major.",
+      "Light you by evidence ground by movie mission.",
+      "Agent box property reflect expert pass six.",
+      "Early interesting black figure."
+    ],
+    "requirements": {
+      "education": "Master's degree preferred",
       "experience": {
         "min_years": 0,
         "max_years": 5,
@@ -4024,32 +1182,355 @@
       },
       "skills": {
         "required": [
-          "Seaborn",
-          "Pandas",
-          "Matplotlib",
-          "Kubernetes",
-          "GitLab CI",
-          "Ansible",
-          "Django",
-          "FastAPI",
-          "Express.js",
-          "After Effects",
-          "Figma"
+          "Bootstrap",
+          "Problem Solving",
+          "Redis",
+          "MySQL",
+          "Docker",
+          "GitHub Actions",
+          "Unity"
         ],
         "preferred": [
-          "TypeScript",
-          "Redis",
-          "PostgreSQL",
-          "Apache Spark"
+          "Pandas",
+          "Premiere Pro",
+          "Photoshop",
+          "DynamoDB"
         ]
       },
       "certifications": [
+        "Certified Kubernetes Administrator",
+        "Scrum Master Certification"
+      ]
+    },
+    "salary": {
+      "min": 101618,
+      "max": 129547,
+      "currency": "USD",
+      "type": "Annual"
+    },
+    "benefits": [
+      "Health insurance",
+      "Dental insurance",
+      "Vision insurance",
+      "401(k) matching",
+      "Paid time off",
+      "Professional development budget",
+      "Flexible work hours",
+      "Stock options"
+    ],
+    "application_deadline": "2025-07-30",
+    "posted_date": "2025-07-08",
+    "status": "Active",
+    "hiring_manager": {
+      "name": "Jasmine Alvarez",
+      "email": "owenstodd@example.com",
+      "title": "VP of Engineering"
+    },
+    "team_size": 4,
+    "reports_to": "Engineering Manager",
+    "created_at": "2025-07-16T16:50:40",
+    "updated_at": "2025-07-11T01:50:11"
+  },
+  {
+    "id": "592e2f2d-fe8f-4fc6-88f3-e31a6f76d5eb",
+    "title": "VP of Engineering",
+    "company": {
+      "name": "Uber",
+      "size": "Startup",
+      "industry": "Education"
+    },
+    "location": "Melaniebury, OH",
+    "remote_policy": "Remote",
+    "employment_type": "Contract",
+    "department": "Management",
+    "level": "Senior",
+    "description": "Idea sell from let girl. Draw wind sometimes production. Just day later outside accept type record.",
+    "responsibilities": [
+      "Court despite low type administration study.",
+      "Author return summer.",
+      "Much nearly all up star just fine.",
+      "Act level million now measure region model.",
+      "Option school wide media spend around take even.",
+      "Argue scene song police cause.",
+      "Anyone professional benefit."
+    ],
+    "requirements": {
+      "education": "Master's degree preferred",
+      "experience": {
+        "min_years": 3,
+        "max_years": 8,
+        "description": "3-8 years of relevant experience"
+      },
+      "skills": {
+        "required": [
+          "HTML5",
+          "CSS3",
+          "Webpack",
+          "Spring Boot",
+          "Django",
+          "Node.js",
+          "Hadoop",
+          "Seaborn",
+          "Elasticsearch",
+          "SQL Server",
+          "MongoDB",
+          "Canva"
+        ],
+        "preferred": [
+          "AWS",
+          "Kubernetes",
+          "Azure",
+          "Blender",
+          "Elasticsearch",
+          "FastAPI",
+          "HTML5"
+        ]
+      },
+      "certifications": [
+        "Scrum Master Certification",
         "PMP Certification"
       ]
     },
     "salary": {
-      "min": 63285,
-      "max": 115290,
+      "min": 114662,
+      "max": 142635,
+      "currency": "USD",
+      "type": "Annual"
+    },
+    "benefits": [
+      "Health insurance",
+      "Dental insurance",
+      "Vision insurance",
+      "401(k) matching",
+      "Paid time off",
+      "Professional development budget",
+      "Flexible work hours",
+      "Stock options"
+    ],
+    "application_deadline": "2025-07-30",
+    "posted_date": "2025-07-02",
+    "status": "Filled",
+    "hiring_manager": {
+      "name": "Robert Tate",
+      "email": "mary59@example.net",
+      "title": "VP of Engineering"
+    },
+    "team_size": 21,
+    "reports_to": "CTO",
+    "created_at": "2025-07-16T16:51:07",
+    "updated_at": "2025-07-16T09:47:20"
+  },
+  {
+    "id": "a08de24e-c243-4f11-88ad-25bb95544670",
+    "title": "Frontend Developer",
+    "company": {
+      "name": "PwC",
+      "size": "Large",
+      "industry": "Healthcare"
+    },
+    "location": "Shannonville, GU",
+    "remote_policy": "Hybrid",
+    "employment_type": "Full-time",
+    "department": "Engineering",
+    "level": "Principal",
+    "description": "Author west without hard glass. Station keep husband another. Sport politics though under scientist.",
+    "responsibilities": [
+      "Information yes stand moment from wall.",
+      "You never white thousand name.",
+      "Future white least far.",
+      "Admit left situation film player after lay.",
+      "According respond show class product professional.",
+      "Continue wife could space stock small safe."
+    ],
+    "requirements": {
+      "education": "Bachelor's degree or equivalent",
+      "experience": {
+        "min_years": 3,
+        "max_years": 10,
+        "description": "3-10 years of relevant experience"
+      },
+      "skills": {
+        "required": [
+          "Mentoring",
+          "Project Management",
+          "Material-UI",
+          "CSS3",
+          "Vue.js"
+        ],
+        "preferred": [
+          "Tailwind CSS",
+          "Agile",
+          "Communication",
+          "Google Cloud",
+          "PHP",
+          "Perl",
+          "C++"
+        ]
+      },
+      "certifications": []
+    },
+    "salary": {
+      "min": 136281,
+      "max": 192926,
+      "currency": "USD",
+      "type": "Annual"
+    },
+    "benefits": [
+      "Health insurance",
+      "Dental insurance",
+      "Vision insurance",
+      "401(k) matching",
+      "Paid time off",
+      "Professional development budget",
+      "Flexible work hours",
+      "Stock options"
+    ],
+    "application_deadline": "2025-07-30",
+    "posted_date": "2025-07-11",
+    "status": "Paused",
+    "hiring_manager": {
+      "name": "Tara Fox",
+      "email": "oscar30@example.com",
+      "title": "HR Manager"
+    },
+    "team_size": 5,
+    "reports_to": "CTO",
+    "created_at": "2025-07-16T16:50:30",
+    "updated_at": "2025-07-12T04:33:41"
+  },
+  {
+    "id": "bcd238dd-45ae-4bd1-a9af-72eaddd166e7",
+    "title": "Product Manager",
+    "company": {
+      "name": "Zoom",
+      "size": "Enterprise",
+      "industry": "Finance"
+    },
+    "location": "Burnschester, NY",
+    "remote_policy": "Remote",
+    "employment_type": "Full-time",
+    "department": "Product",
+    "level": "Senior",
+    "description": "Will sing carry hold subject. Understand people meet relate main hot drive. Get consumer article quality look. Control form generation election able particularly now during.",
+    "responsibilities": [
+      "Possible member less factor kind accept.",
+      "When often necessary reflect interesting international.",
+      "Fight we add explain.",
+      "Administration knowledge teacher arm really.",
+      "Under mission value television."
+    ],
+    "requirements": {
+      "education": "Master's degree preferred",
+      "experience": {
+        "min_years": 5,
+        "max_years": 8,
+        "description": "5-8 years of relevant experience"
+      },
+      "skills": {
+        "required": [
+          "Project Management",
+          "Agile",
+          "Mentoring",
+          "DynamoDB",
+          "Elasticsearch",
+          "SQLite",
+          "After Effects"
+        ],
+        "preferred": [
+          "Terraform",
+          "Docker",
+          "Pandas"
+        ]
+      },
+      "certifications": [
+        "Certified Kubernetes Administrator",
+        "AWS Certified Solutions Architect"
+      ]
+    },
+    "salary": {
+      "min": 116545,
+      "max": 164235,
+      "currency": "USD",
+      "type": "Annual"
+    },
+    "benefits": [
+      "Health insurance",
+      "Dental insurance",
+      "Vision insurance",
+      "401(k) matching",
+      "Paid time off",
+      "Professional development budget",
+      "Flexible work hours",
+      "Stock options"
+    ],
+    "application_deadline": "2025-07-30",
+    "posted_date": "2025-07-05",
+    "status": "Paused",
+    "hiring_manager": {
+      "name": "Zachary Sparks",
+      "email": "danielhicks@example.net",
+      "title": "Engineering Manager"
+    },
+    "team_size": 24,
+    "reports_to": "CTO",
+    "created_at": "2025-07-16T16:50:00",
+    "updated_at": "2025-07-13T17:13:34"
+  },
+  {
+    "id": "38f0a904-d290-4c5b-acd4-da3f0eccb811",
+    "title": "Senior UX Designer",
+    "company": {
+      "name": "Apple",
+      "size": "Enterprise",
+      "industry": "Consulting"
+    },
+    "location": "West Shannon, DE",
+    "remote_policy": "Remote",
+    "employment_type": "Part-time",
+    "department": "Design",
+    "level": "Mid",
+    "description": "Social art son possible card. Home order sister always western. Price space myself customer add low treat. Buy above level key whom quality. Rate Republican group your place fine.",
+    "responsibilities": [
+      "Energy great nice sure amount.",
+      "American rate sing among chair interest.",
+      "Everything study rest activity challenge among.",
+      "Push high behavior during.",
+      "Very pull provide treatment raise blood.",
+      "Bring among wind all dog system."
+    ],
+    "requirements": {
+      "education": "Master's degree preferred",
+      "experience": {
+        "min_years": 6,
+        "max_years": 9,
+        "description": "6-9 years of relevant experience"
+      },
+      "skills": {
+        "required": [
+          "Apache Spark",
+          "jQuery",
+          "Webpack",
+          "Mentoring",
+          "Terraform",
+          "Sketch"
+        ],
+        "preferred": [
+          "React Native",
+          "Cordova",
+          "Communication",
+          "Agile",
+          "Premiere Pro",
+          "Go",
+          "Scala"
+        ]
+      },
+      "certifications": [
+        "Microsoft Azure Fundamentals"
+      ]
+    },
+    "salary": {
+      "min": 116536,
+      "max": 164150,
       "currency": "USD",
       "type": "Annual"
     },
@@ -4065,15 +1546,93 @@
     ],
     "application_deadline": "2025-07-30",
     "posted_date": "2025-07-10",
-    "status": "Active",
+    "status": "Filled",
     "hiring_manager": {
-      "name": "Dr. Tina Rios",
-      "email": "dillon29@example.org",
-      "title": "VP of Engineering"
+      "name": "Andrea Hunt",
+      "email": "pearsonlauren@example.com",
+      "title": "Product Manager"
     },
-    "team_size": 23,
-    "reports_to": "Product Manager",
-    "created_at": "2025-07-16T15:44:24",
-    "updated_at": "2025-07-12T10:47:18"
+    "team_size": 12,
+    "reports_to": "Director of Engineering",
+    "created_at": "2025-07-16T16:50:17",
+    "updated_at": "2025-07-09T19:30:43"
+  },
+  {
+    "id": "1174aca8-341e-48ac-a694-7acb87330587",
+    "title": "Technical Lead",
+    "company": {
+      "name": "Deloitte",
+      "size": "Mid-size",
+      "industry": "E-commerce"
+    },
+    "location": "Christopherstad, MA",
+    "remote_policy": "On-site",
+    "employment_type": "Contract",
+    "department": "Management",
+    "level": "Entry",
+    "description": "Again someone doctor memory production people whose. Interesting instead card similar rise as language arm. Chair him artist behavior wear. Perform describe prove maintain wall attorney. Should first range world expert several. Lot try before each.",
+    "responsibilities": [
+      "Base way teacher personal decision edge machine.",
+      "Natural war practice material himself street.",
+      "Act past great could change street.",
+      "Whether speak kind chair."
+    ],
+    "requirements": {
+      "education": "Advanced degree required",
+      "experience": {
+        "min_years": 2,
+        "max_years": 8,
+        "description": "2-8 years of relevant experience"
+      },
+      "skills": {
+        "required": [
+          "Elasticsearch",
+          "MySQL",
+          "SQL Server",
+          "Apache Spark",
+          "Hadoop",
+          "ASP.NET Core",
+          "Django",
+          "Spring Boot"
+        ],
+        "preferred": [
+          "Vue.js",
+          "Bootstrap",
+          "Material-UI",
+          "HTML5"
+        ]
+      },
+      "certifications": [
+        "Certified Kubernetes Administrator"
+      ]
+    },
+    "salary": {
+      "min": 128874,
+      "max": 206634,
+      "currency": "USD",
+      "type": "Annual"
+    },
+    "benefits": [
+      "Health insurance",
+      "Dental insurance",
+      "Vision insurance",
+      "401(k) matching",
+      "Paid time off",
+      "Professional development budget",
+      "Flexible work hours",
+      "Stock options"
+    ],
+    "application_deadline": "2025-07-30",
+    "posted_date": "2025-07-07",
+    "status": "Paused",
+    "hiring_manager": {
+      "name": "Jimmy Watson DVM",
+      "email": "jeffreyperkins@example.org",
+      "title": "Product Manager"
+    },
+    "team_size": 6,
+    "reports_to": "VP of Engineering",
+    "created_at": "2025-07-16T16:50:06",
+    "updated_at": "2025-07-14T05:07:10"
   }
 ]

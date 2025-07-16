@@ -153,6 +153,8 @@ class JobListResponse(BaseModel):
     priority: str
     applications_count: int = 0
     views_count: int = 0
+    avg_match_percentage: Optional[float] = 0.0
+    highest_match_percentage: Optional[float] = 0.0
     created_at: datetime
     posted_at: Optional[datetime]
     
@@ -165,6 +167,8 @@ class JobApplicationCreate(BaseModel):
     candidate_id: uuid.UUID
     source: Optional[str] = None
     cover_letter: Optional[str] = None
+    ahp_score: Optional[Decimal] = None
+    ahp_breakdown: Optional[Dict[str, Any]] = None
 
 class JobApplicationUpdate(BaseModel):
     status: Optional[ApplicationStatus] = None

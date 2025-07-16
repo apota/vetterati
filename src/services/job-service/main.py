@@ -184,19 +184,35 @@ async def search_jobs(
     # Convert to list response format
     job_list = []
     for job in jobs:
-        job_dict = {
-            "id": job.id,
-            "title": job.title,
-            "department": job.department,
-            "location": job.location,
-            "employment_type": job.employment_type,
-            "status": job.status,
-            "priority": job.priority,
-            "applications_count": len(job.applications),
-            "views_count": 0,  # TODO: Calculate from job_views
-            "created_at": job.created_at,
-            "posted_at": job.posted_at
-        }
+        # Calculate match percentages from applications
+        applications = job.applications
+        match_percentages = []
+        
+        for app in applications:
+            if app.ahp_score:
+                # Convert AHP score (0-1) to percentage (0-100)
+                match_percentage = float(app.ahp_score) * 100
+                match_percentages.append(match_percentage)
+        
+        # Calculate statistics
+        avg_match_percentage = sum(match_percentages) / len(match_percentages) if match_percentages else 0
+        highest_match_percentage = max(match_percentages) if match_percentages else 0
+        
+        job_dict = JobListResponse(
+            id=job.id,
+            title=job.title,
+            department=job.department,
+            location=job.location,
+            employment_type=job.employment_type,
+            status=job.status,
+            priority=job.priority,
+            applications_count=len(job.applications),
+            views_count=0,  # TODO: Calculate from job_views
+            avg_match_percentage=round(avg_match_percentage, 1),
+            highest_match_percentage=round(highest_match_percentage, 1),
+            created_at=job.created_at,
+            posted_at=job.posted_at
+        )
         job_list.append(job_dict)
     
     total_pages = (total + per_page - 1) // per_page

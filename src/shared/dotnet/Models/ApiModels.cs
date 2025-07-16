@@ -249,6 +249,44 @@ public class RefreshScoresResponse
     public int CandidatesRefreshed { get; set; }
 }
 
+public class CandidateMatchItem
+{
+    public Guid Id { get; set; }
+    public Guid CandidateId { get; set; }
+    public Guid JobProfileId { get; set; }
+    public string CandidateName { get; set; } = string.Empty;
+    public string JobTitle { get; set; } = string.Empty;
+    public decimal OverallScore { get; set; }
+    public int MatchPercentage { get; set; }
+    public Dictionary<string, decimal> CriteriaScores { get; set; } = new();
+    public Dictionary<string, object> ScoreBreakdown { get; set; } = new();
+    public DateTime CalculatedAt { get; set; }
+    public DateTime ScoredAt { get; set; }
+    public string Methodology { get; set; } = string.Empty;
+    public Dictionary<string, object>? Metadata { get; set; }
+}
+
+public class CandidateMatchSummaryResponse
+{
+    public int TotalMatches { get; set; }
+    public decimal AverageScore { get; set; }
+    public decimal HighestScore { get; set; }
+    public decimal LowestScore { get; set; }
+    public int MatchedJobs { get; set; }
+}
+
+public class PaginatedCandidateMatchesResponse
+{
+    public List<CandidateMatchItem> Matches { get; set; } = new();
+    public int TotalCount { get; set; }
+    public int CurrentPage { get; set; }
+    public int PageSize { get; set; }
+    public int TotalPages { get; set; }
+    public bool HasNextPage { get; set; }
+    public bool HasPreviousPage { get; set; }
+    public CandidateMatchSummaryResponse? Summary { get; set; }
+}
+
 public class ValidateMatrixResponse
 {
     public Guid JobProfileId { get; set; }

@@ -881,7 +881,7 @@ public class AuthController : ControllerBase
 
     /// <summary>
     /// <summary>
-    /// Demo login endpoint for quick testing with predefined users.
+    /// Demo login endpoint for quick access with predefined users.
     /// Available roles: admin, recruiter, hiring-manager, candidate, interviewer, hr
     /// POST /api/v1/auth/demo-login with { "role": "admin" }
     /// </summary>
@@ -1040,7 +1040,7 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Get list of available demo users for testing.
+    /// Get list of available demo users for quick access.
     /// GET /api/v1/auth/demo-users
     /// </summary>
     [HttpGet("demo-users")]
@@ -1071,28 +1071,7 @@ public class AuthController : ControllerBase
                 Code = "INTERNAL_ERROR", 
                 Message = "An error occurred while fetching demo users" 
             });
-        }
-    }
-
-    [HttpGet("test-log")]
-    public ActionResult<ApiResponse<object>> TestLog()
-    {
-        _logger.LogInformation("TEST: Test log endpoint called");
-        return Ok(new ApiResponse<object> 
-        { 
-            Data = new { message = "Test log successful" } 
-        });
-    }
-
-
-
-
-
-
-
-
-
-
+        }    }
 
     private string GenerateSecureToken()
     {

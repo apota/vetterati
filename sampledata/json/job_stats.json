@@ -1,0 +1,540 @@
+{
+  "08a1297a-46ab-4982-b5c9-006a70f02d14": {
+    "total_applications": 10,
+    "avg_match_percentage": 27.2,
+    "highest_match_percentage": 46,
+    "applications_by_status": {
+      "screening": 2,
+      "applied": 7,
+      "interview": 1
+    }
+  },
+  "7f559e75-de03-4e85-a733-dfd46441aca9": {
+    "total_applications": 2,
+    "avg_match_percentage": 25.0,
+    "highest_match_percentage": 25,
+    "applications_by_status": {
+      "applied": 2
+    }
+  },
+  "89f22137-e49a-462e-9995-eef6a69e7d93": {
+    "total_applications": 3,
+    "avg_match_percentage": 29.0,
+    "highest_match_percentage": 32,
+    "applications_by_status": {
+      "applied": 2,
+      "screening": 1
+    }
+  },
+  "2708c626-eae1-46ac-8607-472e661ec889": {
+    "total_applications": 2,
+    "avg_match_percentage": 25.0,
+    "highest_match_percentage": 25,
+    "applications_by_status": {
+      "applied": 1,
+      "rejected": 1
+    }
+  },
+  "87ba7816-a952-4541-8a0b-eb1973ff4f47": {
+    "total_applications": 14,
+    "avg_match_percentage": 31.642857142857142,
+    "highest_match_percentage": 52,
+    "applications_by_status": {
+      "interview": 2,
+      "applied": 7,
+      "rejected": 1,
+      "screening": 4
+    }
+  },
+  "7a3d2b7b-6436-45d3-b211-e6a357dee41f": {
+    "total_applications": 5,
+    "avg_match_percentage": 32.4,
+    "highest_match_percentage": 61,
+    "applications_by_status": {
+      "applied": 2,
+      "rejected": 2,
+      "withdrawn": 1
+    }
+  },
+  "ffc86228-0dbd-4764-ba6e-f31639b52d6c": {
+    "total_applications": 3,
+    "avg_match_percentage": 27.666666666666668,
+    "highest_match_percentage": 33,
+    "applications_by_status": {
+      "applied": 1,
+      "screening": 2
+    }
+  },
+  "aad17b67-a3a7-4a83-9401-369910c874bb": {
+    "total_applications": 8,
+    "avg_match_percentage": 30.875,
+    "highest_match_percentage": 56,
+    "applications_by_status": {
+      "offer": 1,
+      "screening": 4,
+      "rejected": 1,
+      "applied": 1,
+      "interview": 1
+    }
+  },
+  "aec616e1-d129-415e-a3c9-602661682125": {
+    "total_applications": 9,
+    "avg_match_percentage": 25.77777777777778,
+    "highest_match_percentage": 29,
+    "applications_by_status": {
+      "screening": 2,
+      "applied": 3,
+      "rejected": 1,
+      "interview": 2,
+      "offer": 1
+    }
+  },
+  "15f55287-0438-4547-b9e9-4ad0a617aa7c": {
+    "total_applications": 2,
+    "avg_match_percentage": 28.0,
+    "highest_match_percentage": 29,
+    "applications_by_status": {
+      "applied": 2
+    }
+  },
+  "2c22a23a-c33b-4cb6-b9b8-2c1c94894e48": {
+    "total_applications": 10,
+    "avg_match_percentage": 29.5,
+    "highest_match_percentage": 43,
+    "applications_by_status": {
+      "offer": 1,
+      "rejected": 1,
+      "withdrawn": 1,
+      "interview": 1,
+      "applied": 2,
+      "screening": 4
+    }
+  },
+  "5cc18711-5412-47c5-a72f-febb001b6495": {
+    "total_applications": 6,
+    "avg_match_percentage": 28.0,
+    "highest_match_percentage": 43,
+    "applications_by_status": {
+      "offer": 1,
+      "screening": 4,
+      "withdrawn": 1
+    }
+  },
+  "acb9d4b8-c096-4cef-bc20-0eaa0265f359": {
+    "total_applications": 7,
+    "avg_match_percentage": 33.142857142857146,
+    "highest_match_percentage": 59,
+    "applications_by_status": {
+      "applied": 4,
+      "offer": 1,
+      "interview": 1,
+      "withdrawn": 1
+    }
+  },
+  "b23c791f-f18d-4e1f-be4a-95aa0335f6b7": {
+    "total_applications": 14,
+    "avg_match_percentage": 32.285714285714285,
+    "highest_match_percentage": 65,
+    "applications_by_status": {
+      "screening": 2,
+      "applied": 8,
+      "rejected": 1,
+      "offer": 3
+    }
+  },
+  "65b8581b-43c6-4e7e-a8a6-b276358cfe05": {
+    "total_applications": 15,
+    "avg_match_percentage": 27.533333333333335,
+    "highest_match_percentage": 37,
+    "applications_by_status": {
+      "screening": 2,
+      "applied": 10,
+      "interview": 3
+    }
+  },
+  "1b382e52-b5ff-4140-8acb-6297fa104403": {
+    "total_applications": 14,
+    "avg_match_percentage": 27.071428571428573,
+    "highest_match_percentage": 36,
+    "applications_by_status": {
+      "offer": 1,
+      "applied": 6,
+      "withdrawn": 1,
+      "interview": 1,
+      "screening": 3,
+      "rejected": 2
+    }
+  },
+  "626bca5a-948a-42a2-a913-16aabac1f193": {
+    "total_applications": 6,
+    "avg_match_percentage": 25.0,
+    "highest_match_percentage": 25,
+    "applications_by_status": {
+      "applied": 4,
+      "interview": 1,
+      "withdrawn": 1
+    }
+  },
+  "7f8ee6dc-582f-40c3-ad97-7d5e8f53a61e": {
+    "total_applications": 10,
+    "avg_match_percentage": 27.0,
+    "highest_match_percentage": 33,
+    "applications_by_status": {
+      "applied": 4,
+      "screening": 5,
+      "offer": 1
+    }
+  },
+  "1a7895e4-ad9f-4b5f-a237-3e31d9962fec": {
+    "total_applications": 15,
+    "avg_match_percentage": 26.466666666666665,
+    "highest_match_percentage": 36,
+    "applications_by_status": {
+      "applied": 9,
+      "offer": 2,
+      "screening": 2,
+      "rejected": 2
+    }
+  },
+  "a33bbcba-7a20-43e0-ae57-bcebe52fec21": {
+    "total_applications": 7,
+    "avg_match_percentage": 25.0,
+    "highest_match_percentage": 25,
+    "applications_by_status": {
+      "applied": 3,
+      "offer": 1,
+      "withdrawn": 1,
+      "rejected": 1,
+      "screening": 1
+    }
+  },
+  "981bd493-593a-4340-b8ce-387115c13fe4": {
+    "total_applications": 3,
+    "avg_match_percentage": 26.0,
+    "highest_match_percentage": 28,
+    "applications_by_status": {
+      "screening": 2,
+      "withdrawn": 1
+    }
+  },
+  "1a434050-9257-4241-801c-b704cb4a8ae1": {
+    "total_applications": 11,
+    "avg_match_percentage": 25.454545454545453,
+    "highest_match_percentage": 30,
+    "applications_by_status": {
+      "screening": 2,
+      "offer": 1,
+      "applied": 2,
+      "rejected": 4,
+      "withdrawn": 2
+    }
+  },
+  "f103f713-ca60-435c-851f-5af360f9cb96": {
+    "total_applications": 12,
+    "avg_match_percentage": 26.583333333333332,
+    "highest_match_percentage": 37,
+    "applications_by_status": {
+      "offer": 3,
+      "applied": 4,
+      "withdrawn": 2,
+      "screening": 1,
+      "interview": 2
+    }
+  },
+  "a7a1e4c0-b4d0-4cbf-b12c-38373026940f": {
+    "total_applications": 13,
+    "avg_match_percentage": 28.23076923076923,
+    "highest_match_percentage": 35,
+    "applications_by_status": {
+      "offer": 3,
+      "applied": 4,
+      "screening": 2,
+      "rejected": 1,
+      "interview": 1,
+      "withdrawn": 2
+    }
+  },
+  "81465d73-50f9-453b-b6f1-891890640d45": {
+    "total_applications": 14,
+    "avg_match_percentage": 28.928571428571427,
+    "highest_match_percentage": 42,
+    "applications_by_status": {
+      "rejected": 3,
+      "interview": 2,
+      "applied": 5,
+      "screening": 1,
+      "withdrawn": 3
+    }
+  },
+  "87fcf5d9-4a91-426b-af96-7377e5785c03": {
+    "total_applications": 6,
+    "avg_match_percentage": 25.0,
+    "highest_match_percentage": 25,
+    "applications_by_status": {
+      "applied": 3,
+      "screening": 1,
+      "withdrawn": 1,
+      "rejected": 1
+    }
+  },
+  "af87278b-03be-43bf-a59f-278fde892d8f": {
+    "total_applications": 13,
+    "avg_match_percentage": 29.692307692307693,
+    "highest_match_percentage": 49,
+    "applications_by_status": {
+      "applied": 4,
+      "rejected": 4,
+      "interview": 2,
+      "screening": 2,
+      "offer": 1
+    }
+  },
+  "faee4015-c963-4247-bd6f-33440161b051": {
+    "total_applications": 15,
+    "avg_match_percentage": 26.533333333333335,
+    "highest_match_percentage": 35,
+    "applications_by_status": {
+      "screening": 2,
+      "applied": 7,
+      "withdrawn": 2,
+      "offer": 1,
+      "interview": 2,
+      "rejected": 1
+    }
+  },
+  "8bd51781-424d-407d-9bb7-f70565d18e4b": {
+    "total_applications": 11,
+    "avg_match_percentage": 25.727272727272727,
+    "highest_match_percentage": 32,
+    "applications_by_status": {
+      "withdrawn": 3,
+      "screening": 3,
+      "applied": 2,
+      "interview": 2,
+      "offer": 1
+    }
+  },
+  "243f6103-444c-4feb-950d-5d295b59bba3": {
+    "total_applications": 4,
+    "avg_match_percentage": 28.0,
+    "highest_match_percentage": 37,
+    "applications_by_status": {
+      "screening": 3,
+      "applied": 1
+    }
+  },
+  "cdf7c495-48d2-4ed3-a487-2b2f3833b3ca": {
+    "total_applications": 5,
+    "avg_match_percentage": 26.8,
+    "highest_match_percentage": 33,
+    "applications_by_status": {
+      "applied": 3,
+      "screening": 2
+    }
+  },
+  "47567a8b-0fc5-474b-a742-c8dc7ba2a0c2": {
+    "total_applications": 2,
+    "avg_match_percentage": 28.0,
+    "highest_match_percentage": 31,
+    "applications_by_status": {
+      "applied": 1,
+      "offer": 1
+    }
+  },
+  "31ab4968-2004-4123-b013-6345b17d0c5e": {
+    "total_applications": 3,
+    "avg_match_percentage": 25.333333333333332,
+    "highest_match_percentage": 26,
+    "applications_by_status": {
+      "applied": 2,
+      "offer": 1
+    }
+  },
+  "549d606e-082d-4868-9b00-8a9820a49bd7": {
+    "total_applications": 8,
+    "avg_match_percentage": 26.5,
+    "highest_match_percentage": 34,
+    "applications_by_status": {
+      "rejected": 1,
+      "applied": 4,
+      "offer": 1,
+      "interview": 1,
+      "withdrawn": 1
+    }
+  },
+  "9212ba2d-ef11-4828-91cd-33ef61274100": {
+    "total_applications": 11,
+    "avg_match_percentage": 25.0,
+    "highest_match_percentage": 25,
+    "applications_by_status": {
+      "offer": 2,
+      "applied": 5,
+      "withdrawn": 1,
+      "rejected": 1,
+      "screening": 2
+    }
+  },
+  "396a892e-5b18-4283-a03e-5d35ba6113f5": {
+    "total_applications": 7,
+    "avg_match_percentage": 28.714285714285715,
+    "highest_match_percentage": 47,
+    "applications_by_status": {
+      "applied": 3,
+      "rejected": 2,
+      "interview": 1,
+      "offer": 1
+    }
+  },
+  "ad703dc0-9d72-4cbf-88f2-7f9402d28505": {
+    "total_applications": 15,
+    "avg_match_percentage": 26.733333333333334,
+    "highest_match_percentage": 43,
+    "applications_by_status": {
+      "rejected": 1,
+      "applied": 8,
+      "screening": 4,
+      "withdrawn": 1,
+      "interview": 1
+    }
+  },
+  "9a29dd36-1a22-4ad1-918a-d3a7d9cda98f": {
+    "total_applications": 3,
+    "avg_match_percentage": 25.0,
+    "highest_match_percentage": 25,
+    "applications_by_status": {
+      "offer": 1,
+      "rejected": 1,
+      "applied": 1
+    }
+  },
+  "29a66ff9-4b1d-4902-975e-3a3e7b5ee81f": {
+    "total_applications": 6,
+    "avg_match_percentage": 25.0,
+    "highest_match_percentage": 25,
+    "applications_by_status": {
+      "applied": 3,
+      "interview": 1,
+      "withdrawn": 1,
+      "offer": 1
+    }
+  },
+  "140393da-63ea-439a-8856-392a248627aa": {
+    "total_applications": 14,
+    "avg_match_percentage": 25.928571428571427,
+    "highest_match_percentage": 29,
+    "applications_by_status": {
+      "offer": 4,
+      "applied": 6,
+      "screening": 1,
+      "interview": 3
+    }
+  },
+  "dc329b02-fc1d-4c97-a6d6-33eff330805b": {
+    "total_applications": 14,
+    "avg_match_percentage": 27.571428571428573,
+    "highest_match_percentage": 48,
+    "applications_by_status": {
+      "applied": 6,
+      "screening": 5,
+      "withdrawn": 2,
+      "interview": 1
+    }
+  },
+  "f6470854-ffe3-4fa1-be51-71be4ad2b61b": {
+    "total_applications": 12,
+    "avg_match_percentage": 25.0,
+    "highest_match_percentage": 25,
+    "applications_by_status": {
+      "rejected": 2,
+      "offer": 1,
+      "withdrawn": 1,
+      "screening": 6,
+      "applied": 2
+    }
+  },
+  "503f3f64-0078-4ca1-b2c1-4b0147f4344e": {
+    "total_applications": 9,
+    "avg_match_percentage": 27.555555555555557,
+    "highest_match_percentage": 45,
+    "applications_by_status": {
+      "screening": 2,
+      "interview": 1,
+      "rejected": 1,
+      "applied": 3,
+      "offer": 2
+    }
+  },
+  "0282a513-9b16-48f2-8631-8ef66cc10cb1": {
+    "total_applications": 4,
+    "avg_match_percentage": 25.75,
+    "highest_match_percentage": 28,
+    "applications_by_status": {
+      "applied": 2,
+      "screening": 1,
+      "withdrawn": 1
+    }
+  },
+  "cd41dd4f-3633-4866-8e08-1e5a68bba4f0": {
+    "total_applications": 2,
+    "avg_match_percentage": 25.0,
+    "highest_match_percentage": 25,
+    "applications_by_status": {
+      "rejected": 1,
+      "withdrawn": 1
+    }
+  },
+  "18f55dc1-3fb9-46b0-90ab-93610cbfa4cf": {
+    "total_applications": 13,
+    "avg_match_percentage": 26.76923076923077,
+    "highest_match_percentage": 39,
+    "applications_by_status": {
+      "rejected": 2,
+      "screening": 2,
+      "offer": 3,
+      "withdrawn": 3,
+      "applied": 3
+    }
+  },
+  "2a5f62c3-cc82-451f-b8a6-9c16381d2038": {
+    "total_applications": 15,
+    "avg_match_percentage": 27.066666666666666,
+    "highest_match_percentage": 37,
+    "applications_by_status": {
+      "applied": 5,
+      "interview": 2,
+      "withdrawn": 3,
+      "screening": 4,
+      "rejected": 1
+    }
+  },
+  "212203d3-9a3c-4492-b8a2-5d52f4829968": {
+    "total_applications": 2,
+    "avg_match_percentage": 25.0,
+    "highest_match_percentage": 25,
+    "applications_by_status": {
+      "rejected": 2
+    }
+  },
+  "9380b9d9-bdef-4242-bd65-879e52c9ccda": {
+    "total_applications": 14,
+    "avg_match_percentage": 27.785714285714285,
+    "highest_match_percentage": 45,
+    "applications_by_status": {
+      "screening": 3,
+      "applied": 4,
+      "offer": 3,
+      "withdrawn": 3,
+      "interview": 1
+    }
+  },
+  "f9cbb97f-9c6b-4cc5-b63f-6ce57a9e19cf": {
+    "total_applications": 5,
+    "avg_match_percentage": 25.2,
+    "highest_match_percentage": 26,
+    "applications_by_status": {
+      "applied": 3,
+      "interview": 1,
+      "offer": 1
+    }
+  }
+}

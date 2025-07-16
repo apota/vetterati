@@ -56,7 +56,7 @@ const AHPBreakdownDialog: React.FC<AHPBreakdownDialogProps> = ({
   onClose,
   match
 }) => {
-  // Mock AHP breakdown data - in real implementation, this would come from the AHP service
+  // Sample AHP breakdown data - in real implementation, this would come from the AHP service
   const ahpBreakdown = {
     overallScore: match.overallScore,
     matchPercentage: match.matchPercentage,

@@ -213,22 +213,21 @@ export class DashboardService {
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
       
-      // Return mock data with time window if API calls fail
-      const mockCurrent = {
+      // Return fallback data with time window if API calls fail
+      const fallbackCurrent = {
         activeJobs: 24,
         totalCandidates: 1247,
         interviewsToday: 12,
         hireRate: 23
       };
+        const simulatedPrevious = this.simulatePreviousData(timeWindow, fallbackCurrent);
       
-      const simulatedPrevious = this.simulatePreviousData(timeWindow, mockCurrent);
-
       return {
-        ...mockCurrent,
-        jobsChange: this.calculateChange(mockCurrent.activeJobs, simulatedPrevious.activeJobs),
-        candidatesChange: this.calculateChange(mockCurrent.totalCandidates, simulatedPrevious.totalCandidates),
-        interviewsChange: this.calculateChange(mockCurrent.interviewsToday, simulatedPrevious.interviewsToday),
-        hireRateChange: this.calculateChange(mockCurrent.hireRate, simulatedPrevious.hireRate),
+        ...fallbackCurrent,
+        jobsChange: this.calculateChange(fallbackCurrent.activeJobs, simulatedPrevious.activeJobs),
+        candidatesChange: this.calculateChange(fallbackCurrent.totalCandidates, simulatedPrevious.totalCandidates),
+        interviewsChange: this.calculateChange(fallbackCurrent.interviewsToday, simulatedPrevious.interviewsToday),
+        hireRateChange: this.calculateChange(fallbackCurrent.hireRate, simulatedPrevious.hireRate),
         timeWindow,
         comparisonPeriod: this.formatComparisonPeriod(timeWindow)
       };
@@ -310,7 +309,7 @@ export class DashboardService {
     } catch (error) {
       console.error('Error fetching recent applications:', error);
       
-      // Return mock data if API calls fail
+      // Return fallback data if API calls fail
       return [
         {
           id: '1',

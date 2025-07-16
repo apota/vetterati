@@ -1,144 +1,55 @@
-import api from './apiService';
+import axios from 'axios';
+import { JobListItem, JobDetails, JobSearchFilters, PaginatedJobsResponse, JobCreateRequest } from '../types/job';
 
-export interface Job {
-  id: string;
-  title: string;
-  description: string;
-  requirements: string;
-  status: 'draft' | 'active' | 'paused' | 'closed';
-  created_at: string;
-  updated_at: string;
-  company_id: string;
-  location: string;
-  salary_min?: number;
-  salary_max?: number;
-  employment_type: string;
-}
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
-export interface JobApplication {
-  id: string;
-  job_id: string;
-  candidate_id: string;
-  candidate_name: string;
-  status: 'applied' | 'reviewing' | 'interview' | 'offer' | 'hired' | 'rejected';
-  created_at: string;
-  updated_at: string;
-}
+export const jobService = {
+  // Get paginated jobs list with filters
+  async getJobs(filters: JobSearchFilters = {}): Promise<PaginatedJobsResponse> {
+    const params = new URLSearchParams();
+    
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        params.append(key, value.toString());
+      }
+    });
 
-export interface JobStats {
-  total: number;
-  active: number;
-  draft: number;
-  paused: number;
-  closed: number;
-}
+    const response = await axios.get(`${API_BASE_URL}/api/v1/jobs?${params}`);
+    return response.data;
+  },
 
-export class JobService {
-  // Get all jobs
-  static async getJobs(params?: {
-    page?: number;
-    limit?: number;
-    status?: string;
-    search?: string;
-  }): Promise<{ items: Job[], total: number }> {
-    try {
-      const response = await api.get('/api/v1/jobs', { params });
-      return response.data.data;
-    } catch (error) {
-      console.error('Error fetching jobs:', error);
-      throw error;
-    }
-  }
-
-  // Get job by ID
-  static async getJobById(id: string): Promise<Job> {
-    try {
-      const response = await api.get(`/api/v1/jobs/${id}`);
-      return response.data.data;
-    } catch (error) {
-      console.error('Error fetching job:', error);
-      throw error;
-    }
-  }
+  // Get single job details
+  async getJob(jobId: string): Promise<JobDetails> {
+    const response = await axios.get(`${API_BASE_URL}/api/v1/jobs/${jobId}`);
+    return response.data;
+  },
 
   // Create new job
-  static async createJob(jobData: Partial<Job>): Promise<Job> {
-    try {
-      const response = await api.post('/api/v1/jobs', jobData);
-      return response.data.data;
-    } catch (error) {
-      console.error('Error creating job:', error);
-      throw error;
-    }
-  }
+  async createJob(jobData: JobCreateRequest): Promise<JobDetails> {
+    const response = await axios.post(`${API_BASE_URL}/api/v1/jobs`, jobData);
+    return response.data;
+  },
 
   // Update job
-  static async updateJob(id: string, jobData: Partial<Job>): Promise<Job> {
-    try {
-      const response = await api.put(`/api/v1/jobs/${id}`, jobData);
-      return response.data.data;
-    } catch (error) {
-      console.error('Error updating job:', error);
-      throw error;
-    }
-  }
+  async updateJob(jobId: string, jobData: Partial<JobCreateRequest>): Promise<JobDetails> {
+    const response = await axios.put(`${API_BASE_URL}/api/v1/jobs/${jobId}`, jobData);
+    return response.data;
+  },
 
   // Delete job
-  static async deleteJob(id: string): Promise<void> {
-    try {
-      await api.delete(`/api/v1/jobs/${id}`);
-    } catch (error) {
-      console.error('Error deleting job:', error);
-      throw error;
-    }
-  }
+  async deleteJob(jobId: string): Promise<void> {
+    await axios.delete(`${API_BASE_URL}/api/v1/jobs/${jobId}`);
+  },
 
   // Get job statistics
-  static async getJobStats(): Promise<JobStats> {
-    try {
-      const response = await api.get('/api/v1/jobs/stats');
-      return response.data.data;
-    } catch (error) {
-      console.error('Error fetching job stats:', error);
-      throw error;
-    }
-  }
+  async getJobStats(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/api/v1/jobs/stats`);
+    return response.data;
+  },
 
-  // Get applications for a job
-  static async getJobApplications(jobId: string, params?: {
-    page?: number;
-    limit?: number;
-  }): Promise<{ items: JobApplication[], total: number }> {
-    try {
-      const response = await api.get(`/api/v1/jobs/${jobId}/applications`, { params });
-      return response.data.data;
-    } catch (error) {
-      console.error('Error fetching job applications:', error);
-      throw error;
-    }
+  // Get job applications for a specific job
+  async getJobApplications(jobId: string): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/api/v1/jobs/${jobId}/applications`);
+    return response.data;
   }
-
-  // Publish job
-  static async publishJob(id: string): Promise<Job> {
-    try {
-      const response = await api.post(`/api/v1/jobs/${id}/publish`);
-      return response.data.data;
-    } catch (error) {
-      console.error('Error publishing job:', error);
-      throw error;
-    }
-  }
-
-  // Pause job
-  static async pauseJob(id: string): Promise<Job> {
-    try {
-      const response = await api.post(`/api/v1/jobs/${id}/pause`);
-      return response.data.data;
-    } catch (error) {
-      console.error('Error pausing job:', error);
-      throw error;
-    }
-  }
-}
-
-export default JobService;
+};

@@ -47,7 +47,7 @@ const CandidateDetailDialog: React.FC<CandidateDetailDialogProps> = ({
   onClose,
   match
 }) => {
-  // Mock candidate data - in real implementation, this would come from candidate service
+  // Sample candidate data - in real implementation, this would come from candidate service
   const candidateDetails = {
     name: match.candidateName,
     email: 'candidate@example.com',

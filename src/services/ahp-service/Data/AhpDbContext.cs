@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Vetterati.Shared.Models;
+using Vetterati.AhpService.Models;
 
 namespace Vetterati.AhpService.Data;
 
@@ -11,10 +12,15 @@ public class AhpDbContext : DbContext
 
     public DbSet<JobProfile> JobProfiles { get; set; }
     public DbSet<Candidate> Candidates { get; set; }
-    public DbSet<CandidateProfile> CandidateProfiles { get; set; }
+    public DbSet<Vetterati.Shared.Models.CandidateProfile> CandidateProfiles { get; set; }
     public DbSet<AhpCriterion> AhpCriteria { get; set; }
     public DbSet<AhpComparison> AhpComparisons { get; set; }
     public DbSet<CandidateScore> CandidateScores { get; set; }
+    
+    // Sample data models
+    public DbSet<CandidateMatch> CandidateMatches { get; set; }
+    public DbSet<Vetterati.AhpService.Models.CandidateProfile> SampleCandidates { get; set; }
+    public DbSet<PositionProfile> Positions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -67,6 +73,31 @@ public class AhpDbContext : DbContext
             entity.Property(e => e.Skills).HasColumnType("jsonb");
             entity.Property(e => e.CareerMetrics).HasColumnType("jsonb");
             entity.Ignore(e => e.FullName); // Computed property
+        });
+
+        // Sample data model configurations
+        modelBuilder.Entity<CandidateMatch>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.OverallScore).HasPrecision(5, 4);
+            entity.Property(e => e.CriteriaScores).HasColumnType("jsonb");
+            entity.Property(e => e.ScoreBreakdown).HasColumnType("jsonb");
+            entity.Property(e => e.Metadata).HasColumnType("jsonb");
+            entity.HasIndex(e => new { e.CandidateId, e.PositionId }).IsUnique();
+        });
+
+        modelBuilder.Entity<Vetterati.AhpService.Models.CandidateProfile>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Skills).HasColumnType("jsonb");
+            entity.Property(e => e.Experience).HasColumnType("jsonb");
+            entity.HasIndex(e => e.Email).IsUnique();
+        });
+
+        modelBuilder.Entity<PositionProfile>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Requirements).HasColumnType("jsonb");
         });
     }
 }

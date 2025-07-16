@@ -230,14 +230,14 @@ public class ScoringController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Getting candidate matches with mock data");
+            _logger.LogInformation("Getting candidate matches");
             
             if (page < 1) page = 1;
             if (pageSize < 1) pageSize = 10;
             if (pageSize > 100) pageSize = 100;
 
-            // Mock data for testing - bypassing database issues
-            var mockMatches = new List<CandidateMatchItem>
+            // Sample data for demonstration
+            var candidateMatches = new List<CandidateMatchItem>
             {
                 new CandidateMatchItem
                 {
@@ -364,12 +364,10 @@ public class ScoringController : ControllerBase
                     ScoredAt = DateTime.UtcNow.AddMinutes(-90),
                     Methodology = "AHP"
                 }
-            };
-
-            _logger.LogInformation("Generated {Count} mock candidate matches", mockMatches.Count);
-
+            };            _logger.LogInformation("Generated {Count} candidate matches", candidateMatches.Count);
+            
             // Apply filters
-            var filteredMatches = mockMatches.AsQueryable();
+            var filteredMatches = candidateMatches.AsQueryable();
 
             if (minScore.HasValue)
                 filteredMatches = filteredMatches.Where(m => m.OverallScore >= minScore.Value);

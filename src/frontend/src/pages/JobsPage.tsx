@@ -47,7 +47,7 @@ import {
   Close
 } from '@mui/icons-material';
 import { JobListItem, JobDetails, JobSearchFilters } from '../types/job';
-import { mockJobService } from '../services/jobService';
+import { jobService } from '../services/jobService';
 
 const JobsPage: React.FC = () => {
   const [jobs, setJobs] = useState<JobListItem[]>([]);
@@ -79,7 +79,7 @@ const JobsPage: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      const response = await mockJobService.getJobs({
+      const response = await jobService.getJobs({
         ...filters,
         page: page + 1,
         per_page: perPage
@@ -111,7 +111,7 @@ const JobsPage: React.FC = () => {
   // Handle job selection and details dialog
   const handleJobClick = async (jobId: string) => {
     try {
-      const jobDetails = await mockJobService.getJob(jobId);
+      const jobDetails = await jobService.getJob(jobId);
       setSelectedJob(jobDetails);
       setDetailsDialogOpen(true);
     } catch (err) {

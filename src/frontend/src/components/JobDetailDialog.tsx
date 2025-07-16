@@ -45,7 +45,7 @@ const JobDetailDialog: React.FC<JobDetailDialogProps> = ({
   onClose,
   match
 }) => {
-  // Mock job data - in real implementation, this would come from job service
+  // Sample job data - in real implementation, this would come from job service
   const jobDetails = {
     title: match.jobTitle,
     company: 'TechCorp Inc.',

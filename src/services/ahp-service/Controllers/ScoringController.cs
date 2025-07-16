@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Vetterati.AhpService.Services;
+using Vetterati.AhpService.Data;
 using Vetterati.Shared.Models;
 using System.Text.Json;
 
@@ -11,15 +13,18 @@ public class ScoringController : ControllerBase
 {
     private readonly IAhpScoringService _scoringService;
     private readonly ICandidateMatchingService _matchingService;
+    private readonly AhpDbContext _context;
     private readonly ILogger<ScoringController> _logger;
 
     public ScoringController(
         IAhpScoringService scoringService,
         ICandidateMatchingService matchingService,
+        AhpDbContext context,
         ILogger<ScoringController> logger)
     {
         _scoringService = scoringService;
         _matchingService = matchingService;
+        _context = context;
         _logger = logger;
     }
 
@@ -207,6 +212,112 @@ public class ScoringController : ControllerBase
         {
             _logger.LogError(ex, "Error validating AHP matrix for job profile {JobProfileId}", jobProfileId);
             return StatusCode(500, "An error occurred while validating the AHP matrix");
+        }
+    }
+
+    [HttpGet("matches")]
+    public async Task<ActionResult<PaginatedCandidateMatchesResponse>> GetAllCandidateMatches(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string sortBy = "score",
+        [FromQuery] string sortOrder = "desc",
+        [FromQuery] decimal? minScore = null,
+        [FromQuery] decimal? maxScore = null,
+        [FromQuery] List<Guid>? jobProfileIds = null,
+        [FromQuery] List<Guid>? candidateIds = null,
+        [FromQuery] DateTime? dateFrom = null,
+        [FromQuery] DateTime? dateTo = null)
+    {
+        try
+        {
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 10;
+            if (pageSize > 100) pageSize = 100;
+
+            var query = _context.CandidateScores.AsQueryable();
+
+            // Apply filters
+            if (minScore.HasValue)
+                query = query.Where(cs => cs.OverallScore >= minScore.Value);
+            
+            if (maxScore.HasValue)
+                query = query.Where(cs => cs.OverallScore <= maxScore.Value);
+
+            if (jobProfileIds != null && jobProfileIds.Any())
+                query = query.Where(cs => jobProfileIds.Contains(cs.JobProfileId));
+
+            if (candidateIds != null && candidateIds.Any())
+                query = query.Where(cs => candidateIds.Contains(cs.CandidateId));
+
+            if (dateFrom.HasValue)
+                query = query.Where(cs => cs.CalculatedAt >= dateFrom.Value);
+
+            if (dateTo.HasValue)
+                query = query.Where(cs => cs.CalculatedAt <= dateTo.Value);
+
+            // Apply sorting
+            query = sortBy.ToLower() switch
+            {
+                "score" => sortOrder.ToLower() == "asc" 
+                    ? query.OrderBy(cs => cs.OverallScore)
+                    : query.OrderByDescending(cs => cs.OverallScore),
+                "calculatedat" => sortOrder.ToLower() == "asc"
+                    ? query.OrderBy(cs => cs.CalculatedAt)
+                    : query.OrderByDescending(cs => cs.CalculatedAt),
+                _ => query.OrderByDescending(cs => cs.OverallScore)
+            };
+
+            var totalCount = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+            var matches = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var response = new PaginatedCandidateMatchesResponse
+            {
+                Matches = matches.Select(match => new CandidateMatchItem
+                {
+                    Id = match.Id,
+                    CandidateId = match.CandidateId,
+                    JobProfileId = match.JobProfileId,
+                    CandidateName = $"Candidate {match.CandidateId.ToString().Substring(0, 8)}",
+                    JobTitle = $"Position {match.JobProfileId.ToString().Substring(0, 8)}",
+                    OverallScore = match.OverallScore,
+                    MatchPercentage = (int)Math.Round(match.OverallScore * 100),
+                    CriteriaScores = string.IsNullOrEmpty(match.ScoreBreakdown) 
+                        ? new Dictionary<string, decimal>() 
+                        : JsonSerializer.Deserialize<Dictionary<string, decimal>>(match.ScoreBreakdown) ?? new Dictionary<string, decimal>(),
+                    ScoreBreakdown = string.IsNullOrEmpty(match.ScoreBreakdown) 
+                        ? new Dictionary<string, object>() 
+                        : JsonSerializer.Deserialize<Dictionary<string, object>>(match.ScoreBreakdown) ?? new Dictionary<string, object>(),
+                    CalculatedAt = match.CalculatedAt,
+                    ScoredAt = match.ScoredAt,
+                    Methodology = match.Methodology ?? "AHP"
+                }).ToList(),
+                TotalCount = totalCount,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalPages = totalPages,
+                HasNextPage = page < totalPages,
+                HasPreviousPage = page > 1,
+                Summary = new CandidateMatchSummaryResponse
+                {
+                    TotalMatches = totalCount,
+                    AverageScore = matches.Any() ? matches.Average(m => m.OverallScore) : 0,
+                    HighestScore = matches.Any() ? matches.Max(m => m.OverallScore) : 0,
+                    LowestScore = matches.Any() ? matches.Min(m => m.OverallScore) : 0,
+                    MatchedJobs = matches.Select(m => m.JobProfileId).Distinct().Count()
+                }
+            };
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting candidate matches");
+            return StatusCode(500, "An error occurred while retrieving candidate matches");
         }
     }
 }

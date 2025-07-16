@@ -3,6 +3,7 @@ using Serilog;
 using StackExchange.Redis;
 using Vetterati.AhpService.Data;
 using Vetterati.AhpService.Services;
+using Vetterati.AhpService.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,8 @@ builder.Services.AddSwaggerGen(c =>
 
 // Database
 builder.Services.AddDbContext<AhpDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+           .UseSnakeCaseNamingConvention());
 
 // Redis
 builder.Services.AddStackExchangeRedisCache(options =>
@@ -65,11 +67,7 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/health");
 
-// Ensure database is created
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<AhpDbContext>();
-    await context.Database.EnsureCreatedAsync();
-}
+// Ensure database is created and seeded
+await app.Services.EnsureDatabaseCreatedAsync();
 
 app.Run();

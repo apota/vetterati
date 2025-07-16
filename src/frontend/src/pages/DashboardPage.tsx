@@ -44,6 +44,7 @@ import {
   Refresh,
 } from '@mui/icons-material';
 import DashboardService, { DashboardStats, RecentApplication, TimeWindow } from '../services/dashboardService';
+import CandidateMatchesSection from '../components/CandidateMatchesSection';
 
 const DashboardPage: React.FC = () => {
   // Separate loading states for each panel
@@ -524,6 +525,19 @@ const DashboardPage: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
+        </Grid>
+
+        {/* Candidate Matches Section */}
+        <Grid item xs={12}>
+          <CandidateMatchesSection 
+            maxHeight={600}
+            showPagination={true}
+            defaultPageSize={10}
+            onMatchClick={(match) => {
+              // Handle match click - could navigate to candidate or job details
+              console.log('Match clicked:', match);
+            }}
+          />
         </Grid>
       </Grid>
 

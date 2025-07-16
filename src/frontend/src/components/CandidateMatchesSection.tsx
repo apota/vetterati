@@ -24,7 +24,8 @@ import {
   LinearProgress,
   Avatar,
   TableSortLabel,
-  Skeleton
+  Skeleton,
+  ButtonBase
 } from '@mui/material';
 import {
   Refresh,
@@ -35,6 +36,9 @@ import {
   Sort
 } from '@mui/icons-material';
 import AhpService, { CandidateMatch, GetCandidateMatchesOptions, PaginatedCandidateMatches } from '../services/ahpService';
+import CandidateDetailDialog from './CandidateDetailDialog';
+import JobDetailDialog from './JobDetailDialog';
+import AHPBreakdownDialog from './AHPBreakdownDialog';
 
 interface CandidateMatchesSectionProps {
   maxHeight?: number;
@@ -52,6 +56,12 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
   const [matches, setMatches] = useState<PaginatedCandidateMatches | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Dialog states
+  const [candidateDialogOpen, setCandidateDialogOpen] = useState(false);
+  const [jobDialogOpen, setJobDialogOpen] = useState(false);
+  const [ahpDialogOpen, setAhpDialogOpen] = useState(false);
+  const [selectedMatch, setSelectedMatch] = useState<CandidateMatch | null>(null);
   
   // Pagination and sorting state
   const [currentPage, setCurrentPage] = useState(1);
@@ -119,6 +129,27 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
     if (onMatchClick) {
       onMatchClick(match);
     }
+  };
+
+  // Handle candidate column click
+  const handleCandidateClick = (event: React.MouseEvent, match: CandidateMatch) => {
+    event.stopPropagation();
+    setSelectedMatch(match);
+    setCandidateDialogOpen(true);
+  };
+
+  // Handle job column click
+  const handleJobClick = (event: React.MouseEvent, match: CandidateMatch) => {
+    event.stopPropagation();
+    setSelectedMatch(match);
+    setJobDialogOpen(true);
+  };
+
+  // Handle match score/confidence column click
+  const handleScoreClick = (event: React.MouseEvent, match: CandidateMatch) => {
+    event.stopPropagation();
+    setSelectedMatch(match);
+    setAhpDialogOpen(true);
   };
 
   // Get match confidence color
@@ -247,33 +278,45 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
                 <TableHead>
                   <TableRow>
                     <TableCell>
-                      <TableSortLabel
-                        active={sortBy === 'candidateName'}
-                        direction={sortBy === 'candidateName' ? sortOrder : 'asc'}
-                        onClick={() => handleSortChange('candidateName')}
-                      >
-                        Candidate
-                      </TableSortLabel>
+                      <Tooltip title="Click to view candidate details">
+                        <TableSortLabel
+                          active={sortBy === 'candidateName'}
+                          direction={sortBy === 'candidateName' ? sortOrder : 'asc'}
+                          onClick={() => handleSortChange('candidateName')}
+                        >
+                          Candidate
+                        </TableSortLabel>
+                      </Tooltip>
                     </TableCell>
                     <TableCell>
-                      <TableSortLabel
-                        active={sortBy === 'jobTitle'}
-                        direction={sortBy === 'jobTitle' ? sortOrder : 'asc'}
-                        onClick={() => handleSortChange('jobTitle')}
-                      >
-                        Position
-                      </TableSortLabel>
+                      <Tooltip title="Click to view job details">
+                        <TableSortLabel
+                          active={sortBy === 'jobTitle'}
+                          direction={sortBy === 'jobTitle' ? sortOrder : 'asc'}
+                          onClick={() => handleSortChange('jobTitle')}
+                        >
+                          Position
+                        </TableSortLabel>
+                      </Tooltip>
                     </TableCell>
                     <TableCell>
-                      <TableSortLabel
-                        active={sortBy === 'score'}
-                        direction={sortBy === 'score' ? sortOrder : 'asc'}
-                        onClick={() => handleSortChange('score')}
-                      >
-                        Match %
-                      </TableSortLabel>
+                      <Tooltip title="Click to view AHP breakdown">
+                        <TableSortLabel
+                          active={sortBy === 'score'}
+                          direction={sortBy === 'score' ? sortOrder : 'asc'}
+                          onClick={() => handleSortChange('score')}
+                        >
+                          Match %
+                        </TableSortLabel>
+                      </Tooltip>
                     </TableCell>
-                    <TableCell>Confidence</TableCell>
+                    <TableCell>
+                      <Tooltip title="Click to view AHP breakdown">
+                        <Typography variant="body2" fontWeight="medium">
+                          Confidence
+                        </Typography>
+                      </Tooltip>
+                    </TableCell>
                     <TableCell>
                       <TableSortLabel
                         active={sortBy === 'calculatedAt'}
@@ -307,7 +350,21 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
                         sx={{ cursor: 'pointer' }}
                       >
                         <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <ButtonBase
+                            onClick={(e) => handleCandidateClick(e, match)}
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 2,
+                              textAlign: 'left',
+                              width: '100%',
+                              borderRadius: 1,
+                              p: 1,
+                              '&:hover': {
+                                backgroundColor: 'action.hover',
+                              }
+                            }}
+                          >
                             <Avatar sx={{ bgcolor: 'primary.main' }}>
                               <Person />
                             </Avatar>
@@ -319,34 +376,70 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
                                 ID: {match.candidateId.substring(0, 8)}...
                               </Typography>
                             </Box>
-                          </Box>
+                          </ButtonBase>
                         </TableCell>
                         <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <ButtonBase
+                            onClick={(e) => handleJobClick(e, match)}
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                              textAlign: 'left',
+                              width: '100%',
+                              borderRadius: 1,
+                              p: 1,
+                              '&:hover': {
+                                backgroundColor: 'action.hover',
+                              }
+                            }}
+                          >
                             <Work fontSize="small" color="action" />
                             <Typography variant="body2">
                               {match.jobTitle}
                             </Typography>
-                          </Box>
+                          </ButtonBase>
                         </TableCell>
                         <TableCell>
-                          <Chip
-                            label={`${match.matchPercentage}%`}
-                            color={getMatchColor(match.overallScore)}
-                            size="small"
-                            variant="filled"
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Chip
-                            label={AhpService.getMatchConfidence(match.overallScore).toUpperCase()}
-                            size="small"
-                            variant="outlined"
-                            sx={{ 
-                              color: AhpService.getMatchConfidenceColor(match.overallScore),
-                              borderColor: AhpService.getMatchConfidenceColor(match.overallScore)
+                          <ButtonBase
+                            onClick={(e) => handleScoreClick(e, match)}
+                            sx={{
+                              borderRadius: 1,
+                              '&:hover': {
+                                backgroundColor: 'action.hover',
+                              }
                             }}
-                          />
+                          >
+                            <Chip
+                              label={`${match.matchPercentage}%`}
+                              color={getMatchColor(match.overallScore)}
+                              size="small"
+                              variant="filled"
+                              sx={{ cursor: 'pointer' }}
+                            />
+                          </ButtonBase>
+                        </TableCell>
+                        <TableCell>
+                          <ButtonBase
+                            onClick={(e) => handleScoreClick(e, match)}
+                            sx={{
+                              borderRadius: 1,
+                              '&:hover': {
+                                backgroundColor: 'action.hover',
+                              }
+                            }}
+                          >
+                            <Chip
+                              label={AhpService.getMatchConfidence(match.overallScore).toUpperCase()}
+                              size="small"
+                              variant="outlined"
+                              sx={{ 
+                                color: AhpService.getMatchConfidenceColor(match.overallScore),
+                                borderColor: AhpService.getMatchConfidenceColor(match.overallScore),
+                                cursor: 'pointer'
+                              }}
+                            />
+                          </ButtonBase>
                         </TableCell>
                         <TableCell>
                           <Typography variant="body2" color="text.secondary">
@@ -377,6 +470,27 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
           </Box>
         )}
       </CardContent>
+
+      {/* Detail Dialogs */}
+      {selectedMatch && (
+        <>
+          <CandidateDetailDialog
+            open={candidateDialogOpen}
+            onClose={() => setCandidateDialogOpen(false)}
+            match={selectedMatch}
+          />
+          <JobDetailDialog
+            open={jobDialogOpen}
+            onClose={() => setJobDialogOpen(false)}
+            match={selectedMatch}
+          />
+          <AHPBreakdownDialog
+            open={ahpDialogOpen}
+            onClose={() => setAhpDialogOpen(false)}
+            match={selectedMatch}
+          />
+        </>
+      )}
     </Card>
   );
 };

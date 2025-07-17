@@ -50,6 +50,7 @@ import {
 import { JobListItem, JobDetails, JobSearchFilters, JobCreateRequest } from '../types/job';
 import { jobService } from '../services/jobService';
 import CreateJobDialog from '../components/CreateJobDialog';
+import EditJobDialog from '../components/EditJobDialog';
 
 const JobsPage: React.FC = () => {
   const [jobs, setJobs] = useState<JobListItem[]>([]);
@@ -59,6 +60,11 @@ const JobsPage: React.FC = () => {
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
+  
+  // Edit dialog state
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editJob, setEditJob] = useState<JobDetails | null>(null);
   
   // Pagination state
   const [page, setPage] = useState(0);
@@ -200,6 +206,31 @@ const JobsPage: React.FC = () => {
   // Format match percentage
   const formatMatchPercentage = (percentage: number) => {
     return `${percentage.toFixed(1)}%`;
+  };
+
+  // Handler for edit icon click
+  const handleEditClick = async (jobId: string) => {
+    try {
+      const jobDetails = await jobService.getJob(jobId);
+      setEditJob(jobDetails);
+      setEditDialogOpen(true);
+    } catch (err) {
+      setError('Failed to load job for editing');
+    }
+  };
+
+  // Handler for saving edits
+  const handleSaveEdit = async (jobId: string, jobData: Partial<JobCreateRequest>) => {
+    try {
+      setEditLoading(true);
+      await jobService.updateJob(jobId, jobData);
+      setEditDialogOpen(false);
+      loadJobs(); // Refresh list
+    } catch (err) {
+      setError('Failed to save job edits');
+    } finally {
+      setEditLoading(false);
+    }
   };
 
   return (
@@ -382,8 +413,12 @@ const JobsPage: React.FC = () => {
                           Applications
                         </TableSortLabel>
                       </TableCell>
-                      <TableCell>Avg Match %</TableCell>
-                      <TableCell>Highest Match %</TableCell>
+                      <TableCell>
+                        Avg Match %
+                      </TableCell>
+                      <TableCell>
+                        Highest Match %
+                      </TableCell>
                       <TableCell>
                         <TableSortLabel
                           active={filters.sort_by === 'created_at'}
@@ -393,8 +428,12 @@ const JobsPage: React.FC = () => {
                           Created
                         </TableSortLabel>
                       </TableCell>
-                      <TableCell>Views</TableCell>
-                      <TableCell>Actions</TableCell>
+                      <TableCell>
+                        Views
+                      </TableCell>
+                      <TableCell>
+                        Actions
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -449,7 +488,7 @@ const JobsPage: React.FC = () => {
                         </TableCell>
                         <TableCell>
                           <Tooltip title="Edit">
-                            <IconButton size="small" onClick={(e) => { e.stopPropagation(); /* TODO: Implement edit */ }}>
+                            <IconButton size="small" onClick={() => handleEditClick(job.id)}>
                               <Edit />
                             </IconButton>
                           </Tooltip>
@@ -672,6 +711,17 @@ const JobsPage: React.FC = () => {
         onSubmit={handleCreateJob}
         loading={createLoading}
       />
+
+      {/* Edit Job Dialog */}
+      {editJob && (
+        <EditJobDialog
+          open={editDialogOpen}
+          job={editJob}
+          loading={editLoading}
+          onClose={() => setEditDialogOpen(false)}
+          onSave={handleSaveEdit}
+        />
+      )}
     </Box>
   );
 };

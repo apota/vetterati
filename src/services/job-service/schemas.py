@@ -224,7 +224,7 @@ class JobSearchRequest(BaseModel):
     
     page: int = Field(1, ge=1)
     per_page: int = Field(20, ge=1, le=100)
-    sort_by: str = Field("created_at", pattern="^(created_at|updated_at|title|applications_count)$")
+    sort_by: str = Field("created_at", pattern="^(created_at|updated_at|title|department|location|status|priority|applications_count)$")
     sort_order: str = Field("desc", pattern="^(asc|desc)$")
 
 # Response Wrappers

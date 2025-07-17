@@ -131,7 +131,18 @@ class JobService:
         total = query.count()
         
         # Apply sorting
-        sort_column = getattr(Job, search_request.sort_by, Job.created_at)
+        if search_request.sort_by == 'applications_count':
+            # Special handling for applications_count sorting
+            subquery = self.db.query(
+                JobApplication.job_id,
+                func.count(JobApplication.id).label('app_count')
+            ).group_by(JobApplication.job_id).subquery()
+            
+            query = query.outerjoin(subquery, Job.id == subquery.c.job_id)
+            sort_column = func.coalesce(subquery.c.app_count, 0)
+        else:
+            sort_column = getattr(Job, search_request.sort_by, Job.created_at)
+            
         if search_request.sort_order == 'desc':
             query = query.order_by(desc(sort_column))
         else:

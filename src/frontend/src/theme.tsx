@@ -61,7 +61,30 @@ const theme = createTheme({
     MuiTableHead: {
       styleOverrides: {
         root: {
-          backgroundColor: '#f8f9fa',
+          backgroundColor: '#2a2a2a', // Light black background
+          '& .MuiTableCell-root': {
+            backgroundColor: '#2a2a2a',
+            color: '#ffd700', // Gold lettering
+            fontWeight: 'bold',
+            borderBottom: '1px solid #404040',
+          },
+        },
+      },
+    },
+    MuiTableSortLabel: {
+      styleOverrides: {
+        root: {
+          color: '#ffd700 !important', // Gold lettering for sort labels
+          '&:hover': {
+            color: '#ffed4a !important', // Lighter gold on hover
+          },
+          '&.Mui-active': {
+            color: '#ffed4a !important', // Lighter gold when active
+            fontWeight: 'bold',
+            '& .MuiTableSortLabel-icon': {
+              color: '#ffed4a !important',
+            },
+          },
         },
       },
     },

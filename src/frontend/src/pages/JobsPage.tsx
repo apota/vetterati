@@ -47,8 +47,9 @@ import {
   Pause,
   Close
 } from '@mui/icons-material';
-import { JobListItem, JobDetails, JobSearchFilters } from '../types/job';
+import { JobListItem, JobDetails, JobSearchFilters, JobCreateRequest } from '../types/job';
 import { jobService } from '../services/jobService';
+import CreateJobDialog from '../components/CreateJobDialog';
 
 const JobsPage: React.FC = () => {
   const [jobs, setJobs] = useState<JobListItem[]>([]);
@@ -56,6 +57,8 @@ const JobsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedJob, setSelectedJob] = useState<JobDetails | null>(null);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
   
   // Pagination state
   const [page, setPage] = useState(0);
@@ -107,6 +110,21 @@ const JobsPage: React.FC = () => {
       [field]: value
     }));
     setPage(0); // Reset to first page when filters change
+  };
+
+  // Handle create job
+  const handleCreateJob = async (jobData: JobCreateRequest) => {
+    try {
+      setCreateLoading(true);
+      await jobService.createJob(jobData);
+      setCreateDialogOpen(false);
+      loadJobs(); // Refresh the list
+    } catch (err) {
+      console.error('Error creating job:', err);
+      setError('Failed to create job');
+    } finally {
+      setCreateLoading(false);
+    }
   };
 
   // Handle sorting
@@ -193,7 +211,7 @@ const JobsPage: React.FC = () => {
         <Button
           variant="contained"
           startIcon={<Add />}
-          onClick={() => {/* TODO: Implement create job */}}
+          onClick={() => setCreateDialogOpen(true)}
         >
           Create Job
         </Button>
@@ -646,6 +664,14 @@ const JobsPage: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Create Job Dialog */}
+      <CreateJobDialog
+        open={createDialogOpen}
+        onClose={() => setCreateDialogOpen(false)}
+        onSubmit={handleCreateJob}
+        loading={createLoading}
+      />
     </Box>
   );
 };

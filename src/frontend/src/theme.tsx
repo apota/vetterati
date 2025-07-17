@@ -75,12 +75,13 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           color: '#ffd700 !important', // Gold lettering for sort labels
+          fontWeight: 'bold',
           '&:hover': {
             color: '#ffed4a !important', // Lighter gold on hover
           },
           '&.Mui-active': {
             color: '#ffed4a !important', // Lighter gold when active
-            fontWeight: 'bold',
+            fontWeight: '900 !important', // Extra bold for active sorted columns
             '& .MuiTableSortLabel-icon': {
               color: '#ffed4a !important',
             },

@@ -34,6 +34,7 @@ import {
   ListItemText,
   ListItemIcon,
   LinearProgress,
+  TableSortLabel,
 } from '@mui/material';
 import {
   TrendingUp,
@@ -60,6 +61,10 @@ const DashboardPage: React.FC = () => {
   const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
   const [metricBreakdownData, setMetricBreakdownData] = useState<any>(null);
   const [breakdownLoading, setBreakdownLoading] = useState(false);
+
+  // Sorting state for Recent Applications table
+  const [sortBy, setSortBy] = useState<'candidate' | 'position' | 'status' | 'appliedAt'>('appliedAt');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   // Fetch dashboard stats independently
   const fetchDashboardStats = useCallback(async (selectedTimeWindow: TimeWindow) => {
@@ -109,6 +114,51 @@ const DashboardPage: React.FC = () => {
     fetchDashboardStats(timeWindow);
     fetchRecentApplications();
   }, [fetchDashboardStats, fetchRecentApplications, timeWindow]);
+
+  // Handle sort change for Recent Applications table
+  const handleSortChange = useCallback((field: 'candidate' | 'position' | 'status' | 'appliedAt') => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(field);
+      setSortOrder('asc');
+    }
+  }, [sortBy, sortOrder]);
+
+  // Sort recent applications based on current sort settings
+  const sortedRecentApplications = useMemo(() => {
+    if (!recentApplications.length) return [];
+    
+    return [...recentApplications].sort((a, b) => {
+      let aValue: string | number;
+      let bValue: string | number;
+      
+      switch (sortBy) {
+        case 'candidate':
+          aValue = a.candidate.toLowerCase();
+          bValue = b.candidate.toLowerCase();
+          break;
+        case 'position':
+          aValue = a.position.toLowerCase();
+          bValue = b.position.toLowerCase();
+          break;
+        case 'status':
+          aValue = a.status.toLowerCase();
+          bValue = b.status.toLowerCase();
+          break;
+        case 'appliedAt':
+          aValue = new Date(a.appliedAt).getTime();
+          bValue = new Date(b.appliedAt).getTime();
+          break;
+        default:
+          return 0;
+      }
+      
+      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [recentApplications, sortBy, sortOrder]);
 
   // Fetch metric breakdown data
   const fetchMetricBreakdown = useCallback(async (metricType: string) => {
@@ -444,10 +494,42 @@ const DashboardPage: React.FC = () => {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Candidate</TableCell>
-                        <TableCell>Position</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Applied</TableCell>
+                        <TableCell>
+                          <TableSortLabel
+                            active={sortBy === 'candidate'}
+                            direction={sortBy === 'candidate' ? sortOrder : 'asc'}
+                            onClick={() => handleSortChange('candidate')}
+                          >
+                            Candidate
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel
+                            active={sortBy === 'position'}
+                            direction={sortBy === 'position' ? sortOrder : 'asc'}
+                            onClick={() => handleSortChange('position')}
+                          >
+                            Position
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel
+                            active={sortBy === 'status'}
+                            direction={sortBy === 'status' ? sortOrder : 'asc'}
+                            onClick={() => handleSortChange('status')}
+                          >
+                            Status
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel
+                            active={sortBy === 'appliedAt'}
+                            direction={sortBy === 'appliedAt' ? sortOrder : 'asc'}
+                            onClick={() => handleSortChange('appliedAt')}
+                          >
+                            Applied
+                          </TableSortLabel>
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -458,7 +540,7 @@ const DashboardPage: React.FC = () => {
                         ))
                       ) : (
                         // Show actual application data
-                        recentApplications.map((application) => (
+                        sortedRecentApplications.map((application) => (
                           <TableRow key={application.id}>
                             <TableCell>
                               <Typography variant="body2" fontWeight="medium">

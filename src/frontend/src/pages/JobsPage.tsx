@@ -21,6 +21,7 @@ import {
   FormControl,
   InputLabel,
   TablePagination,
+  TableSortLabel,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -106,6 +107,15 @@ const JobsPage: React.FC = () => {
       [field]: value
     }));
     setPage(0); // Reset to first page when filters change
+  };
+
+  // Handle sorting
+  const handleSortChange = (field: string) => {
+    setFilters(prev => ({
+      ...prev,
+      sort_by: field,
+      sort_order: prev.sort_by === field && prev.sort_order === 'asc' ? 'desc' : 'asc'
+    }));
   };
 
   // Handle job selection and details dialog
@@ -300,15 +310,71 @@ const JobsPage: React.FC = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Job Title</TableCell>
-                      <TableCell>Department</TableCell>
-                      <TableCell>Location</TableCell>
-                      <TableCell>Status</TableCell>
-                      <TableCell>Priority</TableCell>
-                      <TableCell>Applications</TableCell>
+                      <TableCell>
+                        <TableSortLabel
+                          active={filters.sort_by === 'title'}
+                          direction={filters.sort_by === 'title' ? filters.sort_order : 'asc'}
+                          onClick={() => handleSortChange('title')}
+                        >
+                          Job Title
+                        </TableSortLabel>
+                      </TableCell>
+                      <TableCell>
+                        <TableSortLabel
+                          active={filters.sort_by === 'department'}
+                          direction={filters.sort_by === 'department' ? filters.sort_order : 'asc'}
+                          onClick={() => handleSortChange('department')}
+                        >
+                          Department
+                        </TableSortLabel>
+                      </TableCell>
+                      <TableCell>
+                        <TableSortLabel
+                          active={filters.sort_by === 'location'}
+                          direction={filters.sort_by === 'location' ? filters.sort_order : 'asc'}
+                          onClick={() => handleSortChange('location')}
+                        >
+                          Location
+                        </TableSortLabel>
+                      </TableCell>
+                      <TableCell>
+                        <TableSortLabel
+                          active={filters.sort_by === 'status'}
+                          direction={filters.sort_by === 'status' ? filters.sort_order : 'asc'}
+                          onClick={() => handleSortChange('status')}
+                        >
+                          Status
+                        </TableSortLabel>
+                      </TableCell>
+                      <TableCell>
+                        <TableSortLabel
+                          active={filters.sort_by === 'priority'}
+                          direction={filters.sort_by === 'priority' ? filters.sort_order : 'asc'}
+                          onClick={() => handleSortChange('priority')}
+                        >
+                          Priority
+                        </TableSortLabel>
+                      </TableCell>
+                      <TableCell>
+                        <TableSortLabel
+                          active={filters.sort_by === 'applications_count'}
+                          direction={filters.sort_by === 'applications_count' ? filters.sort_order : 'asc'}
+                          onClick={() => handleSortChange('applications_count')}
+                        >
+                          Applications
+                        </TableSortLabel>
+                      </TableCell>
                       <TableCell>Avg Match %</TableCell>
                       <TableCell>Highest Match %</TableCell>
-                      <TableCell>Created</TableCell>
+                      <TableCell>
+                        <TableSortLabel
+                          active={filters.sort_by === 'created_at'}
+                          direction={filters.sort_by === 'created_at' ? filters.sort_order : 'asc'}
+                          onClick={() => handleSortChange('created_at')}
+                        >
+                          Created
+                        </TableSortLabel>
+                      </TableCell>
                       <TableCell>Views</TableCell>
                       <TableCell>Actions</TableCell>
                     </TableRow>

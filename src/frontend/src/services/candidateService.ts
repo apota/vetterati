@@ -1,5 +1,12 @@
 import api from './apiService';
+import { 
+  CandidateListItem, 
+  CandidateDetails, 
+  CandidateCreateRequest, 
+  CandidateUpdateRequest
+} from '../types/candidate';
 
+// Legacy interface for backward compatibility
 export interface Candidate {
   id: string;
   email: string;
@@ -22,6 +29,10 @@ export interface CandidateStats {
   hired: number;
   rejected: number;
   inactive: number;
+  new_this_week: number;
+  avg_experience_years: number;
+  top_skills: Array<{ name: string; count: number }>;
+  applications_by_status: Record<string, number>;
 }
 
 export interface CandidateApplication {
@@ -40,7 +51,7 @@ export class CandidateService {
     limit?: number;
     status?: string;
     search?: string;
-  }): Promise<{ items: Candidate[], total: number }> {
+  }): Promise<{ items: CandidateListItem[], total: number }> {
     try {
       const response = await api.get('/api/v1/candidates', { params });
       return response.data.data;
@@ -51,7 +62,7 @@ export class CandidateService {
   }
 
   // Get candidate by ID
-  static async getCandidateById(id: string): Promise<Candidate> {
+  static async getCandidateById(id: string): Promise<CandidateDetails> {
     try {
       const response = await api.get(`/api/v1/candidates/${id}`);
       return response.data.data;
@@ -62,7 +73,7 @@ export class CandidateService {
   }
 
   // Create new candidate
-  static async createCandidate(candidateData: Partial<Candidate>): Promise<Candidate> {
+  static async createCandidate(candidateData: CandidateCreateRequest): Promise<CandidateDetails> {
     try {
       const response = await api.post('/api/v1/candidates', candidateData);
       return response.data.data;
@@ -73,7 +84,7 @@ export class CandidateService {
   }
 
   // Update candidate
-  static async updateCandidate(id: string, candidateData: Partial<Candidate>): Promise<Candidate> {
+  static async updateCandidate(id: string, candidateData: CandidateUpdateRequest): Promise<CandidateDetails> {
     try {
       const response = await api.put(`/api/v1/candidates/${id}`, candidateData);
       return response.data.data;
@@ -127,7 +138,7 @@ export class CandidateService {
     location?: string;
     page?: number;
     limit?: number;
-  }): Promise<{ items: Candidate[], total: number }> {
+  }): Promise<{ items: CandidateListItem[], total: number }> {
     try {
       const response = await api.post('/api/v1/candidates/search', searchParams);
       return response.data.data;

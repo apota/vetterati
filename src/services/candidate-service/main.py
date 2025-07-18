@@ -8,7 +8,7 @@ from datetime import datetime
 from database import get_db, init_db
 from models import Candidate, CandidateExperience, CandidateEducation, CandidateSkill, CandidateResume, JobApplication
 from schemas import (
-    CandidateCreate, CandidateUpdate, CandidateResponse,
+    CandidateCreate, CandidateUpdate, CandidateResponse, CandidateSearchParams,
     ExperienceCreate, ExperienceResponse,
     EducationCreate, EducationResponse,
     SkillCreate, SkillResponse,
@@ -55,6 +55,134 @@ async def get_candidate_stats(db: Session = Depends(get_db)):
     stats = candidate_service.get_candidate_stats()
     
     return {"success": True, "data": stats, "message": "Candidate statistics retrieved successfully"}
+
+@app.get("/api/v1/candidates")
+async def get_candidates(
+    page: int = Query(1, ge=1),
+    per_page: int = Query(10, ge=1, le=100),
+    status: Optional[str] = Query(None),
+    q: Optional[str] = Query(None),
+    location: Optional[str] = Query(None),
+    career_level: Optional[str] = Query(None),
+    experience_min: Optional[int] = Query(None, ge=0),
+    experience_max: Optional[int] = Query(None, ge=0),
+    sort_by: str = Query("created_at"),
+    sort_order: str = Query("desc"),
+    db: Session = Depends(get_db)
+):
+    """Get paginated list of candidates"""
+    candidate_service = CandidateService(db)
+    
+    # Create search params
+    search_params = CandidateSearchParams(
+        q=q,
+        status=status,
+        location=location,
+        career_level=career_level,
+        experience_min=experience_min,
+        experience_max=experience_max,
+        page=page,
+        per_page=per_page,
+        sort_by=sort_by,
+        sort_order=sort_order
+    )
+    
+    candidates, total, facets = candidate_service.search_candidates(search_params)
+    
+    return {
+        "success": True,
+        "data": {
+            "items": candidates,
+            "total": total,
+            "page": page,
+            "per_page": per_page,
+            "pages": (total + per_page - 1) // per_page,
+            "facets": facets
+        },
+        "message": "Candidates retrieved successfully"
+    }
+
+@app.get("/api/v1/candidates/{candidate_id}")
+async def get_candidate(candidate_id: str, db: Session = Depends(get_db)):
+    """Get candidate by ID"""
+    try:
+        candidate_uuid = uuid.UUID(candidate_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid candidate ID format")
+    
+    candidate_service = CandidateService(db)
+    candidate = candidate_service.get_candidate(candidate_uuid)
+    
+    if not candidate:
+        raise HTTPException(status_code=404, detail="Candidate not found")
+    
+    return {"success": True, "data": candidate, "message": "Candidate retrieved successfully"}
+
+@app.post("/api/v1/candidates")
+async def create_candidate(
+    candidate_data: CandidateCreate,
+    db: Session = Depends(get_db)
+):
+    """Create a new candidate"""
+    candidate_service = CandidateService(db)
+    candidate = candidate_service.create_candidate(candidate_data)
+    
+    return {"success": True, "data": candidate, "message": "Candidate created successfully"}
+
+@app.put("/api/v1/candidates/{candidate_id}")
+async def update_candidate(
+    candidate_id: str,
+    candidate_data: CandidateUpdate,
+    db: Session = Depends(get_db)
+):
+    """Update a candidate"""
+    try:
+        candidate_uuid = uuid.UUID(candidate_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid candidate ID format")
+    
+    candidate_service = CandidateService(db)
+    candidate = candidate_service.update_candidate(candidate_uuid, candidate_data)
+    
+    if not candidate:
+        raise HTTPException(status_code=404, detail="Candidate not found")
+    
+    return {"success": True, "data": candidate, "message": "Candidate updated successfully"}
+
+@app.delete("/api/v1/candidates/{candidate_id}")
+async def delete_candidate(candidate_id: str, db: Session = Depends(get_db)):
+    """Delete a candidate"""
+    try:
+        candidate_uuid = uuid.UUID(candidate_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid candidate ID format")
+    
+    candidate_service = CandidateService(db)
+    success = candidate_service.delete_candidate(candidate_uuid)
+    
+    if not success:
+        raise HTTPException(status_code=404, detail="Candidate not found")
+    
+    return {"success": True, "message": "Candidate deleted successfully"}
+
+@app.post("/api/v1/candidates/search")
+async def search_candidates(
+    search_params: CandidateSearchParams,
+    db: Session = Depends(get_db)
+):
+    """Search candidates with advanced filters"""
+    candidate_service = CandidateService(db)
+    candidates, total, facets = candidate_service.search_candidates(search_params)
+    
+    return {
+        "success": True,
+        "data": {
+            "items": candidates,
+            "total": total,
+            "facets": facets
+        },
+        "message": "Candidates search completed successfully"
+    }
 
 if __name__ == "__main__":
     import uvicorn

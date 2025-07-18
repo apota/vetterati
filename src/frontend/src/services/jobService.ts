@@ -22,8 +22,37 @@ export const jobService = {
 
   // Get single job details
   async getJob(jobId: string): Promise<JobDetails> {
-    const response = await axios.get(`${API_BASE_URL}/jobs/${jobId}`);
-    return response.data;
+    try {
+      const response = await axios.get(`${API_BASE_URL}/jobs/${jobId}`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      // Fix any array fields that might be returned as empty objects
+      const jobData = response.data;
+      if (jobData.required_skills && typeof jobData.required_skills === 'object' && !Array.isArray(jobData.required_skills)) {
+        jobData.required_skills = [];
+      }
+      if (jobData.preferred_skills && typeof jobData.preferred_skills === 'object' && !Array.isArray(jobData.preferred_skills)) {
+        jobData.preferred_skills = [];
+      }
+      if (jobData.certifications && typeof jobData.certifications === 'object' && !Array.isArray(jobData.certifications)) {
+        jobData.certifications = [];
+      }
+      if (jobData.languages && typeof jobData.languages === 'object' && !Array.isArray(jobData.languages)) {
+        jobData.languages = [];
+      }
+      if (jobData.keywords && typeof jobData.keywords === 'object' && !Array.isArray(jobData.keywords)) {
+        jobData.keywords = [];
+      }
+      
+      return jobData;
+    } catch (error: any) {
+      console.error('Error in getJob:', error);
+      throw error;
+    }
   },
 
   // Create new job

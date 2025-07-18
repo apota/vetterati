@@ -91,7 +91,7 @@ class CustomReportRequest(BaseModel):
     filters: Dict[str, Any] = {}
     groupby_fields: List[str] = []
     metrics: List[str] = []
-    export_format: str = Field(default="json", regex="^(json|csv|excel|pdf)$")
+    export_format: str = Field(default="json", pattern="^(json|csv|excel|pdf)$")
     include_charts: bool = False
 
 class CustomReportResponse(BaseResponse):
@@ -126,7 +126,7 @@ class PredictiveAnalyticsResponse(BaseResponse):
 
 # Export schemas
 class ExportRequest(BaseModel):
-    format: str = Field(regex="^(csv|excel|pdf)$")
+    format: str = Field(pattern="^(csv|excel|pdf)$")
     data_type: str
     filters: Dict[str, Any] = {}
     date_range: Optional[Dict[str, datetime]] = None
@@ -202,7 +202,7 @@ class AlertRule(BaseModel):
     metric_name: str
     condition: str  # >, <, =, !=
     threshold: float
-    severity: str = Field(regex="^(low|medium|high|critical)$")
+    severity: str = Field(pattern="^(low|medium|high|critical)$")
     notification_channels: List[str]
     is_enabled: bool = True
 

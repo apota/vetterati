@@ -277,7 +277,7 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
               <Table stickyHeader>
                 <TableHead>
                   <TableRow>
-                    <TableCell>
+                    <TableCell align="left" sx={{ padding: '8px 16px' }}>
                       <Tooltip title="Click to view candidate details">
                         <TableSortLabel
                           active={sortBy === 'candidateName'}
@@ -288,7 +288,7 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
                         </TableSortLabel>
                       </Tooltip>
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="left" sx={{ padding: '8px 16px' }}>
                       <Tooltip title="Click to view job details">
                         <TableSortLabel
                           active={sortBy === 'jobTitle'}
@@ -299,7 +299,7 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
                         </TableSortLabel>
                       </Tooltip>
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="left">
                       <Tooltip title="Click to view AHP breakdown">
                         <TableSortLabel
                           active={sortBy === 'score'}
@@ -310,14 +310,14 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
                         </TableSortLabel>
                       </Tooltip>
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="left">
                       <Tooltip title="Click to view AHP breakdown">
                         <Typography variant="body2" fontWeight="medium">
                           Confidence
                         </Typography>
                       </Tooltip>
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="left">
                       <TableSortLabel
                         active={sortBy === 'calculatedAt'}
                         direction={sortBy === 'calculatedAt' ? sortOrder : 'asc'}
@@ -343,106 +343,53 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
                     </TableRow>
                   ) : (
                     matches?.matches.map((match) => (
-                      <TableRow 
-                        key={match.id}
-                        hover
-                        onClick={() => handleMatchClick(match)}
-                        sx={{ cursor: 'pointer' }}
-                      >
-                        <TableCell>
+                      <TableRow key={match.id} hover onClick={() => handleMatchClick(match)} sx={{ cursor: 'pointer' }}>
+                        <TableCell align="left" sx={{ padding: '8px 16px' }}>
                           <ButtonBase
                             onClick={(e) => handleCandidateClick(e, match)}
                             sx={{
                               display: 'flex',
                               alignItems: 'center',
-                              gap: 2,
-                              textAlign: 'left',
-                              width: '100%',
-                              borderRadius: 1,
-                              p: 1,
-                              '&:hover': {
-                                backgroundColor: 'action.hover',
-                              }
-                            }}
-                          >
-                            <Avatar sx={{ bgcolor: 'primary.main' }}>
-                              <Person />
-                            </Avatar>
-                            <Box>
-                              <Typography variant="body2" fontWeight="medium">
-                                {match.candidateName}
-                              </Typography>
-                              <Typography variant="caption" color="text.secondary">
-                                ID: {match.candidateId.substring(0, 8)}...
-                              </Typography>
-                            </Box>
-                          </ButtonBase>
-                        </TableCell>
-                        <TableCell>
-                          <ButtonBase
-                            onClick={(e) => handleJobClick(e, match)}
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
+                              justifyContent: 'flex-start',
                               gap: 1,
                               textAlign: 'left',
                               width: '100%',
                               borderRadius: 1,
-                              p: 1,
+                              p: 0.5,
                               '&:hover': {
                                 backgroundColor: 'action.hover',
                               }
                             }}
                           >
-                            <Work fontSize="small" color="action" />
-                            <Typography variant="body2">
-                              {match.jobTitle}
+                            <Avatar sx={{ bgcolor: 'primary.main', width: 32, height: 32 }}>
+                              <Person sx={{ fontSize: 18 }} />
+                            </Avatar>
+                            <Typography variant="subtitle2" fontWeight="bold" sx={{ textAlign: 'left', flex: 1 }}>
+                              {match.candidateName}
                             </Typography>
                           </ButtonBase>
                         </TableCell>
-                        <TableCell>
-                          <ButtonBase
-                            onClick={(e) => handleScoreClick(e, match)}
-                            sx={{
-                              borderRadius: 1,
-                              '&:hover': {
-                                backgroundColor: 'action.hover',
-                              }
-                            }}
-                          >
-                            <Chip
-                              label={`${match.matchPercentage}%`}
-                              color={getMatchColor(match.overallScore)}
-                              size="small"
-                              variant="filled"
-                              sx={{ cursor: 'pointer' }}
-                            />
-                          </ButtonBase>
+                        <TableCell align="left" sx={{ padding: '8px 16px' }}>
+                          <Typography variant="subtitle2" fontWeight="bold" sx={{ textAlign: 'left' }}>
+                            {match.jobTitle}
+                          </Typography>
                         </TableCell>
-                        <TableCell>
-                          <ButtonBase
-                            onClick={(e) => handleScoreClick(e, match)}
-                            sx={{
-                              borderRadius: 1,
-                              '&:hover': {
-                                backgroundColor: 'action.hover',
-                              }
-                            }}
-                          >
-                            <Chip
-                              label={AhpService.getMatchConfidence(match.overallScore).toUpperCase()}
-                              size="small"
-                              variant="outlined"
-                              sx={{ 
-                                color: AhpService.getMatchConfidenceColor(match.overallScore),
-                                borderColor: AhpService.getMatchConfidenceColor(match.overallScore),
-                                cursor: 'pointer'
-                              }}
-                            />
-                          </ButtonBase>
+                        <TableCell align="left">
+                          <Box sx={{ minWidth: 80, textAlign: 'left' }}>
+                            <Typography variant="subtitle2" fontWeight="bold" sx={{ textAlign: 'left' }}>
+                              {match.matchPercentage}%
+                            </Typography>
+                          </Box>
                         </TableCell>
-                        <TableCell>
-                          <Typography variant="body2" color="text.secondary">
+                        <TableCell align="left">
+                          <Box sx={{ minWidth: 60, textAlign: 'left' }}>
+                            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'left' }}>
+                              {match.overallScore}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell align="left">
+                          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'left' }}>
                             {formatDate(match.calculatedAt)}
                           </Typography>
                         </TableCell>

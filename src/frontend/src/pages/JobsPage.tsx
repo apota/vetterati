@@ -50,6 +50,7 @@ import {
 import { JobListItem, JobDetails, JobSearchFilters, JobCreateRequest } from '../types/job';
 import { jobService } from '../services/jobService';
 import CreateJobDialog from '../components/CreateJobDialog';
+import EditJobDialog from '../components/EditJobDialog';
 
 const JobsPage: React.FC = () => {
   const [jobs, setJobs] = useState<JobListItem[]>([]);
@@ -59,6 +60,12 @@ const JobsPage: React.FC = () => {
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
+  
+  // Edit dialog state
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editJob, setEditJob] = useState<JobDetails | null>(null);
+  const [editError, setEditError] = useState<string | null>(null);
   
   // Pagination state
   const [page, setPage] = useState(0);
@@ -202,8 +209,55 @@ const JobsPage: React.FC = () => {
     return `${percentage.toFixed(1)}%`;
   };
 
+  // Handler for edit icon click
+  const handleEditClick = async (jobId: string) => {
+    console.log('Edit icon clicked for job ID:', jobId);
+    try {
+      setEditLoading(true);
+      setEditError(null); // Clear any previous errors
+      setEditDialogOpen(true); // Open dialog immediately to show loading state
+      const jobDetails = await jobService.getJob(jobId);
+      console.log('Job details received:', jobDetails);
+      setEditJob(jobDetails);
+    } catch (err: any) {
+      console.error('Error loading job for editing:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to load job for editing';
+      setEditError(errorMessage);
+      setError(errorMessage); // Also set the global error for toast
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
+  // Separate handler for edit button to prevent event propagation issues
+  const handleEditButtonClick = (e: React.MouseEvent, jobId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Edit button clicked - preventing default and stopping propagation');
+    handleEditClick(jobId);
+  };
+
+  // Handler for saving edits
+  const handleSaveEdit = async (jobId: string, jobData: Partial<JobCreateRequest>) => {
+    try {
+      setEditLoading(true);
+      console.log('Saving job edits:', { jobId, jobData });
+      await jobService.updateJob(jobId, jobData);
+      setEditDialogOpen(false);
+      setEditJob(null);
+      setEditError(null);
+      loadJobs(); // Refresh list
+    } catch (err: any) {
+      console.error('Error saving job edits:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to save job edits';
+      setError(errorMessage);
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 3 }}>      
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>
           Jobs Management
@@ -382,8 +436,12 @@ const JobsPage: React.FC = () => {
                           Applications
                         </TableSortLabel>
                       </TableCell>
-                      <TableCell>Avg Match %</TableCell>
-                      <TableCell>Highest Match %</TableCell>
+                      <TableCell>
+                        Avg Match %
+                      </TableCell>
+                      <TableCell>
+                        Highest Match %
+                      </TableCell>
                       <TableCell>
                         <TableSortLabel
                           active={filters.sort_by === 'created_at'}
@@ -393,8 +451,12 @@ const JobsPage: React.FC = () => {
                           Created
                         </TableSortLabel>
                       </TableCell>
-                      <TableCell>Views</TableCell>
-                      <TableCell>Actions</TableCell>
+                      <TableCell>
+                        Views
+                      </TableCell>
+                      <TableCell>
+                        Actions
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -448,11 +510,15 @@ const JobsPage: React.FC = () => {
                           </Box>
                         </TableCell>
                         <TableCell>
-                          <Tooltip title="Edit">
-                            <IconButton size="small" onClick={(e) => { e.stopPropagation(); /* TODO: Implement edit */ }}>
-                              <Edit />
-                            </IconButton>
-                          </Tooltip>
+                          <Button 
+                            variant="outlined" 
+                            size="small" 
+                            startIcon={<Edit />}
+                            onClick={(e) => handleEditButtonClick(e, job.id)}
+                            style={{ marginRight: '8px' }}
+                          >
+                            Edit
+                          </Button>
                           <Tooltip title="Delete">
                             <IconButton size="small" onClick={(e) => { e.stopPropagation(); /* TODO: Implement delete */ }}>
                               <Delete />
@@ -671,6 +737,20 @@ const JobsPage: React.FC = () => {
         onClose={() => setCreateDialogOpen(false)}
         onSubmit={handleCreateJob}
         loading={createLoading}
+      />
+
+      {/* Edit Job Dialog */}
+      <EditJobDialog
+        open={editDialogOpen}
+        job={editJob}
+        loading={editLoading}
+        error={editError || undefined}
+        onClose={() => {
+          setEditDialogOpen(false);
+          setEditJob(null);
+          setEditError(null);
+        }}
+        onSave={handleSaveEdit}
       />
     </Box>
   );

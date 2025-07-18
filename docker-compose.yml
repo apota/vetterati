@@ -236,7 +236,7 @@ services:
     ports:
       - "8003:8000"
     environment:
-      - DATABASE_URL=postgresql://ats_user:ats_password@postgres:5432/vetterati_ats
+      - DATABASE_URL=postgresql+asyncpg://ats_user:ats_password@postgres:5432/vetterati_ats
       - DYNAMODB_ENDPOINT=http://localstack:4566
       - AWS_ENDPOINT_URL=http://localstack:4566
       - AWS_DEFAULT_REGION=us-east-1

@@ -277,7 +277,7 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
               <Table stickyHeader>
                 <TableHead>
                   <TableRow>
-                    <TableCell align="left">
+                    <TableCell align="left" sx={{ padding: '8px 16px' }}>
                       <Tooltip title="Click to view candidate details">
                         <TableSortLabel
                           active={sortBy === 'candidateName'}
@@ -288,7 +288,7 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
                         </TableSortLabel>
                       </Tooltip>
                     </TableCell>
-                    <TableCell align="left">
+                    <TableCell align="left" sx={{ padding: '8px 16px' }}>
                       <Tooltip title="Click to view job details">
                         <TableSortLabel
                           active={sortBy === 'jobTitle'}
@@ -344,34 +344,33 @@ const CandidateMatchesSection: React.FC<CandidateMatchesSectionProps> = ({
                   ) : (
                     matches?.matches.map((match) => (
                       <TableRow key={match.id} hover onClick={() => handleMatchClick(match)} sx={{ cursor: 'pointer' }}>
-                        <TableCell align="left">
+                        <TableCell align="left" sx={{ padding: '8px 16px' }}>
                           <ButtonBase
                             onClick={(e) => handleCandidateClick(e, match)}
                             sx={{
                               display: 'flex',
                               alignItems: 'center',
-                              gap: 2,
+                              justifyContent: 'flex-start',
+                              gap: 1,
                               textAlign: 'left',
                               width: '100%',
                               borderRadius: 1,
-                              p: 1,
+                              p: 0.5,
                               '&:hover': {
                                 backgroundColor: 'action.hover',
                               }
                             }}
                           >
-                            <Avatar sx={{ bgcolor: 'primary.main' }}>
-                              <Person />
+                            <Avatar sx={{ bgcolor: 'primary.main', width: 32, height: 32 }}>
+                              <Person sx={{ fontSize: 18 }} />
                             </Avatar>
-                            <Box sx={{ textAlign: 'left', width: '100%' }}>
-                              <Typography variant="subtitle2" fontWeight="bold" sx={{ textAlign: 'left' }}>
-                                {match.candidateName}
-                              </Typography>
-                            </Box>
+                            <Typography variant="subtitle2" fontWeight="bold" sx={{ textAlign: 'left', flex: 1 }}>
+                              {match.candidateName}
+                            </Typography>
                           </ButtonBase>
                         </TableCell>
-                        <TableCell align="left">
-                          <Typography variant="subtitle2" fontWeight="bold" sx={{ textAlign: 'left', width: '100%' }}>
+                        <TableCell align="left" sx={{ padding: '8px 16px' }}>
+                          <Typography variant="subtitle2" fontWeight="bold" sx={{ textAlign: 'left' }}>
                             {match.jobTitle}
                           </Typography>
                         </TableCell>

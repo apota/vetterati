@@ -38,6 +38,7 @@ class Settings(BaseSettings):
     
     class Config:
         env_file = ".env"
+        protected_namespaces = ()
 
 @lru_cache()
 def get_settings():

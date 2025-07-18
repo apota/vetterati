@@ -143,15 +143,11 @@ const JobsPage: React.FC = () => {
     }));
   };
 
-  // Handle job selection and details dialog
+  // Handle job selection and edit dialog
   const handleJobClick = async (jobId: string) => {
-    try {
-      const jobDetails = await jobService.getJob(jobId);
-      setSelectedJob(jobDetails);
-      setDetailsDialogOpen(true);
-    } catch (err) {
-      console.error('Error loading job details:', err);
-    }
+    console.log('Job row clicked:', jobId);
+    // Use the same edit functionality as the edit button
+    await handleEditClick(jobId);
   };
 
   // Status chip styling

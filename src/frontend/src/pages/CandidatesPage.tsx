@@ -97,7 +97,13 @@ const CandidatesPage: React.FC = () => {
         page: page + 1,
         limit: perPage,
         status: filters.status || undefined,
-        search: filters.query || undefined
+        search: filters.query || undefined,
+        location: filters.location || undefined,
+        career_level: filters.career_level || undefined,
+        experience_min: filters.min_experience,
+        experience_max: filters.max_experience,
+        sort_by: filters.sort_by,
+        sort_order: filters.sort_order
       });
       
       setCandidates(response.items);
@@ -108,7 +114,7 @@ const CandidatesPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, perPage, filters.status, filters.query]);
+  }, [page, perPage, filters.status, filters.query, filters.location, filters.career_level, filters.min_experience, filters.max_experience, filters.sort_by, filters.sort_order]);
 
   // Load stats
   const loadStats = async () => {
@@ -371,7 +377,8 @@ const CandidatesPage: React.FC = () => {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} md={4}>
+            {/* First row */}
+            <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
                 placeholder="Search candidates..."
@@ -387,7 +394,7 @@ const CandidatesPage: React.FC = () => {
               />
             </Grid>
             
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid item xs={12} sm={6} md={3}>
               <FormControl fullWidth>
                 <InputLabel>Status</InputLabel>
                 <Select
@@ -404,7 +411,7 @@ const CandidatesPage: React.FC = () => {
               </FormControl>
             </Grid>
             
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid item xs={12} sm={6} md={3}>
               <FormControl fullWidth>
                 <InputLabel>Career Level</InputLabel>
                 <Select
@@ -421,7 +428,8 @@ const CandidatesPage: React.FC = () => {
               </FormControl>
             </Grid>
             
-            <Grid item xs={12} sm={6} md={2}>
+            {/* Second row */}
+            <Grid item xs={12} sm={6} md={3}>
               <TextField
                 fullWidth
                 label="Min Experience"
@@ -432,7 +440,7 @@ const CandidatesPage: React.FC = () => {
               />
             </Grid>
             
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid item xs={12} sm={6} md={3}>
               <TextField
                 fullWidth
                 label="Max Experience"
@@ -440,6 +448,16 @@ const CandidatesPage: React.FC = () => {
                 value={filters.max_experience || ''}
                 onChange={(e) => handleFilterChange('max_experience', e.target.value ? parseInt(e.target.value) : undefined)}
                 inputProps={{ min: 0 }}
+              />
+            </Grid>
+            
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                label="Location"
+                value={filters.location}
+                onChange={(e) => handleFilterChange('location', e.target.value)}
+                placeholder="City, State"
               />
             </Grid>
           </Grid>

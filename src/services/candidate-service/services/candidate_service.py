@@ -131,9 +131,12 @@ class CandidateService:
     
     def _search_candidates_database(self, search_params: CandidateSearchParams) -> Tuple[List[Candidate], int, Dict[str, Any]]:
         """Search candidates using database queries"""
-        query = self.db.query(Candidate).filter(Candidate.status == "active")
+        query = self.db.query(Candidate)
         
         # Apply filters
+        if search_params.status:
+            query = query.filter(Candidate.status == search_params.status)
+        
         if search_params.location:
             query = query.filter(
                 or_(

@@ -89,10 +89,45 @@ async def get_candidates(
     
     candidates, total, facets = candidate_service.search_candidates(search_params)
     
+    # Format candidates for response
+    formatted_candidates = []
+    for candidate in candidates:
+        # Build location string
+        location_parts = []
+        if candidate.location_city:
+            location_parts.append(candidate.location_city)
+        if candidate.location_state:
+            location_parts.append(candidate.location_state)
+        if candidate.location_country:
+            location_parts.append(candidate.location_country)
+        
+        location_str = ", ".join(location_parts) if location_parts else None
+        
+        # Count applications (simplified for now)
+        applications_count = 0  # TODO: Implement proper application counting when job_applications table is ready
+        
+        formatted_candidate = {
+            "id": str(candidate.id),
+            "first_name": candidate.first_name,
+            "last_name": candidate.last_name,
+            "email": candidate.email,
+            "phone": candidate.phone,
+            "location": location_str,
+            "status": candidate.status,
+            "career_level": candidate.career_level,
+            "total_years_experience": candidate.total_years_experience,
+            "created_at": candidate.created_at.isoformat(),
+            "updated_at": candidate.updated_at.isoformat() if candidate.updated_at else None,
+            "applications_count": applications_count,
+            "latest_application_status": None  # TODO: Implement when needed
+        }
+        
+        formatted_candidates.append(formatted_candidate)
+    
     return {
         "success": True,
         "data": {
-            "items": candidates,
+            "items": formatted_candidates,
             "total": total,
             "page": page,
             "per_page": per_page,

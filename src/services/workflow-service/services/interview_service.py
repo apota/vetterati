@@ -76,27 +76,19 @@ class InterviewService:
             if not interview:
                 return None
             
-            # Update fields
-            if interview_data.scheduled_start:
-                interview.scheduled_start = interview_data.scheduled_start
-            if interview_data.scheduled_end:
-                interview.scheduled_end = interview_data.scheduled_end
-            if interview_data.meeting_url:
-                interview.meeting_url = interview_data.meeting_url
-            if interview_data.meeting_id:
-                interview.meeting_id = interview_data.meeting_id
-            if interview_data.meeting_password:
-                interview.meeting_password = interview_data.meeting_password
-            if interview_data.location:
-                interview.location = interview_data.location
-            if interview_data.status:
-                interview.status = interview_data.status.value
-            if interview_data.feedback:
-                interview.feedback = interview_data.feedback
-            if interview_data.scores:
-                interview.scores = interview_data.scores
-            if interview_data.notes:
-                interview.notes = interview_data.notes
+            # Update fields using model_dump to handle all fields properly
+            update_data = interview_data.model_dump(exclude_unset=True)
+            
+            for field, value in update_data.items():
+                if value is not None:
+                    if field == 'status' and hasattr(value, 'value'):
+                        # Handle enum values
+                        setattr(interview, field, value.value)
+                    elif field == 'interview_type' and hasattr(value, 'value'):
+                        # Handle enum values
+                        setattr(interview, field, value.value)
+                    else:
+                        setattr(interview, field, value)
             
             interview.updated_at = datetime.utcnow()
             

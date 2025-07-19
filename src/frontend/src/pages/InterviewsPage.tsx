@@ -46,8 +46,18 @@ import {
   PlayArrow,
   People
 } from '@mui/icons-material';
-import { InterviewListItem, InterviewStats, InterviewSearchFilters, InterviewType, InterviewStatus } from '../types/interview';
+import { 
+  InterviewListItem, 
+  InterviewStats, 
+  InterviewSearchFilters, 
+  InterviewType, 
+  InterviewStatus,
+  InterviewDetails,
+  InterviewCreateRequest,
+  InterviewUpdateRequest
+} from '../types/interview';
 import { InterviewService } from '../services/interviewService';
+import InterviewForm from '../components/Interview/InterviewForm';
 
 const InterviewsPage: React.FC = () => {
   const [interviews, setInterviews] = useState<InterviewListItem[]>([]);
@@ -71,6 +81,13 @@ const InterviewsPage: React.FC = () => {
     sort_by: 'scheduled_start',
     sort_order: 'asc'
   });
+
+  // Form state
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingInterview, setEditingInterview] = useState<InterviewDetails | null>(null);
+  const [isEdit, setIsEdit] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   // Load interviews
   const loadInterviews = React.useCallback(async () => {
@@ -173,6 +190,82 @@ const InterviewsPage: React.FC = () => {
     setPage(0);
   };
 
+  // Form handlers
+  const handleCreateInterview = () => {
+    setEditingInterview(null);
+    setIsEdit(false);
+    setFormError(null);
+    setFormOpen(true);
+  };
+
+  const handleEditInterview = async (interviewId: string) => {
+    try {
+      setFormLoading(true);
+      
+      // Fetch the full interview details from the API
+      const interviewDetails = await InterviewService.getInterviewById(interviewId);
+      
+      // Transform the response to match InterviewDetails interface
+      const interviewDetailsForEdit: InterviewDetails = {
+        ...interviewDetails,
+        // Map API response fields if necessary
+        interviewer_ids: interviewDetails.interviewer_ids || [],
+        additional_participants: interviewDetails.additional_participants || [],
+        interview_questions: interviewDetails.interview_questions || [],
+        evaluation_criteria: interviewDetails.evaluation_criteria || [],
+        feedback: interviewDetails.feedback || [],
+        attachments: interviewDetails.attachments || [],
+        // Use existing fields from API response
+        workflow_id: interviewDetails.workflow_id,
+        created_at: interviewDetails.created_at,
+        updated_at: interviewDetails.updated_at,
+      };
+      
+      setEditingInterview(interviewDetailsForEdit);
+      setIsEdit(true);
+      setFormError(null);
+      setFormOpen(true);
+    } catch (error) {
+      console.error('Error loading interview for edit:', error);
+      setFormError('Failed to load interview details');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleFormSubmit = async (data: InterviewCreateRequest | InterviewUpdateRequest) => {
+    try {
+      setFormLoading(true);
+      setFormError(null);
+
+      if (isEdit && editingInterview) {
+        // Update existing interview
+        await InterviewService.updateInterview(editingInterview.id, data as InterviewUpdateRequest);
+      } else {
+        // Create new interview
+        await InterviewService.createInterview(data as InterviewCreateRequest);
+      }
+
+      // Refresh the interviews list
+      await loadInterviews();
+      await loadStats();
+      
+      setFormOpen(false);
+    } catch (error) {
+      console.error('Error saving interview:', error);
+      setFormError('Failed to save interview');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleFormClose = () => {
+    setFormOpen(false);
+    setEditingInterview(null);
+    setIsEdit(false);
+    setFormError(null);
+  };
+
   // Get status chip color
   const getStatusChipColor = (status: InterviewStatus) => {
     switch (status) {
@@ -230,7 +323,7 @@ const InterviewsPage: React.FC = () => {
         <Button
           variant="contained"
           startIcon={<Add />}
-          // onClick={() => setCreateDialogOpen(true)}
+          onClick={handleCreateInterview}
         >
           Schedule Interview
         </Button>
@@ -525,7 +618,10 @@ const InterviewsPage: React.FC = () => {
                     <TableCell>
                       <Box display="flex">
                         <Tooltip title="Edit Interview">
-                          <IconButton size="small">
+                          <IconButton 
+                            size="small"
+                            onClick={() => handleEditInterview(interview.id)}
+                          >
                             <Edit fontSize="small" />
                           </IconButton>
                         </Tooltip>
@@ -564,6 +660,17 @@ const InterviewsPage: React.FC = () => {
           onRowsPerPageChange={handlePerPageChange}
         />
       </Card>
+
+      {/* Interview Form Dialog */}
+      <InterviewForm
+        open={formOpen}
+        onClose={handleFormClose}
+        onSubmit={handleFormSubmit}
+        interview={editingInterview}
+        isEdit={isEdit}
+        loading={formLoading}
+        error={formError}
+      />
     </Box>
   );
 };

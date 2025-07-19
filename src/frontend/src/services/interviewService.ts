@@ -75,7 +75,7 @@ export class InterviewService {
   // Get interview by ID
   static async getInterviewById(id: string): Promise<InterviewDetails> {
     try {
-      const response = await api.get(`/interviews/${id}`);
+      const response = await api.get(`http://localhost:8002/api/v1/interviews/${id}`);
       return response.data.data;
     } catch (error) {
       console.error('Error fetching interview:', error);
@@ -86,7 +86,7 @@ export class InterviewService {
   // Create new interview
   static async createInterview(interviewData: InterviewCreateRequest): Promise<InterviewStep> {
     try {
-      const response = await api.post('/interviews', interviewData);
+      const response = await api.post('http://localhost:8002/api/v1/interviews', interviewData);
       return response.data.data;
     } catch (error) {
       console.error('Error creating interview:', error);
@@ -97,7 +97,7 @@ export class InterviewService {
   // Update interview
   static async updateInterview(id: string, interviewData: InterviewUpdateRequest): Promise<InterviewStep> {
     try {
-      const response = await api.put(`/interviews/${id}`, interviewData);
+      const response = await api.put(`http://localhost:8002/api/v1/interviews/${id}`, interviewData);
       return response.data.data;
     } catch (error) {
       console.error('Error updating interview:', error);

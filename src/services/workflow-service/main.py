@@ -13,6 +13,7 @@ from schemas import (
     CandidateWorkflowUpdate,
     InterviewStepResponse,
     InterviewStepCreate,
+    InterviewStepUpdate,
     WorkflowTemplateResponse,
     WorkflowTemplateCreate,
     WorkflowStateTransitionRequest,
@@ -175,111 +176,6 @@ async def transition_workflow_state(
         logger.error(f"Error transitioning workflow state: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to transition state")
 
-# Interview endpoints
-@app.get("/api/v1/interviews")
-async def list_interviews(
-    page: int = Query(1, ge=1),
-    limit: int = Query(10, ge=1, le=100),
-    status: Optional[str] = Query(None),
-    interview_type: Optional[str] = Query(None),
-    q: Optional[str] = Query(None),
-    candidate_id: Optional[str] = Query(None),
-    job_id: Optional[str] = Query(None),
-    interviewer_id: Optional[str] = Query(None),
-    date_from: Optional[str] = Query(None),
-    date_to: Optional[str] = Query(None),
-    sort_by: str = Query("scheduled_start"),
-    sort_order: str = Query("asc"),
-    db: AsyncSession = Depends(get_db)
-):
-    """Get paginated list of interviews with filtering"""
-    try:
-        # For now, return mock data since the service method needs to be implemented
-        mock_interviews = [
-            {
-                "id": "1",
-                "candidate_name": "Jane Smith",
-                "candidate_id": "333333333-3333-3333-33333-333333333333",
-                "job_title": "Senior Software Engineer",
-                "job_id": "job-1",
-                "interview_type": "technical",
-                "round_number": 1,
-                "title": "Technical Interview - React & TypeScript",
-                "status": "scheduled",
-                "scheduled_start": "2025-07-19T10:00:00Z",
-                "scheduled_end": "2025-07-19T11:30:00Z",
-                "interviewer_names": ["John Doe", "Sarah Wilson"],
-                "meeting_url": "https://meet.google.com/abc-defg-hij",
-                "created_at": "2025-07-18T08:00:00Z"
-            },
-            {
-                "id": "2",
-                "candidate_name": "Mike Johnson",
-                "candidate_id": "444444444-4444-4444-44444-444444444444",
-                "job_title": "Product Manager",
-                "job_id": "job-2",
-                "interview_type": "behavioral",
-                "round_number": 1,
-                "title": "Initial Screening",
-                "status": "completed",
-                "scheduled_start": "2025-07-17T14:00:00Z",
-                "scheduled_end": "2025-07-17T15:00:00Z",
-                "interviewer_names": ["Emily Davis"],
-                "meeting_url": "https://zoom.us/j/123456789",
-                "created_at": "2025-07-16T10:00:00Z"
-            },
-            {
-                "id": "3",
-                "candidate_name": "David Brown",
-                "candidate_id": "555555555-5555-5555-55555-555555555555",
-                "job_title": "DevOps Engineer",
-                "job_id": "job-3",
-                "interview_type": "onsite",
-                "round_number": 2,
-                "title": "Final Interview - System Design",
-                "status": "pending",
-                "scheduled_start": "2025-07-20T09:00:00Z",
-                "scheduled_end": "2025-07-20T12:00:00Z",
-                "interviewer_names": ["Alex Chen", "Maria Garcia", "Tom Wilson"],
-                "location": "Conference Room A",
-                "created_at": "2025-07-18T12:00:00Z"
-            }
-        ]
-        
-        # Apply basic filtering to mock data
-        filtered_interviews = mock_interviews
-        if status:
-            filtered_interviews = [i for i in filtered_interviews if i["status"] == status]
-        if interview_type:
-            filtered_interviews = [i for i in filtered_interviews if i["interview_type"] == interview_type]
-        if q:
-            q_lower = q.lower()
-            filtered_interviews = [i for i in filtered_interviews if 
-                q_lower in i["candidate_name"].lower() or 
-                q_lower in i["job_title"].lower() or
-                (i.get("title") and q_lower in i["title"].lower())
-            ]
-        
-        # Apply pagination
-        start_idx = (page - 1) * limit
-        end_idx = start_idx + limit
-        paginated_interviews = filtered_interviews[start_idx:end_idx]
-        
-        return {
-            "success": True,
-            "data": {
-                "items": paginated_interviews,
-                "total": len(filtered_interviews),
-                "page": page,
-                "per_page": limit,
-                "pages": (len(filtered_interviews) + limit - 1) // limit
-            },
-            "message": "Interviews retrieved successfully"
-        }
-    except Exception as e:
-        logger.error(f"Error fetching interviews: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to fetch interviews")
-
 @app.post("/interviews", response_model=InterviewStepResponse)
 async def create_interview(
     interview_data: InterviewStepCreate,
@@ -293,16 +189,7 @@ async def create_interview(
         logger.error(f"Error creating interview: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to create interview")
 
-@app.get("/interviews/{interview_id}", response_model=InterviewStepResponse)
-async def get_interview(
-    interview_id: str,
-    db: AsyncSession = Depends(get_db)
-):
-    """Get interview by ID"""
-    interview = await interview_service.get_interview(db, interview_id)
-    if not interview:
-        raise HTTPException(status_code=404, detail="Interview not found")
-    return interview
+# Removed old individual interview endpoint - replaced by v1 endpoint
 
 @app.get("/workflows/{workflow_id}/interviews", response_model=List[InterviewStepResponse])
 async def list_workflow_interviews(
@@ -391,6 +278,351 @@ async def get_workflow_analytics(
     except Exception as e:
         logger.error(f"Error getting analytics: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to get analytics")
+
+# Interview endpoints
+@app.get("/api/v1/interviews")
+async def list_interviews(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    status: Optional[str] = Query(None),
+    interview_type: Optional[str] = Query(None),
+    q: Optional[str] = Query(None),
+    candidate_id: Optional[str] = Query(None),
+    job_id: Optional[str] = Query(None),
+    interviewer_id: Optional[str] = Query(None),
+    date_from: Optional[str] = Query(None),
+    date_to: Optional[str] = Query(None),
+    sort_by: str = Query("scheduled_start"),
+    sort_order: str = Query("asc"),
+    db: AsyncSession = Depends(get_db)
+):
+    """List interviews with filtering and pagination"""
+    try:
+        # Mock data for development - replace with actual database query
+        mock_interviews = [
+            {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "candidate_name": "Jane Smith",
+                "candidate_id": "333333333-3333-3333-33333-333333333333",
+                "job_title": "Senior Software Engineer",
+                "job_id": "job-1",
+                "interview_type": "technical",
+                "round_number": 1,
+                "title": "Technical Interview - React & TypeScript",
+                "status": "scheduled",
+                "scheduled_start": "2025-07-19T10:00:00Z",
+                "scheduled_end": "2025-07-19T11:30:00Z",
+                "interviewer_names": ["John Doe", "Sarah Wilson"],
+                "meeting_url": "https://meet.google.com/abc-defg-hij",
+                "created_at": "2025-07-18T08:00:00Z"
+            },
+            {
+                "id": "550e8400-e29b-41d4-a716-446655440002",
+                "candidate_name": "Mike Johnson",
+                "candidate_id": "444444444-4444-4444-44444-444444444444",
+                "job_title": "Product Manager",
+                "job_id": "job-2",
+                "interview_type": "behavioral",
+                "round_number": 1,
+                "title": "Initial Screening",
+                "status": "completed",
+                "scheduled_start": "2025-07-17T14:00:00Z",
+                "scheduled_end": "2025-07-17T15:00:00Z",
+                "interviewer_names": ["Emily Davis"],
+                "meeting_url": "https://zoom.us/j/123456789",
+                "created_at": "2025-07-16T10:00:00Z"
+            },
+            {
+                "id": "550e8400-e29b-41d4-a716-446655440003",
+                "candidate_name": "David Brown",
+                "candidate_id": "555555555-5555-5555-55555-555555555555",
+                "job_title": "DevOps Engineer",
+                "job_id": "job-3",
+                "interview_type": "onsite",
+                "round_number": 2,
+                "title": "Final Interview - System Design",
+                "status": "pending",
+                "scheduled_start": "2025-07-20T09:00:00Z",
+                "scheduled_end": "2025-07-20T12:00:00Z",
+                "interviewer_names": ["Alex Chen", "Maria Garcia", "Tom Wilson"],
+                "location": "Conference Room A",
+                "created_at": "2025-07-18T12:00:00Z"
+            },
+            {
+                "id": "550e8400-e29b-41d4-a716-446655440004",
+                "candidate_name": "Sarah Wilson",
+                "candidate_id": "666666666-6666-6666-66666-666666666666",
+                "job_title": "UX Designer",
+                "job_id": "job-4",
+                "interview_type": "video",
+                "round_number": 1,
+                "title": "Portfolio Review",
+                "status": "in_progress",
+                "scheduled_start": "2025-07-18T16:00:00Z",
+                "scheduled_end": "2025-07-18T17:00:00Z",
+                "interviewer_names": ["Lisa Park"],
+                "meeting_url": "https://teams.microsoft.com/l/meetup-join/abc123",
+                "created_at": "2025-07-17T14:00:00Z"
+            },
+            {
+                "id": "550e8400-e29b-41d4-a716-446655440005",
+                "candidate_name": "Emily Davis",
+                "candidate_id": "777777777-7777-7777-77777-777777777777",
+                "job_title": "Marketing Manager",
+                "job_id": "job-5",
+                "interview_type": "phone",
+                "round_number": 1,
+                "title": "HR Screening",
+                "status": "cancelled",
+                "scheduled_start": "2025-07-19T11:00:00Z",
+                "scheduled_end": "2025-07-19T11:30:00Z",
+                "interviewer_names": ["Robert Kim"],
+                "created_at": "2025-07-18T09:00:00Z"
+            }
+        ]
+        
+        # Apply basic filtering
+        filtered_interviews = mock_interviews
+        
+        if status:
+            filtered_interviews = [i for i in filtered_interviews if i["status"] == status]
+        
+        if interview_type:
+            filtered_interviews = [i for i in filtered_interviews if i["interview_type"] == interview_type]
+        
+        if q:
+            search_term = q.lower()
+            filtered_interviews = [
+                i for i in filtered_interviews 
+                if (search_term in i["candidate_name"].lower() or
+                    search_term in i["job_title"].lower() or
+                    search_term in (i.get("title", "")).lower())
+            ]
+        
+        # Apply pagination
+        start_index = (page - 1) * limit
+        end_index = start_index + limit
+        paginated_interviews = filtered_interviews[start_index:end_index]
+        
+        return {
+            "success": True,
+            "data": {
+                "items": paginated_interviews,
+                "total": len(filtered_interviews)
+            },
+            "message": "Interviews retrieved successfully"
+        }
+    except Exception as e:
+        logger.error(f"Error listing interviews: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve interviews")
+
+@app.get("/api/v1/interviews/{interview_id}")
+async def get_interview_v1(
+    interview_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """Get interview by ID"""
+    try:
+        # Fallback to mock data for demo purposes (skip database for now)
+        mock_data = {
+            "550e8400-e29b-41d4-a716-446655440001": {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "workflow_id": "123e4567-e89b-12d3-a456-426614174000",
+                "interview_type": "technical",
+                "round_number": 1,
+                "title": "Technical Interview - React & TypeScript",
+                "description": "Comprehensive technical interview covering React, TypeScript, and system design",
+                "status": "scheduled",
+                "scheduled_start": "2025-07-19T10:00:00Z",
+                "scheduled_end": "2025-07-19T11:30:00Z",
+                "meeting_url": "https://meet.google.com/abc-defg-hij",
+                "meeting_id": "abc-defg-hij",
+                "meeting_password": "l4#%ab$HvJU^X3kY",
+                "location": "Virtual",
+                "interviewer_ids": ["1", "2"],
+                "additional_participants": [],
+                "interview_questions": [],
+                "evaluation_criteria": [],
+                "feedback": [],
+                "scores": {},
+                "notes": "",
+                "attachments": [],
+                "created_at": "2025-07-18T08:00:00Z",
+                "updated_at": "2025-07-18T08:00:00Z"
+            },
+            "550e8400-e29b-41d4-a716-446655440002": {
+                "id": "550e8400-e29b-41d4-a716-446655440002",
+                "workflow_id": "123e4567-e89b-12d3-a456-426614174001",
+                "interview_type": "behavioral",
+                "round_number": 1,
+                "title": "Initial Screening",
+                "description": "Behavioral interview to assess cultural fit",
+                "status": "completed",
+                "scheduled_start": "2025-07-17T14:00:00Z",
+                "scheduled_end": "2025-07-17T15:00:00Z",
+                "meeting_url": "https://zoom.us/j/123456789",
+                "meeting_id": "123456789",
+                "location": "Virtual",
+                "interviewer_ids": ["3"],
+                "additional_participants": [],
+                "interview_questions": [],
+                "evaluation_criteria": [],
+                "feedback": [],
+                "scores": {},
+                "notes": "",
+                "attachments": [],
+                "created_at": "2025-07-16T10:00:00Z",
+                "updated_at": "2025-07-17T15:00:00Z"
+            },
+            "550e8400-e29b-41d4-a716-446655440003": {
+                "id": "550e8400-e29b-41d4-a716-446655440003",
+                "workflow_id": "123e4567-e89b-12d3-a456-426614174002",
+                "interview_type": "onsite",
+                "round_number": 2,
+                "title": "Final Interview - System Design",
+                "description": "Final round interview focusing on system design",
+                "status": "pending",
+                "scheduled_start": "2025-07-20T09:00:00Z",
+                "scheduled_end": "2025-07-20T12:00:00Z",
+                "location": "Conference Room A",
+                "interviewer_ids": ["4", "5"],
+                "additional_participants": [],
+                "interview_questions": [],
+                "evaluation_criteria": [],
+                "feedback": [],
+                "scores": {},
+                "notes": "",
+                "attachments": [],
+                "created_at": "2025-07-18T12:00:00Z",
+                "updated_at": "2025-07-18T12:00:00Z"
+            }
+        }
+        
+        if interview_id in mock_data:
+            return {
+                "success": True,
+                "data": mock_data[interview_id],
+                "message": "Interview retrieved successfully"
+            }
+        
+        raise HTTPException(status_code=404, detail="Interview not found")
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting interview: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get interview: {str(e)}")
+
+@app.post("/api/v1/interviews")
+async def create_interview_v1(
+    interview_data: dict,
+    db: AsyncSession = Depends(get_db)
+):
+    """Create a new interview"""
+    try:
+        logger.info(f"Creating interview with data: {interview_data}")
+        
+        # Convert dict to InterviewStepCreate schema for validation
+        interview_create_data = InterviewStepCreate(**interview_data)
+        
+        # Use real database service instead of mock
+        new_interview = await interview_service.create_interview(db, interview_create_data)
+        
+        return {
+            "success": True,
+            "data": {
+                "id": str(new_interview.id),
+                "workflow_id": str(new_interview.workflow_id),
+                "interview_type": new_interview.interview_type,
+                "round_number": new_interview.round_number,
+                "title": new_interview.title,
+                "description": new_interview.description,
+                "status": new_interview.status,
+                "scheduled_start": new_interview.scheduled_start.isoformat() if new_interview.scheduled_start else None,
+                "scheduled_end": new_interview.scheduled_end.isoformat() if new_interview.scheduled_end else None,
+                "meeting_url": new_interview.meeting_url,
+                "meeting_id": new_interview.meeting_id,
+                "meeting_password": new_interview.meeting_password,
+                "location": new_interview.location,
+                "interviewer_ids": new_interview.interviewer_ids,
+                "additional_participants": new_interview.additional_participants,
+                "notes": new_interview.notes,
+                "created_at": new_interview.created_at.isoformat(),
+                "updated_at": new_interview.updated_at.isoformat()
+            },
+            "message": "Interview created successfully"
+        }
+    except Exception as e:
+        logger.error(f"Error creating interview: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to create interview: {str(e)}")
+
+@app.put("/api/v1/interviews/{interview_id}")
+async def update_interview_v1(
+    interview_id: str,
+    interview_data: dict,
+    db: AsyncSession = Depends(get_db)
+):
+    """Update an existing interview"""
+    try:
+        logger.info(f"Updating interview {interview_id} with data: {interview_data}")
+        
+        # Convert dict to InterviewStepUpdate schema for validation
+        interview_update_data = InterviewStepUpdate(**interview_data)
+        
+        # Use real database service instead of mock
+        updated_interview = await interview_service.update_interview(db, interview_id, interview_update_data)
+        
+        if not updated_interview:
+            raise HTTPException(status_code=404, detail="Interview not found")
+        
+        return {
+            "success": True,
+            "data": {
+                "id": str(updated_interview.id),
+                "title": updated_interview.title,
+                "description": updated_interview.description,
+                "status": updated_interview.status,
+                "scheduled_start": updated_interview.scheduled_start.isoformat() if updated_interview.scheduled_start else None,
+                "scheduled_end": updated_interview.scheduled_end.isoformat() if updated_interview.scheduled_end else None,
+                "meeting_url": updated_interview.meeting_url,
+                "meeting_id": updated_interview.meeting_id,
+                "meeting_password": updated_interview.meeting_password,
+                "location": updated_interview.location,
+                "notes": updated_interview.notes,
+                "updated_at": updated_interview.updated_at.isoformat()
+            },
+            "message": "Interview updated successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating interview: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to update interview: {str(e)}")
+
+@app.delete("/api/v1/interviews/{interview_id}")
+async def delete_interview_v1(
+    interview_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """Delete an interview"""
+    try:
+        logger.info(f"Deleting interview {interview_id}")
+        
+        # Use real database service instead of mock
+        deleted = await interview_service.delete_interview(db, interview_id)
+        
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Interview not found")
+        
+        return {
+            "success": True,
+            "message": "Interview deleted successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting interview: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete interview: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

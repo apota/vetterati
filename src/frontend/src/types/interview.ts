@@ -151,7 +151,9 @@ export interface InterviewListItem {
 export interface InterviewDetails extends InterviewStep {
   candidate_name: string;
   candidate_email: string;
+  candidate_id: string;
   job_title: string;
+  job_id: string;
   job_department?: string;
   interviewer_details: InterviewParticipant[];
 }
@@ -169,8 +171,14 @@ export interface InterviewCreateRequest {
 }
 
 export interface InterviewUpdateRequest {
+  interview_type?: InterviewType;
+  round_number?: number;
   title?: string;
   description?: string;
+  interviewer_ids?: string[];
+  additional_participants?: any[];
+  interview_questions?: any[];
+  evaluation_criteria?: any[];
   scheduled_start?: string;
   scheduled_end?: string;
   meeting_url?: string;
@@ -178,8 +186,8 @@ export interface InterviewUpdateRequest {
   meeting_password?: string;
   location?: string;
   status?: InterviewStatus;
-  feedback?: InterviewFeedback;
-  scores?: InterviewScores;
+  feedback?: any[];
+  scores?: any;
   notes?: string;
 }
 

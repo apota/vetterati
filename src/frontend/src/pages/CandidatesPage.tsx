@@ -217,6 +217,43 @@ const CandidatesPage: React.FC = () => {
     setPage(0); // Reset to first page when filters change
   };
 
+  // Handle stats panel clicks
+  const handleStatsPanelClick = (filterType: string) => {
+    let newFilters: Partial<CandidateSearchFilters> = {
+      query: '',
+      career_level: '',
+      source: '',
+      min_experience: undefined,
+      max_experience: undefined,
+      location: '',
+      skills: [],
+    };
+
+    switch (filterType) {
+      case 'total':
+        // Show all candidates - clear all filters
+        newFilters.status = '';
+        break;
+      case 'active':
+        newFilters.status = 'active';
+        break;
+      case 'hired':
+        newFilters.status = 'hired';
+        break;
+      case 'new_this_week':
+        // Show all candidates from this week (no specific status filter needed)
+        newFilters.status = '';
+        // Note: The backend should handle the "new this week" logic based on created_at
+        break;
+    }
+
+    setFilters(prev => ({
+      ...prev,
+      ...newFilters
+    }));
+    setPage(0); // Reset to first page when filters change
+  };
+
   // Handle candidate creation
   const handleCandidateCreated = (newCandidate: CandidateDetails) => {
     loadCandidates(); // Refresh the list
@@ -301,7 +338,10 @@ const CandidatesPage: React.FC = () => {
       {/* Statistics Cards */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card 
+            sx={{ cursor: 'pointer', '&:hover': { boxShadow: 4 } }}
+            onClick={() => handleStatsPanelClick('total')}
+          >
             <CardContent>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
@@ -319,7 +359,10 @@ const CandidatesPage: React.FC = () => {
         </Grid>
         
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card 
+            sx={{ cursor: 'pointer', '&:hover': { boxShadow: 4 } }}
+            onClick={() => handleStatsPanelClick('active')}
+          >
             <CardContent>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
@@ -337,7 +380,10 @@ const CandidatesPage: React.FC = () => {
         </Grid>
         
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card 
+            sx={{ cursor: 'pointer', '&:hover': { boxShadow: 4 } }}
+            onClick={() => handleStatsPanelClick('hired')}
+          >
             <CardContent>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
@@ -355,7 +401,10 @@ const CandidatesPage: React.FC = () => {
         </Grid>
         
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card 
+            sx={{ cursor: 'pointer', '&:hover': { boxShadow: 4 } }}
+            onClick={() => handleStatsPanelClick('new_this_week')}
+          >
             <CardContent>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>

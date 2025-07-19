@@ -51,9 +51,29 @@ export class CandidateService {
     limit?: number;
     status?: string;
     search?: string;
+    location?: string;
+    career_level?: string;
+    experience_min?: number;
+    experience_max?: number;
+    sort_by?: string;
+    sort_order?: string;
   }): Promise<{ items: CandidateListItem[], total: number }> {
     try {
-      const response = await api.get('/api/v1/candidates', { params });
+      // Map frontend parameter names to backend parameter names
+      const apiParams = {
+        page: params?.page,
+        per_page: params?.limit,
+        status: params?.status,
+        q: params?.search,
+        location: params?.location,
+        career_level: params?.career_level,
+        experience_min: params?.experience_min,
+        experience_max: params?.experience_max,
+        sort_by: params?.sort_by,
+        sort_order: params?.sort_order
+      };
+
+      const response = await api.get('/api/v1/candidates', { params: apiParams });
       return response.data.data;
     } catch (error) {
       console.error('Error fetching candidates:', error);

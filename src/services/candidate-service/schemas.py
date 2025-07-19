@@ -6,8 +6,9 @@ from enum import Enum
 
 class CandidateStatus(str, Enum):
     active = "active"
+    hired = "hired"
+    rejected = "rejected"
     inactive = "inactive"
-    do_not_contact = "do_not_contact"
 
 class CareerLevel(str, Enum):
     entry = "entry"

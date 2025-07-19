@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks
+from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional, Dict, Any
@@ -176,6 +176,110 @@ async def transition_workflow_state(
         raise HTTPException(status_code=500, detail="Failed to transition state")
 
 # Interview endpoints
+@app.get("/api/v1/interviews")
+async def list_interviews(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    status: Optional[str] = Query(None),
+    interview_type: Optional[str] = Query(None),
+    q: Optional[str] = Query(None),
+    candidate_id: Optional[str] = Query(None),
+    job_id: Optional[str] = Query(None),
+    interviewer_id: Optional[str] = Query(None),
+    date_from: Optional[str] = Query(None),
+    date_to: Optional[str] = Query(None),
+    sort_by: str = Query("scheduled_start"),
+    sort_order: str = Query("asc"),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get paginated list of interviews with filtering"""
+    try:
+        # For now, return mock data since the service method needs to be implemented
+        mock_interviews = [
+            {
+                "id": "1",
+                "candidate_name": "Jane Smith",
+                "candidate_id": "333333333-3333-3333-33333-333333333333",
+                "job_title": "Senior Software Engineer",
+                "job_id": "job-1",
+                "interview_type": "technical",
+                "round_number": 1,
+                "title": "Technical Interview - React & TypeScript",
+                "status": "scheduled",
+                "scheduled_start": "2025-07-19T10:00:00Z",
+                "scheduled_end": "2025-07-19T11:30:00Z",
+                "interviewer_names": ["John Doe", "Sarah Wilson"],
+                "meeting_url": "https://meet.google.com/abc-defg-hij",
+                "created_at": "2025-07-18T08:00:00Z"
+            },
+            {
+                "id": "2",
+                "candidate_name": "Mike Johnson",
+                "candidate_id": "444444444-4444-4444-44444-444444444444",
+                "job_title": "Product Manager",
+                "job_id": "job-2",
+                "interview_type": "behavioral",
+                "round_number": 1,
+                "title": "Initial Screening",
+                "status": "completed",
+                "scheduled_start": "2025-07-17T14:00:00Z",
+                "scheduled_end": "2025-07-17T15:00:00Z",
+                "interviewer_names": ["Emily Davis"],
+                "meeting_url": "https://zoom.us/j/123456789",
+                "created_at": "2025-07-16T10:00:00Z"
+            },
+            {
+                "id": "3",
+                "candidate_name": "David Brown",
+                "candidate_id": "555555555-5555-5555-55555-555555555555",
+                "job_title": "DevOps Engineer",
+                "job_id": "job-3",
+                "interview_type": "onsite",
+                "round_number": 2,
+                "title": "Final Interview - System Design",
+                "status": "pending",
+                "scheduled_start": "2025-07-20T09:00:00Z",
+                "scheduled_end": "2025-07-20T12:00:00Z",
+                "interviewer_names": ["Alex Chen", "Maria Garcia", "Tom Wilson"],
+                "location": "Conference Room A",
+                "created_at": "2025-07-18T12:00:00Z"
+            }
+        ]
+        
+        # Apply basic filtering to mock data
+        filtered_interviews = mock_interviews
+        if status:
+            filtered_interviews = [i for i in filtered_interviews if i["status"] == status]
+        if interview_type:
+            filtered_interviews = [i for i in filtered_interviews if i["interview_type"] == interview_type]
+        if q:
+            q_lower = q.lower()
+            filtered_interviews = [i for i in filtered_interviews if 
+                q_lower in i["candidate_name"].lower() or 
+                q_lower in i["job_title"].lower() or
+                (i.get("title") and q_lower in i["title"].lower())
+            ]
+        
+        # Apply pagination
+        start_idx = (page - 1) * limit
+        end_idx = start_idx + limit
+        paginated_interviews = filtered_interviews[start_idx:end_idx]
+        
+        return {
+            "success": True,
+            "data": {
+                "items": paginated_interviews,
+                "total": len(filtered_interviews),
+                "page": page,
+                "per_page": limit,
+                "pages": (len(filtered_interviews) + limit - 1) // limit
+            },
+            "message": "Interviews retrieved successfully"
+        }
+    except Exception as e:
+        logger.error(f"Error fetching interviews: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch interviews")
+
 @app.post("/interviews", response_model=InterviewStepResponse)
 async def create_interview(
     interview_data: InterviewStepCreate,

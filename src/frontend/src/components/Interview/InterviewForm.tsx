@@ -156,7 +156,7 @@ const InterviewForm: React.FC<InterviewFormProps> = ({
         meeting_id: interview.meeting_id || '',
         meeting_password: interview.meeting_password || '',
         location: interview.location || '',
-        status: formData.status,
+        status: interview.status || 'pending',
         interviewer_ids: interviewerIds,
         additional_participants: interview.additional_participants || [],
         notes: interview.notes || '',

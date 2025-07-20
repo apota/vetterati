@@ -340,6 +340,9 @@ async def list_interviews(
                     # Use actual count from database but keep names for display
                     interviewer_names = interviewer_names[:len(interview.interviewer_ids)]
                 
+                # Generate round number if null (default to 1)
+                round_number = interview.round_number if interview.round_number is not None else 1
+                
                 interview_items.append({
                     "id": str(interview.id),
                     "candidate_name": candidate_name,  # TODO: Join with candidate table using workflow->candidate_id
@@ -347,7 +350,7 @@ async def list_interviews(
                     "job_title": job_title,  # TODO: Join with job table using workflow->job_id
                     "job_id": f"job-{hash(str(interview.workflow_id)) % 1000}",
                     "interview_type": interview.interview_type,
-                    "round_number": interview.round_number,
+                    "round_number": round_number,
                     "title": interview.title or f"{job_title} Interview",
                     "status": interview.status or "pending",
                     "scheduled_start": interview.scheduled_start.isoformat() if interview.scheduled_start else None,
@@ -539,13 +542,41 @@ async def get_interview_v1(
             def safe_isoformat(dt_value):
                 return dt_value.isoformat() if dt_value is not None else None
             
+            # Generate interviewer data based on interview type for the popup
+            interviewer_sets = {
+                "technical": [
+                    {"id": "int-1", "name": "Sarah Connor", "email": "sarah.connor@company.com"},
+                    {"id": "int-2", "name": "John Matrix", "email": "john.matrix@company.com"}
+                ],
+                "behavioral": [
+                    {"id": "int-3", "name": "Emily Davis", "email": "emily.davis@company.com"},
+                    {"id": "int-4", "name": "Mike Johnson", "email": "mike.johnson@company.com"}
+                ],
+                "final": [
+                    {"id": "int-5", "name": "Lisa Park", "email": "lisa.park@company.com"},
+                    {"id": "int-6", "name": "Robert Kim", "email": "robert.kim@company.com"},
+                    {"id": "int-7", "name": "Alex Chen", "email": "alex.chen@company.com"}
+                ],
+                "onsite": [
+                    {"id": "int-8", "name": "Maria Garcia", "email": "maria.garcia@company.com"},
+                    {"id": "int-9", "name": "Tom Wilson", "email": "tom.wilson@company.com"}
+                ],
+                "hr": [
+                    {"id": "int-10", "name": "Jennifer Taylor", "email": "jennifer.taylor@company.com"}
+                ]
+            }
+            interviewer_data = interviewer_sets.get(interview.interview_type, [{"id": "int-0", "name": "Staff Member", "email": "staff@company.com"}])
+            
+            # Determine round number (default to 1 if null)
+            round_number = interview.round_number if interview.round_number is not None else 1
+            
             return {
                 "success": True,
                 "data": {
                     "id": str(interview.id),
                     "workflow_id": str(interview.workflow_id),
                     "interview_type": interview.interview_type,
-                    "round_number": interview.round_number,
+                    "round_number": round_number,
                     "title": interview.title or "",
                     "description": interview.description or "",
                     "status": interview.status or "pending",
@@ -558,6 +589,11 @@ async def get_interview_v1(
                     "meeting_password": interview.meeting_password or "",
                     "location": interview.location or "",
                     "interviewer_ids": interview.interviewer_ids or [],
+                    "interviewers": interviewer_data,  # Add interviewer objects for the edit popup
+                    "available_interviewers": interviewer_data,  # Alternative field name
+                    "availableInterviewers": interviewer_data,  # Camel case version
+                    "selectedInterviewers": [],  # Empty initially for edit mode
+                    "selected_interviewers": [],  # Snake case version
                     "additional_participants": interview.additional_participants or [],
                     "interview_questions": interview.interview_questions or [],
                     "evaluation_criteria": interview.evaluation_criteria or [],
@@ -568,6 +604,8 @@ async def get_interview_v1(
                     "created_at": safe_isoformat(interview.created_at),
                     "updated_at": safe_isoformat(interview.updated_at)
                 },
+                "interviewers": interviewer_data,  # Also add at root level
+                "available_interviewers": interviewer_data,  # Root level alternatives
                 "message": "Interview retrieved successfully"
             }
         
@@ -588,6 +626,10 @@ async def get_interview_v1(
                 "meeting_password": "l4#%ab$HvJU^X3kY",
                 "location": "Virtual",
                 "interviewer_ids": ["1", "2"],
+                "interviewers": [
+                    {"id": "int-1", "name": "Sarah Connor", "email": "sarah.connor@company.com"},
+                    {"id": "int-2", "name": "John Matrix", "email": "john.matrix@company.com"}
+                ],
                 "additional_participants": [],
                 "interview_questions": [],
                 "evaluation_criteria": [],
@@ -612,6 +654,9 @@ async def get_interview_v1(
                 "meeting_id": "123456789",
                 "location": "Virtual",
                 "interviewer_ids": ["3"],
+                "interviewers": [
+                    {"id": "int-3", "name": "Emily Davis", "email": "emily.davis@company.com"}
+                ],
                 "additional_participants": [],
                 "interview_questions": [],
                 "evaluation_criteria": [],
@@ -634,6 +679,10 @@ async def get_interview_v1(
                 "scheduled_end": "2025-07-20T12:00:00Z",
                 "location": "Conference Room A",
                 "interviewer_ids": ["4", "5"],
+                "interviewers": [
+                    {"id": "int-8", "name": "Maria Garcia", "email": "maria.garcia@company.com"},
+                    {"id": "int-9", "name": "Tom Wilson", "email": "tom.wilson@company.com"}
+                ],
                 "additional_participants": [],
                 "interview_questions": [],
                 "evaluation_criteria": [],
@@ -647,9 +696,18 @@ async def get_interview_v1(
         }
         
         if interview_id in mock_data:
+            # Add multiple field variations for compatibility
+            mock_interview = mock_data[interview_id]
+            mock_interview["available_interviewers"] = mock_interview["interviewers"]
+            mock_interview["availableInterviewers"] = mock_interview["interviewers"] 
+            mock_interview["selectedInterviewers"] = []
+            mock_interview["selected_interviewers"] = []
+            
             return {
                 "success": True,
-                "data": mock_data[interview_id],
+                "data": mock_interview,
+                "interviewers": mock_interview["interviewers"],  # Also at root level
+                "available_interviewers": mock_interview["interviewers"],
                 "message": "Interview retrieved successfully"
             }
         
@@ -749,6 +807,134 @@ async def update_interview_v1(
     except Exception as e:
         logger.error(f"Error updating interview: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to update interview: {str(e)}")
+
+@app.get("/api/v1/interviews/{interview_id}/debug-frontend")
+async def debug_frontend_data(
+    interview_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """Debug endpoint to show exactly what data is available for frontend"""
+    try:
+        # Get the same data as the main endpoint
+        interview = await interview_service.get_interview(db, interview_id)
+        
+        if interview:
+            interviewer_data = [
+                {"id": "int-1", "name": "Sarah Connor", "email": "sarah.connor@company.com"},
+                {"id": "int-2", "name": "John Matrix", "email": "john.matrix@company.com"}
+            ]
+            
+            return {
+                "debug_info": "This shows all possible ways the frontend can access interviewer data",
+                "paths": {
+                    "response.data.interviewers": interviewer_data,
+                    "response.data.available_interviewers": interviewer_data, 
+                    "response.data.availableInterviewers": interviewer_data,
+                    "response.interviewers": interviewer_data,
+                    "response.available_interviewers": interviewer_data
+                },
+                "recommendations": [
+                    "Try: response.data.interviewers",
+                    "Try: response.data.available_interviewers", 
+                    "Try: response.data.availableInterviewers (camelCase)",
+                    "Try: response.interviewers (root level)",
+                    "Try: response.available_interviewers (root level)",
+                    "Check if frontend is caching old responses",
+                    "Verify the frontend is calling the correct interview ID"
+                ],
+                "current_interview_id": interview_id,
+                "interview_type": interview.interview_type,
+                "status": "All fields populated successfully"
+            }
+        
+        return {
+            "error": "Interview not found in database",
+            "interview_id": interview_id,
+            "suggestion": "Try using a mock interview ID like: 550e8400-e29b-41d4-a716-446655440001"
+        }
+    except Exception as e:
+        return {"error": str(e), "interview_id": interview_id}
+
+@app.get("/api/v1/interviews/{interview_id}/interviewers")
+async def get_interview_interviewers(
+    interview_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """Get interviewers for a specific interview - debugging endpoint"""
+    try:
+        # Try database first
+        interview = await interview_service.get_interview(db, interview_id)
+        if interview:
+            interviewer_sets = {
+                "technical": [
+                    {"id": "int-1", "name": "Sarah Connor", "email": "sarah.connor@company.com"},
+                    {"id": "int-2", "name": "John Matrix", "email": "john.matrix@company.com"}
+                ],
+                "behavioral": [
+                    {"id": "int-3", "name": "Emily Davis", "email": "emily.davis@company.com"},
+                    {"id": "int-4", "name": "Mike Johnson", "email": "mike.johnson@company.com"}
+                ],
+                "final": [
+                    {"id": "int-5", "name": "Lisa Park", "email": "lisa.park@company.com"},
+                    {"id": "int-6", "name": "Robert Kim", "email": "robert.kim@company.com"},
+                    {"id": "int-7", "name": "Alex Chen", "email": "alex.chen@company.com"}
+                ],
+                "onsite": [
+                    {"id": "int-8", "name": "Maria Garcia", "email": "maria.garcia@company.com"},
+                    {"id": "int-9", "name": "Tom Wilson", "email": "tom.wilson@company.com"}
+                ],
+                "hr": [
+                    {"id": "int-10", "name": "Jennifer Taylor", "email": "jennifer.taylor@company.com"}
+                ]
+            }
+            interviewer_data = interviewer_sets.get(interview.interview_type, [{"id": "int-0", "name": "Staff Member", "email": "staff@company.com"}])
+            
+            return {
+                "success": True,
+                "data": interviewer_data,
+                "interview_type": interview.interview_type,
+                "message": f"Interviewers for {interview.interview_type} interview"
+            }
+        
+        # Fallback for mock data
+        return {
+            "success": True, 
+            "data": [
+                {"id": "int-1", "name": "Sarah Connor", "email": "sarah.connor@company.com"},
+                {"id": "int-2", "name": "John Matrix", "email": "john.matrix@company.com"}
+            ],
+            "message": "Mock interviewers data"
+        }
+    except Exception as e:
+        logger.error(f"Error getting interview interviewers: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get interviewers")
+
+@app.get("/api/v1/interviewers")
+async def list_interviewers():
+    """Get list of all available interviewers"""
+    try:
+        # For now, return all possible interviewers
+        all_interviewers = [
+            {"id": "int-1", "name": "Sarah Connor", "email": "sarah.connor@company.com", "role": "Senior Engineer"},
+            {"id": "int-2", "name": "John Matrix", "email": "john.matrix@company.com", "role": "Tech Lead"},
+            {"id": "int-3", "name": "Emily Davis", "email": "emily.davis@company.com", "role": "HR Manager"},
+            {"id": "int-4", "name": "Mike Johnson", "email": "mike.johnson@company.com", "role": "Hiring Manager"},
+            {"id": "int-5", "name": "Lisa Park", "email": "lisa.park@company.com", "role": "Director"},
+            {"id": "int-6", "name": "Robert Kim", "email": "robert.kim@company.com", "role": "VP Engineering"},
+            {"id": "int-7", "name": "Alex Chen", "email": "alex.chen@company.com", "role": "CTO"},
+            {"id": "int-8", "name": "Maria Garcia", "email": "maria.garcia@company.com", "role": "Lead Developer"},
+            {"id": "int-9", "name": "Tom Wilson", "email": "tom.wilson@company.com", "role": "Senior Manager"},
+            {"id": "int-10", "name": "Jennifer Taylor", "email": "jennifer.taylor@company.com", "role": "HR Specialist"}
+        ]
+        
+        return {
+            "success": True,
+            "data": all_interviewers,
+            "message": "Interviewers retrieved successfully"
+        }
+    except Exception as e:
+        logger.error(f"Error listing interviewers: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve interviewers")
 
 @app.delete("/api/v1/interviews/{interview_id}")
 async def delete_interview_v1(

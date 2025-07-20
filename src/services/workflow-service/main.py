@@ -298,7 +298,76 @@ async def list_interviews(
 ):
     """List interviews with filtering and pagination"""
     try:
-        # Mock data for development - replace with actual database query
+        # First try to get from database
+        skip = (page - 1) * limit
+        db_interviews = await interview_service.list_interviews(
+            db, skip=skip, limit=limit, status=status, interview_type=interview_type
+        )
+        
+        if db_interviews:
+            # Convert database results to response format
+            interview_items = []
+            for interview in db_interviews:
+                # Generate meaningful placeholders based on interview type and round
+                job_titles = {
+                    "technical": "Senior Software Engineer",
+                    "behavioral": "Product Manager", 
+                    "final": "Engineering Manager",
+                    "onsite": "Lead Developer",
+                    "hr": "HR Specialist"
+                }
+                job_title = job_titles.get(interview.interview_type, "Software Engineer")
+                
+                # Generate candidate names based on workflow_id pattern
+                candidate_names = [
+                    "Alice Johnson", "Bob Smith", "Carol Davis", "David Wilson", 
+                    "Emma Brown", "Frank Miller", "Grace Lee", "Henry Chen"
+                ]
+                candidate_name = candidate_names[hash(str(interview.workflow_id)) % len(candidate_names)]
+                
+                # Generate interviewer names based on interview type
+                interviewer_sets = {
+                    "technical": ["Sarah Connor", "John Matrix"],
+                    "behavioral": ["Emily Davis", "Mike Johnson"],
+                    "final": ["Lisa Park", "Robert Kim", "Alex Chen"],
+                    "onsite": ["Maria Garcia", "Tom Wilson"],
+                    "hr": ["Jennifer Taylor"]
+                }
+                interviewer_names = interviewer_sets.get(interview.interview_type, ["Staff Member"])
+                
+                # If interviewer_ids exists in database, use count for display
+                if interview.interviewer_ids and len(interview.interviewer_ids) > 0:
+                    # Use actual count from database but keep names for display
+                    interviewer_names = interviewer_names[:len(interview.interviewer_ids)]
+                
+                interview_items.append({
+                    "id": str(interview.id),
+                    "candidate_name": candidate_name,  # TODO: Join with candidate table using workflow->candidate_id
+                    "candidate_id": str(interview.workflow_id),  # Using workflow_id as placeholder
+                    "job_title": job_title,  # TODO: Join with job table using workflow->job_id
+                    "job_id": f"job-{hash(str(interview.workflow_id)) % 1000}",
+                    "interview_type": interview.interview_type,
+                    "round_number": interview.round_number,
+                    "title": interview.title or f"{job_title} Interview",
+                    "status": interview.status or "pending",
+                    "scheduled_start": interview.scheduled_start.isoformat() if interview.scheduled_start else None,
+                    "scheduled_end": interview.scheduled_end.isoformat() if interview.scheduled_end else None,
+                    "interviewer_names": interviewer_names,  # TODO: Join with interviewer table using interviewer_ids
+                    "meeting_url": interview.meeting_url or "",
+                    "location": interview.location or "",
+                    "created_at": interview.created_at.isoformat() if interview.created_at else None
+                })
+            
+            return {
+                "success": True,
+                "data": {
+                    "items": interview_items,
+                    "total": len(interview_items)
+                },
+                "message": "Interviews retrieved successfully"
+            }
+        
+        # Fallback to mock data if no database records
         mock_interviews = [
             {
                 "id": "550e8400-e29b-41d4-a716-446655440001",
@@ -381,7 +450,7 @@ async def list_interviews(
             }
         ]
         
-        # Apply basic filtering
+        # Apply basic filtering to mock data
         filtered_interviews = mock_interviews
         
         if status:
@@ -399,7 +468,7 @@ async def list_interviews(
                     search_term in (i.get("title", "")).lower())
             ]
         
-        # Apply pagination
+        # Apply pagination to mock data
         start_index = (page - 1) * limit
         end_index = start_index + limit
         paginated_interviews = filtered_interviews[start_index:end_index]
@@ -416,14 +485,93 @@ async def list_interviews(
         logger.error(f"Error listing interviews: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to retrieve interviews")
 
+@app.get("/api/v1/interviews/{interview_id}/debug")
+async def debug_get_interview(
+    interview_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """Debug endpoint to test interview retrieval"""
+    try:
+        interview = await interview_service.get_interview(db, interview_id)
+        if interview:
+            return {
+                "success": True,
+                "debug_data": {
+                    "id": str(interview.id),
+                    "title": interview.title,
+                    "status": interview.status,
+                    "created_at_raw": str(interview.created_at),
+                    "updated_at_raw": str(interview.updated_at),
+                    "created_at_type": str(type(interview.created_at)),
+                    "updated_at_type": str(type(interview.updated_at))
+                }
+            }
+        return {"success": False, "message": "Interview not found"}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
 @app.get("/api/v1/interviews/{interview_id}")
 async def get_interview_v1(
     interview_id: str,
     db: AsyncSession = Depends(get_db)
 ):
     """Get interview by ID"""
+    print(f"DEBUG: get_interview_v1 called with interview_id: {interview_id}")
+    logger.info(f"get_interview_v1 called with interview_id: {interview_id}")
     try:
-        # Fallback to mock data for demo purposes (skip database for now)
+        # Try to get from database first
+        print(f"DEBUG: About to call interview_service.get_interview")
+        logger.info(f"About to call interview_service.get_interview with id: {interview_id}")
+        interview = await interview_service.get_interview(db, interview_id)
+        print(f"DEBUG: Service call returned: {interview}")
+        logger.info(f"Service call returned: {interview}")
+        
+        print(f"DEBUG: About to check if interview exists: {interview is not None}")
+        if interview:
+            print(f"DEBUG: Interview exists, entering if block")
+            print(f"DEBUG: Interview object attributes:")
+            print(f"  created_at: {interview.created_at} (type: {type(interview.created_at)})")
+            print(f"  updated_at: {interview.updated_at} (type: {type(interview.updated_at)})")
+            print(f"  scheduled_start: {interview.scheduled_start}")
+            print(f"  scheduled_end: {interview.scheduled_end}")
+            
+            # Safe datetime conversion helper
+            def safe_isoformat(dt_value):
+                return dt_value.isoformat() if dt_value is not None else None
+            
+            return {
+                "success": True,
+                "data": {
+                    "id": str(interview.id),
+                    "workflow_id": str(interview.workflow_id),
+                    "interview_type": interview.interview_type,
+                    "round_number": interview.round_number,
+                    "title": interview.title or "",
+                    "description": interview.description or "",
+                    "status": interview.status or "pending",
+                    "scheduled_start": safe_isoformat(interview.scheduled_start),
+                    "scheduled_end": safe_isoformat(interview.scheduled_end),
+                    "actual_start": safe_isoformat(interview.actual_start),
+                    "actual_end": safe_isoformat(interview.actual_end),
+                    "meeting_url": interview.meeting_url or "",
+                    "meeting_id": interview.meeting_id or "",
+                    "meeting_password": interview.meeting_password or "",
+                    "location": interview.location or "",
+                    "interviewer_ids": interview.interviewer_ids or [],
+                    "additional_participants": interview.additional_participants or [],
+                    "interview_questions": interview.interview_questions or [],
+                    "evaluation_criteria": interview.evaluation_criteria or [],
+                    "feedback": interview.feedback or [],
+                    "scores": interview.scores or {},
+                    "notes": interview.notes or "",
+                    "attachments": interview.attachments or [],
+                    "created_at": safe_isoformat(interview.created_at),
+                    "updated_at": safe_isoformat(interview.updated_at)
+                },
+                "message": "Interview retrieved successfully"
+            }
+        
+        # Fallback to mock data for demo purposes if not found in database
         mock_data = {
             "550e8400-e29b-41d4-a716-446655440001": {
                 "id": "550e8400-e29b-41d4-a716-446655440001",
@@ -510,6 +658,9 @@ async def get_interview_v1(
     except HTTPException:
         raise
     except Exception as e:
+        import traceback
+        print(f"DEBUG: Full traceback:")
+        traceback.print_exc()
         logger.error(f"Error getting interview: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to get interview: {str(e)}")
 
@@ -547,8 +698,8 @@ async def create_interview_v1(
                 "interviewer_ids": new_interview.interviewer_ids,
                 "additional_participants": new_interview.additional_participants,
                 "notes": new_interview.notes,
-                "created_at": new_interview.created_at.isoformat(),
-                "updated_at": new_interview.updated_at.isoformat()
+                "created_at": new_interview.created_at.isoformat() if new_interview.created_at else None,
+                "updated_at": new_interview.updated_at.isoformat() if new_interview.updated_at else None
             },
             "message": "Interview created successfully"
         }
@@ -589,7 +740,7 @@ async def update_interview_v1(
                 "meeting_password": updated_interview.meeting_password,
                 "location": updated_interview.location,
                 "notes": updated_interview.notes,
-                "updated_at": updated_interview.updated_at.isoformat()
+                "updated_at": updated_interview.updated_at.isoformat() if updated_interview.updated_at else None
             },
             "message": "Interview updated successfully"
         }

@@ -157,6 +157,29 @@ export class InterviewService {
     }
   }
 
+  // Get all available interviewers
+  static async getInterviewers(): Promise<Array<{id: string, name: string, email: string, role: string}>> {
+    try {
+      const response = await api.get('http://localhost:8002/api/v1/interviewers');
+      return response.data.data;
+    } catch (error) {
+      console.error('Error fetching interviewers:', error);
+      // Fallback to mock data
+      return [
+        { id: 'int-1', name: 'Sarah Connor', email: 'sarah.connor@company.com', role: 'Senior Engineer' },
+        { id: 'int-2', name: 'John Matrix', email: 'john.matrix@company.com', role: 'Tech Lead' },
+        { id: 'int-3', name: 'Emily Davis', email: 'emily.davis@company.com', role: 'HR Manager' },
+        { id: 'int-4', name: 'Mike Johnson', email: 'mike.johnson@company.com', role: 'Hiring Manager' },
+        { id: 'int-5', name: 'Lisa Park', email: 'lisa.park@company.com', role: 'Director' },
+        { id: 'int-6', name: 'Robert Kim', email: 'robert.kim@company.com', role: 'VP Engineering' },
+        { id: 'int-7', name: 'Alex Chen', email: 'alex.chen@company.com', role: 'CTO' },
+        { id: 'int-8', name: 'Maria Garcia', email: 'maria.garcia@company.com', role: 'Lead Developer' },
+        { id: 'int-9', name: 'Tom Wilson', email: 'tom.wilson@company.com', role: 'Senior Manager' },
+        { id: 'int-10', name: 'Jennifer Taylor', email: 'jennifer.taylor@company.com', role: 'HR Specialist' }
+      ];
+    }
+  }
+
   // Mock data generator for development
   private static async getMockInterviews(params: any): Promise<{ items: InterviewListItem[], total: number }> {
     // This is temporary mock data - replace with actual API call when backend is ready

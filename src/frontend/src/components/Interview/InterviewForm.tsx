@@ -30,6 +30,7 @@ import {
   InterviewDetails,
   InterviewParticipant,
 } from '../../types/interview';
+import { InterviewService } from '../../services/interviewService';
 
 interface InterviewFormProps {
   open: boolean;
@@ -75,14 +76,6 @@ const mockJobs = [
   { id: '5', title: 'Marketing Manager' },
 ];
 
-const mockInterviewers = [
-  { id: '1', name: 'John Doe', email: 'john.doe@company.com', role: 'Senior Engineer' },
-  { id: '2', name: 'Sarah Wilson', email: 'sarah.wilson@company.com', role: 'Engineering Manager' },
-  { id: '3', name: 'Emily Davis', email: 'emily.davis@company.com', role: 'HR Manager' },
-  { id: '4', name: 'Alex Chen', email: 'alex.chen@company.com', role: 'Tech Lead' },
-  { id: '5', name: 'Maria Garcia', email: 'maria.garcia@company.com', role: 'Product Manager' },
-];
-
 const InterviewForm: React.FC<InterviewFormProps> = ({
   open,
   onClose,
@@ -92,6 +85,9 @@ const InterviewForm: React.FC<InterviewFormProps> = ({
   loading = false,
   error = null,
 }) => {
+  // Interviewer data state
+  const [availableInterviewers, setAvailableInterviewers] = useState<Array<{id: string, name: string, email: string, role: string}>>([]);
+  const [interviewersLoading, setInterviewersLoading] = useState(false);
   // Form state
   const [formData, setFormData] = useState<any>({
     title: '',
@@ -115,9 +111,37 @@ const InterviewForm: React.FC<InterviewFormProps> = ({
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
+  // Load interviewers when component mounts or opens
+  useEffect(() => {
+    const loadInterviewers = async () => {
+      if (open) {
+        try {
+          setInterviewersLoading(true);
+          const interviewers = await InterviewService.getInterviewers();
+          setAvailableInterviewers(interviewers);
+        } catch (error) {
+          console.error('Error loading interviewers:', error);
+        } finally {
+          setInterviewersLoading(false);
+        }
+      }
+    };
+
+    loadInterviewers();
+  }, [open]);
+
   // Initialize form with interview data if editing
   useEffect(() => {
     if (isEdit && interview) {
+      // Check if interview has interviewer data from API
+      let interviewerIds = interview.interviewer_ids || [];
+      
+      // If the interview response has additional interviewer data, try to use it
+      const interviewAny = interview as any;
+      if (interviewAny.interviewers && Array.isArray(interviewAny.interviewers)) {
+        interviewerIds = interviewAny.interviewers.map((interviewer: any) => interviewer.id);
+      }
+
       setFormData({
         title: interview.title || '',
         description: interview.description || '',
@@ -132,8 +156,8 @@ const InterviewForm: React.FC<InterviewFormProps> = ({
         meeting_id: interview.meeting_id || '',
         meeting_password: interview.meeting_password || '',
         location: interview.location || '',
-        status: interview.status,
-        interviewer_ids: interview.interviewer_ids || [],
+        status: formData.status,
+        interviewer_ids: interviewerIds,
         additional_participants: interview.additional_participants || [],
         notes: interview.notes || '',
       });
@@ -454,9 +478,10 @@ const InterviewForm: React.FC<InterviewFormProps> = ({
             <Grid item xs={12}>
               <Autocomplete
                 multiple
-                options={mockInterviewers}
+                loading={interviewersLoading}
+                options={availableInterviewers}
                 getOptionLabel={(option) => `${option.name} (${option.role})`}
-                value={mockInterviewers.filter((i) => formData.interviewer_ids.includes(i.id))}
+                value={availableInterviewers.filter((interviewer) => formData.interviewer_ids.includes(interviewer.id))}
                 onChange={(event, newValue) => {
                   handleInputChange('interviewer_ids', newValue.map((v) => v.id));
                 }}
@@ -465,7 +490,7 @@ const InterviewForm: React.FC<InterviewFormProps> = ({
                     {...params}
                     label="Select Interviewers *"
                     error={!!formErrors.interviewer_ids}
-                    helperText={formErrors.interviewer_ids}
+                    helperText={formErrors.interviewer_ids || (interviewersLoading ? 'Loading interviewers...' : '')}
                   />
                 )}
                 renderTags={(value, getTagProps) =>
@@ -474,6 +499,7 @@ const InterviewForm: React.FC<InterviewFormProps> = ({
                       variant="outlined"
                       label={option.name}
                       {...getTagProps({ index })}
+                      key={option.id}
                     />
                   ))
                 }

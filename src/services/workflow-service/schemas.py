@@ -99,6 +99,14 @@ class InterviewStepCreate(InterviewStepBase):
     pass
 
 class InterviewStepUpdate(BaseModel):
+    interview_type: Optional[InterviewType] = None
+    round_number: Optional[int] = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    interviewer_ids: Optional[List[str]] = None
+    additional_participants: Optional[List[Dict[str, Any]]] = None
+    interview_questions: Optional[List[Dict[str, Any]]] = None
+    evaluation_criteria: Optional[List[Dict[str, Any]]] = None
     scheduled_start: Optional[datetime] = None
     scheduled_end: Optional[datetime] = None
     meeting_url: Optional[str] = None

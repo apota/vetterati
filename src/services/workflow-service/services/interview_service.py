@@ -46,10 +46,48 @@ class InterviewService:
     
     async def get_interview(self, db: AsyncSession, interview_id: str) -> Optional[InterviewStep]:
         """Get interview by ID"""
-        result = await db.execute(
-            select(InterviewStep).where(InterviewStep.id == uuid.UUID(interview_id))
-        )
-        return result.scalar_one_or_none()
+        logger.info(f"Searching for interview with ID: {interview_id}")
+        try:
+            uuid_id = uuid.UUID(interview_id)
+            logger.info(f"Converted to UUID: {uuid_id}")
+            result = await db.execute(
+                select(InterviewStep).where(InterviewStep.id == uuid_id)
+            )
+            interview = result.scalar_one_or_none()
+            logger.info(f"Database query result: {interview}")
+            return interview
+        except Exception as e:
+            logger.error(f"Error in get_interview: {e}")
+            return None
+    
+    async def list_interviews(
+        self,
+        db: AsyncSession,
+        skip: int = 0,
+        limit: int = 100,
+        status: Optional[str] = None,
+        interview_type: Optional[str] = None
+    ) -> List[InterviewStep]:
+        """List all interviews with filtering and pagination"""
+        logger.info(f"Listing interviews with skip={skip}, limit={limit}, status={status}, interview_type={interview_type}")
+        try:
+            query = select(InterviewStep)
+            
+            if status:
+                query = query.where(InterviewStep.status == status)
+            
+            if interview_type:
+                query = query.where(InterviewStep.interview_type == interview_type)
+            
+            query = query.order_by(InterviewStep.scheduled_start.desc()).offset(skip).limit(limit)
+            
+            result = await db.execute(query)
+            interviews = result.scalars().all()
+            logger.info(f"Found {len(interviews)} interviews in database")
+            return interviews
+        except Exception as e:
+            logger.error(f"Error in list_interviews: {e}")
+            return []
     
     async def list_workflow_interviews(
         self, 
@@ -76,27 +114,19 @@ class InterviewService:
             if not interview:
                 return None
             
-            # Update fields
-            if interview_data.scheduled_start:
-                interview.scheduled_start = interview_data.scheduled_start
-            if interview_data.scheduled_end:
-                interview.scheduled_end = interview_data.scheduled_end
-            if interview_data.meeting_url:
-                interview.meeting_url = interview_data.meeting_url
-            if interview_data.meeting_id:
-                interview.meeting_id = interview_data.meeting_id
-            if interview_data.meeting_password:
-                interview.meeting_password = interview_data.meeting_password
-            if interview_data.location:
-                interview.location = interview_data.location
-            if interview_data.status:
-                interview.status = interview_data.status.value
-            if interview_data.feedback:
-                interview.feedback = interview_data.feedback
-            if interview_data.scores:
-                interview.scores = interview_data.scores
-            if interview_data.notes:
-                interview.notes = interview_data.notes
+            # Update fields using model_dump to handle all fields properly
+            update_data = interview_data.model_dump(exclude_unset=True)
+            
+            for field, value in update_data.items():
+                if value is not None:
+                    if field == 'status' and hasattr(value, 'value'):
+                        # Handle enum values
+                        setattr(interview, field, value.value)
+                    elif field == 'interview_type' and hasattr(value, 'value'):
+                        # Handle enum values
+                        setattr(interview, field, value.value)
+                    else:
+                        setattr(interview, field, value)
             
             interview.updated_at = datetime.utcnow()
             

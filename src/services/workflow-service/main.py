@@ -775,6 +775,29 @@ async def update_interview_v1(
     try:
         logger.info(f"Updating interview {interview_id} with data: {interview_data}")
         
+        # Handle datetime conversion for scheduled_start and scheduled_end
+        if 'scheduled_start' in interview_data and interview_data['scheduled_start']:
+            try:
+                if isinstance(interview_data['scheduled_start'], str):
+                    from datetime import datetime
+                    dt = datetime.fromisoformat(interview_data['scheduled_start'].replace('Z', '+00:00'))
+                    # Convert to naive datetime (remove timezone info for PostgreSQL)
+                    interview_data['scheduled_start'] = dt.replace(tzinfo=None)
+            except Exception as e:
+                logger.warning(f"Failed to parse scheduled_start: {e}")
+                interview_data['scheduled_start'] = None
+        
+        if 'scheduled_end' in interview_data and interview_data['scheduled_end']:
+            try:
+                if isinstance(interview_data['scheduled_end'], str):
+                    from datetime import datetime
+                    dt = datetime.fromisoformat(interview_data['scheduled_end'].replace('Z', '+00:00'))
+                    # Convert to naive datetime (remove timezone info for PostgreSQL)
+                    interview_data['scheduled_end'] = dt.replace(tzinfo=None)
+            except Exception as e:
+                logger.warning(f"Failed to parse scheduled_end: {e}")
+                interview_data['scheduled_end'] = None
+        
         # Convert dict to InterviewStepUpdate schema for validation
         interview_update_data = InterviewStepUpdate(**interview_data)
         

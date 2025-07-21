@@ -125,6 +125,10 @@ class InterviewService:
                     elif field == 'interview_type' and hasattr(value, 'value'):
                         # Handle enum values
                         setattr(interview, field, value.value)
+                    elif field in ['scheduled_start', 'scheduled_end'] and isinstance(value, datetime):
+                        # Ensure datetime fields are timezone-naive for PostgreSQL
+                        naive_datetime = value.replace(tzinfo=None) if value.tzinfo else value
+                        setattr(interview, field, naive_datetime)
                     else:
                         setattr(interview, field, value)
             

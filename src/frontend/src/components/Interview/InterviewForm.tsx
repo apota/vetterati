@@ -215,10 +215,10 @@ const InterviewForm: React.FC<InterviewFormProps> = ({
       if (!formData.workflow_id) {
         errors.workflow_id = 'Workflow ID is required';
       }
-    }
-
-    if (formData.interviewer_ids.length === 0) {
-      errors.interviewer_ids = 'At least one interviewer is required';
+      // Only require interviewers for new interviews
+      if (formData.interviewer_ids.length === 0) {
+        errors.interviewer_ids = 'At least one interviewer is required';
+      }
     }
 
     if (formData.scheduled_start && formData.scheduled_end) {

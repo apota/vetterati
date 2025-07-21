@@ -96,11 +96,19 @@ export class InterviewService {
 
   // Update interview
   static async updateInterview(id: string, interviewData: InterviewUpdateRequest): Promise<InterviewStep> {
-    try {
+    console.log('🔧 SERVICE UPDATE: InterviewService.updateInterview called');
+    console.log('🔧 ID:', id);
+    console.log('🔧 Data:', interviewData);
+    
+    try {      
+      console.log('🌐 API CALL: Making PUT request to backend...');
       const response = await api.put(`http://localhost:8002/api/v1/interviews/${id}`, interviewData);
+      console.log('✅ API RESPONSE:', response);
+      console.log('✅ API DATA:', response.data);
+      
       return response.data.data;
     } catch (error) {
-      console.error('Error updating interview:', error);
+      console.error('❌ SERVICE ERROR: Error updating interview:', error);
       throw error;
     }
   }

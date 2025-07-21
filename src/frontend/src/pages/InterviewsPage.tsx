@@ -234,26 +234,38 @@ const InterviewsPage: React.FC = () => {
   };
 
   const handleFormSubmit = async (data: InterviewCreateRequest | InterviewUpdateRequest) => {
-    try {
+    console.log('🚀 PARENT SUBMIT: handleFormSubmit called');
+    console.log('🚀 Data received:', data);
+    console.log('🚀 isEdit:', isEdit);
+    console.log('🚀 editingInterview:', editingInterview);
+    
+    try {      
       setFormLoading(true);
       setFormError(null);
 
       if (isEdit && editingInterview) {
+        console.log('📝 UPDATE PATH: Calling updateInterview');
+        console.log('📝 Interview ID:', editingInterview.id);
+        
         // Update existing interview
-        await InterviewService.updateInterview(editingInterview.id, data as InterviewUpdateRequest);
+        const result = await InterviewService.updateInterview(editingInterview.id, data as InterviewUpdateRequest);
+        console.log('✅ UPDATE RESULT:', result);
       } else {
+        console.log('➕ CREATE PATH: Calling createInterview');
         // Create new interview
         await InterviewService.createInterview(data as InterviewCreateRequest);
       }
 
+      console.log('🔄 REFRESH: Refreshing interviews list...');
       // Refresh the interviews list
       await loadInterviews();
       await loadStats();
       
+      console.log('🎉 SUCCESS: Form submission completed, closing form');
       setFormOpen(false);
     } catch (error) {
-      console.error('Error saving interview:', error);
-      setFormError('Failed to save interview');
+      console.error('❌ PARENT ERROR: Error saving interview:', error);
+      setFormError(`Failed to save interview: ${error}`);
     } finally {
       setFormLoading(false);
     }
